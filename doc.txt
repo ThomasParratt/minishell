@@ -1,1 +1,1 @@
-WORLD
+cat minishell.c

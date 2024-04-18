@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/18 11:45:01 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/18 12:16:47 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,10 @@ char	*get_path(char **tokens)
 		paths[i] = ft_strjoin(paths[i], tokens[0]);
 		i++;
 	}
-	ft_printf("\n");
 	i = 0;
 	while (paths[i])
 	{
-		//printf("%s\n", paths[i]);
+		printf("%s\n", paths[i]);
 		//printf ("%d\n", access(paths[i], F_OK));
 		if (access(paths[i], F_OK) == 0)
 			return (ft_strdup(paths[i])); // path to executable folder including executable
@@ -62,7 +61,7 @@ char	*get_path(char **tokens)
 void	execute_command(char **tokens, char **envp)
 {
 	int		id;
-	char	*path_str = NULL;
+	char	*path_str;
 
 	id = fork();
 	if (id == 0)
@@ -108,7 +107,7 @@ int main(int argc, char **argv, char **envp)
 			hostname = getenv("HOSTNAME");
 			prompt = create_prompt(username, hostname, cwd);
 			line_read = readline(prompt);
-			free(line_read);
+			ft_printf("line_read = %s\n\n", line_read);
 			add_history(line_read);
 			tokens = ft_split(line_read, ' ');
 			if (!contains_pipe(line_read))
@@ -117,6 +116,7 @@ int main(int argc, char **argv, char **envp)
 			{
 				//execute pipe
 			}
+			free(line_read);
 			free(prompt);
 		}
 	}

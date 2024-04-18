@@ -1,4 +1,5 @@
 SRC	=	ft_isalpha.c \
+			ft_strcat.c \
 			ft_isdigit.c \
 			ft_isalnum.c \
 			ft_isascii.c \

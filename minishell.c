@@ -6,35 +6,49 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/18 12:16:47 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/18 13:16:07 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*create_prompt(char *str1, char *str2, char *str3)
+
+char	*create_prompt(void)
 {
+	char	cwd[1024];
+	char	*username;
+    char	*hostname;
 	size_t	len;
 	char	*res;
 
-	len = ft_strlen(str1) + ft_strlen(str2) + 3;
+	getcwd(cwd, sizeof(cwd));
+	username = getenv("USER");
+	hostname = getenv("HOSTNAME");
+	len = ft_strlen(username) + ft_strlen(hostname) + 3;
 	res = ft_strdup("");
 	if (!res)
 		exit(EXIT_FAILURE);
-	res = ft_strjoin(res, str1);
+	res = ft_strjoin(res, username);
+	free(res);
 	res = ft_strjoin(res, "@");
-	res = ft_strjoin(res, str2);
+	free(res);
+	res = ft_strjoin(res, hostname);
+	free(res);
 	res = ft_strjoin(res, ":");
-	res = ft_strjoin(res, str3);
+	free(res);
+	res = ft_strjoin(res, cwd);
+	free(res);
 	res = ft_strjoin(res, "$ ");
 	return (res);
 }
 
+//need to sort out memory allocation and freeing in this function
 char	*get_path(char **tokens)
 {
 	char	*path_pointer;
 	char	**paths;
 	int		i;
+	char	*res;
 
 	path_pointer = getenv("PATH");
 	paths = ft_split(path_pointer, ':');
@@ -48,10 +62,13 @@ char	*get_path(char **tokens)
 	i = 0;
 	while (paths[i])
 	{
-		printf("%s\n", paths[i]);
-		//printf ("%d\n", access(paths[i], F_OK));
 		if (access(paths[i], F_OK) == 0)
-			return (ft_strdup(paths[i])); // path to executable folder including executable
+		{
+			res = ft_strdup(paths[i]);
+			if (!res)
+				exit(1);
+			return (res);
+		}
 		i++;
 	}
 	ft_printf("Executable directory not found\n");
@@ -88,12 +105,19 @@ int	contains_pipe(char *line_read)
 	return (0);
 }
 
+void	parse_input(char *line_read, char **tokens, char **envp)
+{
+	if (!contains_pipe(line_read))
+		execute_command(tokens, envp);
+	else if (contains_pipe(line_read))
+	{
+		//execute pipe
+	}
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	char	*line_read;
-	char	cwd[1024];
-	char	*username;
-    char	*hostname;
 	char	*prompt;
 	char	**tokens;
 
@@ -102,22 +126,13 @@ int main(int argc, char **argv, char **envp)
 	{
 		while (1)
 		{
-			getcwd(cwd, sizeof(cwd));
-			username = getenv("USER");
-			hostname = getenv("HOSTNAME");
-			prompt = create_prompt(username, hostname, cwd);
+			prompt = create_prompt();
 			line_read = readline(prompt);
-			ft_printf("line_read = %s\n\n", line_read);
+			free(prompt);
 			add_history(line_read);
 			tokens = ft_split(line_read, ' ');
-			if (!contains_pipe(line_read))
-				execute_command(tokens, envp);
-			else if (contains_pipe(line_read))
-			{
-				//execute pipe
-			}
+			parse_input(line_read, tokens, envp);
 			free(line_read);
-			free(prompt);
 		}
 	}
 	return (0);

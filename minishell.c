@@ -6,11 +6,51 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/18 13:40:50 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/19 13:47:25 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	print_split(char **split)
+{
+	int	i;
+
+	i = 0;
+	while (split[i])
+	{
+		ft_printf("%s\n", split[i]);
+		i++;
+	}
+}
+
+void	execute_pipe(t_cmd *cmds, char **envp)
+{
+	int		fd[2];
+	pid_t	id;
+
+	pipe(fd);
+	id = fork();
+	if (id == 0)
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		execve(cmds->path1, cmds->cmd1, envp);
+		perror("execve");
+		exit(1);
+	}
+	else
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		wait(NULL);
+		execve(cmds->path2, cmds->cmd2, envp);
+		perror("execve");
+		exit(1);
+	}
+}
 
 char	*create_prompt(void)
 {
@@ -97,20 +137,27 @@ int	contains_pipe(char *line_read)
 
 	i = 0;
 	if (ft_strchr(line_read, '|'))
-	{
-		//pipe found
 		return (1);
-	}
 	return (0);
 }
 
 void	parse_input(char *line_read, char **tokens, char **envp)
 {
+	char	**pipe_cmds;
+	t_cmd	*cmds;
+
+	cmds = malloc(sizeof(t_cmd));
 	if (!contains_pipe(line_read))
 		execute_command(tokens, envp);
 	else if (contains_pipe(line_read))
 	{
-		//execute pipe
+		pipe_cmds = ft_split(line_read, '|');
+		cmds->cmd1 = ft_split(pipe_cmds[0], ' ');
+		cmds->path1 = get_path(cmds->cmd1);
+		cmds->cmd2 = ft_split(pipe_cmds[1], ' ');
+		cmds->path2 = get_path(cmds->cmd2);
+		free(pipe_cmds);
+		execute_pipe(cmds, envp);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/15 10:20:37 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/19 13:22:13 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,13 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+
+typedef struct s_cmd
+{
+	char	**cmd1;
+	char	*path1;
+    char    **cmd2;
+    char    *path2;
+}				t_cmd;
 
 #endif

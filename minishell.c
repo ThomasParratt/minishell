@@ -6,11 +6,24 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/19 13:47:25 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/19 13:58:10 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	free_split(char **tab)
+{
+	size_t	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
 
 void	print_split(char **split)
 {
@@ -156,8 +169,13 @@ void	parse_input(char *line_read, char **tokens, char **envp)
 		cmds->path1 = get_path(cmds->cmd1);
 		cmds->cmd2 = ft_split(pipe_cmds[1], ' ');
 		cmds->path2 = get_path(cmds->cmd2);
-		free(pipe_cmds);
+		free_split(pipe_cmds);
 		execute_pipe(cmds, envp);
+		free_split(cmds->cmd1);
+		free_split(cmds->cmd2);
+		free(cmds->path1);
+		free(cmds->path2);
+		free(cmds);
 	}
 }
 

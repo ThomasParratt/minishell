@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/26 15:54:50 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:07:46 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,12 +166,6 @@ void	parse_input(char *line_read, char **tokens, char **envp)
 
 void	handle_signals(char *line_read)
 {
-	if (!line_read)
-	{
-		//Ctrl-D - prints '^D' before exit
-		ft_printf("\nexit\n");
-		exit(0);
-	}
 	signal(SIGINT, receive_signal);
 	signal(SIGQUIT, receive_signal);
 	while (1)
@@ -191,7 +185,12 @@ int main(int argc, char **argv, char **envp)
 		{
 			prompt = create_prompt();
 			line_read = readline(prompt);
-			//handle_signals(line_read);
+			if (!line_read)
+			{
+				//Ctrl-D - prints '^D' before exit
+				ft_printf("\nexit\n");
+				return (0);
+			}
 			free(prompt);
 			add_history(line_read);
 			tokens = ft_split(line_read, ' ');

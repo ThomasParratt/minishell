@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/26 10:11:31 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/26 10:32:31 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	execute_pipe(t_cmd *cmds, char **envp)
 		dup2(fd[1], STDOUT_FILENO);
 		close(fd[1]);
 		execve(cmds->path1, cmds->cmd1, envp);
-		perror("execve");
+		perror("execve failure");
 		exit(1);
 	}
 	else
@@ -60,7 +60,7 @@ void	execute_pipe(t_cmd *cmds, char **envp)
 		close(fd[0]);
 		wait(NULL);
 		execve(cmds->path2, cmds->cmd2, envp);
-		perror("execve");
+		perror("execve failure");
 		exit(1);
 	}
 }
@@ -80,7 +80,7 @@ char	*join_and_free(char *prompt, char *str)
 	return (prompt);
 }
 
-char	*create_prompt(void) 
+char	*create_prompt(void)
 {
 	char	cwd[1024];
 	char	*username;
@@ -107,7 +107,6 @@ char	*create_prompt(void)
 	return (prompt);
 }
 
-//need to sort out memory allocation and freeing in this function
 char	*get_path(char **tokens)
 {
 	char	*path_pointer;
@@ -116,12 +115,14 @@ char	*get_path(char **tokens)
 	char	*res;
 
 	path_pointer = getenv("PATH");
+	if (!path_pointer)
+		return (NULL);
 	paths = ft_split(path_pointer, ':');
 	i = 0;
 	while (paths[i])
 	{
-		paths[i] = ft_strjoin(paths[i], "/");
-		paths[i] = ft_strjoin(paths[i], tokens[0]);
+		paths[i] = join_and_free(paths[i], "/");
+		paths[i] = join_and_free(paths[i], tokens[0]);
 		i++;
 	}
 	i = 0;
@@ -132,10 +133,12 @@ char	*get_path(char **tokens)
 			res = ft_strdup(paths[i]);
 			if (!res)
 				exit(1);
+			free_split(paths);
 			return (res);
 		}
 		i++;
 	}
+	free_split(paths);
 	ft_printf("Executable directory not found\n");
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/24 12:18:31 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/26 10:10:33 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,29 +65,46 @@ void	execute_pipe(t_cmd *cmds, char **envp)
 	}
 }
 
-//need to sort out memory allocation and freeing in this function
-char	*create_prompt(void)
+char	*join_and_free(char *prompt, char *str)
+{
+	char	*temp;
+
+	temp = ft_strjoin(prompt, str);
+	if (!temp)
+	{
+		free(prompt);
+		return (NULL);
+	}
+	free(prompt);
+	prompt = temp;
+	return (prompt);
+}
+
+char	*create_prompt(void) 
 {
 	char	cwd[1024];
 	char	*username;
-    char	*hostname;
-	size_t	len;
-	char	*res;
+	char	*hostname;
+	char	*prompt;
 
-	getcwd(cwd, sizeof(cwd));
+	if (getcwd(cwd, sizeof(cwd)) == NULL) 
+	{
+		perror("getcwd failed");
+		return (NULL);
+	}
 	username = getenv("USER");
+	if (!username)
+		username = "unknown";
 	hostname = getenv("HOSTNAME");
-	len = ft_strlen(username) + ft_strlen(hostname) + 3;
-	res = ft_strdup("");
-	if (!res)
-		exit(EXIT_FAILURE);
-	res = ft_strjoin(res, username);
-	res = ft_strjoin(res, "@");
-	res = ft_strjoin(res, hostname);
-	res = ft_strjoin(res, ":");
-	res = ft_strjoin(res, cwd);
-	res = ft_strjoin(res, "$ ");
-	return (res);
+	if (!hostname)
+		hostname = "unknown";
+	prompt = ft_strdup(username);
+	prompt = join_and_free(prompt, "@");
+	prompt = join_and_free(prompt, hostname);
+	prompt = join_and_free(prompt, ":");
+	prompt = join_and_free(prompt, cwd);
+	prompt = join_and_free(prompt, "$ ");
+	return (prompt);
 }
 
 //need to sort out memory allocation and freeing in this function

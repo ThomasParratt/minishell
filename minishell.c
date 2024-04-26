@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/19 13:58:10 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:18:31 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	execute_pipe(t_cmd *cmds, char **envp)
 	}
 }
 
+//need to sort out memory allocation and freeing in this function
 char	*create_prompt(void)
 {
 	char	cwd[1024];
@@ -81,15 +82,10 @@ char	*create_prompt(void)
 	if (!res)
 		exit(EXIT_FAILURE);
 	res = ft_strjoin(res, username);
-	free(res);
 	res = ft_strjoin(res, "@");
-	free(res);
 	res = ft_strjoin(res, hostname);
-	free(res);
 	res = ft_strjoin(res, ":");
-	free(res);
 	res = ft_strjoin(res, cwd);
-	free(res);
 	res = ft_strjoin(res, "$ ");
 	return (res);
 }
@@ -138,7 +134,7 @@ void	execute_command(char **tokens, char **envp)
 		path_str = get_path(tokens);
 		execve(path_str, tokens, envp);
 		free(path_str);
-		exit(0);
+		exit(1);
 	}
 	else
 		wait(NULL);
@@ -197,6 +193,7 @@ int main(int argc, char **argv, char **envp)
 			tokens = ft_split(line_read, ' ');
 			parse_input(line_read, tokens, envp);
 			free(line_read);
+			free_split(tokens);
 		}
 	}
 	return (0);

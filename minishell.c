@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/26 12:17:00 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/26 15:54:50 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ char	*get_path(char **tokens)
 		i++;
 	}
 	free_split(paths);
-	ft_printf("Executable directory not found\n");
+	ft_printf("minishell: %s: command not found\n", tokens[0]);
 	return (NULL);
 }
 
@@ -144,28 +144,39 @@ int	contains_pipe(char *line_read)
 
 void	parse_input(char *line_read, char **tokens, char **envp)
 {
-	char	**pipe_cmds;
-	t_cmd	*cmds;
+	int		i;
 
-	cmds = malloc(sizeof(t_cmd));
+	i = 0;
 	if (!contains_pipe(line_read))
 		execute_command(tokens, envp);
 	else if (contains_pipe(line_read))
 	{
-		pipe_cmds = ft_split(line_read, '|');
-		cmds->cmd1 = ft_split(pipe_cmds[0], ' ');
-		cmds->path1 = get_path(cmds->cmd1);
-		cmds->cmd2 = ft_split(pipe_cmds[1], ' ');
-		cmds->path2 = get_path(cmds->cmd2);
-		free_split(pipe_cmds);
-		execute_pipe(cmds, envp);
-		free_split(cmds->cmd1);
-		free_split(cmds->cmd2);
-		free(cmds->path1);
-		free(cmds->path2);
-		free(cmds);
+		ft_printf("Command includes pipe\n");
+		//execute pipe
 	}
 }
+
+/*void receive_signal(int sig)
+{
+	if (sig == SIGINT)
+		rl_redisplay();
+	if (sig == SIGQUIT)
+		return ;
+}
+
+void	handle_signals(char *line_read)
+{
+	if (!line_read)
+	{
+		//Ctrl-D - prints '^D' before exit
+		ft_printf("\nexit\n");
+		exit(0);
+	}
+	signal(SIGINT, receive_signal);
+	signal(SIGQUIT, receive_signal);
+	while (1)
+        pause();
+}*/
 
 int main(int argc, char **argv, char **envp)
 {
@@ -180,6 +191,7 @@ int main(int argc, char **argv, char **envp)
 		{
 			prompt = create_prompt();
 			line_read = readline(prompt);
+			//handle_signals(line_read);
 			free(prompt);
 			add_history(line_read);
 			tokens = ft_split(line_read, ' ');

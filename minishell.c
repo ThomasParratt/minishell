@@ -6,11 +6,79 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/29 14:33:29 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/29 14:43:32 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	execute_command(char **tokens, char **envp)
+{
+	int		id;
+	char	*path_str;
+
+	id = fork();
+	if (id == 0)
+	{
+		path_str = get_path(tokens);
+		execve(path_str, tokens, envp);
+		free(path_str);
+		exit(1);
+	}
+	else
+		wait(NULL);
+}
+
+static void	execute_pipe(t_cmd *cmds, char **envp)
+{
+	int		fd[2];
+	pid_t	id;
+
+	pipe(fd);
+	id = fork();
+	if (id == 0)
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		if (execve(cmds->path1, cmds->cmd1, envp) == -1)
+			exit(1);
+	}
+	else
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		if (execve(cmds->path2, cmds->cmd2, envp) == -1)
+			exit(1);
+	}
+}
+
+
+static void	execute(char *line_read, char **tokens, char **envp)
+{
+	char	**pipe_cmds;
+	t_cmd	*cmds;
+
+	cmds = malloc(sizeof(t_cmd));
+	if (!contains_pipe(line_read))
+		execute_command(tokens, envp);
+	else if (contains_pipe(line_read))
+	{
+		pipe_cmds = ft_split(line_read, '|');
+		cmds->cmd1 = ft_split(pipe_cmds[0], ' ');
+		cmds->path1 = get_path(cmds->cmd1);
+		cmds->cmd2 = ft_split(pipe_cmds[1], ' ');
+		cmds->path2 = get_path(cmds->cmd2);
+		free_split(pipe_cmds);
+		execute_pipe(cmds, envp);
+		free_split(cmds->cmd1);
+		free_split(cmds->cmd2);
+		free(cmds->path1);
+		free(cmds->path2);
+		free(cmds);
+	}
+}
 
 static char	*create_prompt(void)
 {
@@ -37,78 +105,6 @@ static char	*create_prompt(void)
 	prompt = join_and_free(prompt, cwd);
 	prompt = join_and_free(prompt, "$ ");
 	return (prompt);
-}
-
-static char	**create_paths(char **tokens)
-{
-	char	*path_pointer;
-	char	**paths;
-	int		i;
-
-	path_pointer = getenv("PATH");
-	if (!path_pointer)
-		return (NULL);
-	paths = ft_split(path_pointer, ':');
-	if (!paths)
-		return (NULL);
-	i = 0;
-	while (paths[i])
-	{
-		paths[i] = join_and_free(paths[i], "/");
-		paths[i] = join_and_free(paths[i], tokens[0]);
-		i++;
-	}
-	return (paths);
-}
-
-char	*get_path(char **tokens)
-{
-	int		i;
-	char	*res;
-	char	**paths;
-
-	i = 0;
-	paths = create_paths(tokens);
-	while (paths[i])
-	{
-		if (access(paths[i], F_OK) == 0)
-		{
-			res = ft_strdup(paths[i]);
-			if (!res)
-				exit(1);
-			free_split(paths);
-			return (res);
-		}
-		i++;
-	}
-	free_split(paths);
-	ft_printf("minishell: %s: command not found\n", tokens[0]);
-	return (NULL);
-}
-
-static void	execute(char *line_read, char **tokens, char **envp)
-{
-	char	**pipe_cmds;
-	t_cmd	*cmds;
-
-	cmds = malloc(sizeof(t_cmd));
-	if (!contains_pipe(line_read))
-		execute_command(tokens, envp);
-	else if (contains_pipe(line_read))
-	{
-		pipe_cmds = ft_split(line_read, '|');
-		cmds->cmd1 = ft_split(pipe_cmds[0], ' ');
-		cmds->path1 = get_path(cmds->cmd1);
-		cmds->cmd2 = ft_split(pipe_cmds[1], ' ');
-		cmds->path2 = get_path(cmds->cmd2);
-		free_split(pipe_cmds);
-		execute_pipe(cmds, envp);
-		free_split(cmds->cmd1);
-		free_split(cmds->cmd2);
-		free(cmds->path1);
-		free(cmds->path2);
-		free(cmds);
-	}
 }
 
 int	main(int argc, char **argv, char **envp)

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/29 14:36:24 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/29 14:43:38 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,14 @@ char	*join_and_free(char *prompt, char *str)
 	free(prompt);
 	prompt = temp;
 	return (prompt);
+}
+
+int	contains_pipe(char *line_read)
+{
+	int		i;
+
+	i = 0;
+	if (ft_strchr(line_read, '|'))
+		return (1);
+	return (0);
 }

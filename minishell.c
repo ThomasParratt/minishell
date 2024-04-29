@@ -6,53 +6,13 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/26 16:07:46 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/29 14:04:53 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_split(char **tab)
-{
-	size_t	i;
-
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
-
-void	print_split(char **split)
-{
-	int	i;
-
-	i = 0;
-	while (split[i])
-	{
-		ft_printf("%s\n", split[i]);
-		i++;
-	}
-}
-
-char	*join_and_free(char *prompt, char *str)
-{
-	char	*temp;
-
-	temp = ft_strjoin(prompt, str);
-	if (!temp)
-	{
-		free(prompt);
-		return (NULL);
-	}
-	free(prompt);
-	prompt = temp;
-	return (prompt);
-}
-
-char	*create_prompt(void)
+static char	*create_prompt(void)
 {
 	char	cwd[1024];
 	char	*username;
@@ -79,7 +39,7 @@ char	*create_prompt(void)
 	return (prompt);
 }
 
-char	*get_path(char **tokens)
+static char	*get_path(char **tokens)
 {
 	char	*path_pointer;
 	char	**paths;
@@ -115,7 +75,7 @@ char	*get_path(char **tokens)
 	return (NULL);
 }
 
-void	execute_command(char **tokens, char **envp)
+static void	execute_command(char **tokens, char **envp)
 {
 	int		id;
 	char	*path_str;
@@ -132,45 +92,30 @@ void	execute_command(char **tokens, char **envp)
 		wait(NULL);
 }
 
-int	contains_pipe(char *line_read)
+static void	execute(char *line_read, char **tokens, char **envp)
 {
-	int		i;
+	char	**pipe_cmds;
+	t_cmd	*cmds;
 
-	i = 0;
-	if (ft_strchr(line_read, '|'))
-		return (1);
-	return (0);
-}
-
-void	parse_input(char *line_read, char **tokens, char **envp)
-{
-	int		i;
-
-	i = 0;
+	cmds = malloc(sizeof(t_cmd));
 	if (!contains_pipe(line_read))
 		execute_command(tokens, envp);
 	else if (contains_pipe(line_read))
 	{
-		ft_printf("Command includes pipe\n");
-		//execute pipe
+		pipe_cmds = ft_split(line_read, '|');
+		cmds->cmd1 = ft_split(pipe_cmds[0], ' ');
+		cmds->path1 = get_path(cmds->cmd1);
+		cmds->cmd2 = ft_split(pipe_cmds[1], ' ');
+		cmds->path2 = get_path(cmds->cmd2);
+		free_split(pipe_cmds);
+		execute_pipe(cmds, envp);
+		free_split(cmds->cmd1);
+		free_split(cmds->cmd2);
+		free(cmds->path1);
+		free(cmds->path2);
+		free(cmds);
 	}
 }
-
-/*void receive_signal(int sig)
-{
-	if (sig == SIGINT)
-		rl_redisplay();
-	if (sig == SIGQUIT)
-		return ;
-}
-
-void	handle_signals(char *line_read)
-{
-	signal(SIGINT, receive_signal);
-	signal(SIGQUIT, receive_signal);
-	while (1)
-        pause();
-}*/
 
 int main(int argc, char **argv, char **envp)
 {
@@ -188,13 +133,13 @@ int main(int argc, char **argv, char **envp)
 			if (!line_read)
 			{
 				//Ctrl-D - prints '^D' before exit
-				ft_printf("\nexit\n");
+				ft_printf("\n%sexit\n", prompt);
 				return (0);
 			}
 			free(prompt);
 			add_history(line_read);
 			tokens = ft_split(line_read, ' ');
-			parse_input(line_read, tokens, envp);
+			execute(line_read, tokens, envp);
 			free(line_read);
 			free_split(tokens);
 		}

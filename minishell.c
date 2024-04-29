@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/29 17:02:20 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/29 17:13:40 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,15 +134,16 @@ int	main(int argc, char **argv, char **envp)
 			if (!line_read)
 			{
 				//Ctrl-D need to change
-				ft_printf("\n%sexit\n", prompt);
+				ft_printf("exit\n");
+				free(prompt);
 				return (0);
 			}
-			free(prompt);
 			add_history(line_read);
 			tokens = ft_split(line_read, ' ');
 			execute(line_read, tokens, envp);
 			free(line_read);
 			free_split(tokens);
+			free(prompt);
 		}
 	}
 	return (0);

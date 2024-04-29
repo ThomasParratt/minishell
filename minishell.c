@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/29 14:43:32 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/29 14:47:06 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ static void	execute_pipe(t_cmd *cmds, char **envp)
 			exit(1);
 	}
 }
-
 
 static void	execute(char *line_read, char **tokens, char **envp)
 {

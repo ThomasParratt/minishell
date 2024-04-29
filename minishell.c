@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/29 15:19:46 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/29 17:02:20 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 static void	execute_pipe(t_cmd *cmds, char **envp)
 {
 	int		fd[2];
-	pid_t	id;
+	pid_t	id1;
+	pid_t	id2;
 
 	pipe(fd);
-	id = fork();
-	if (id == 0)
+	id1 = fork();
+	if (id1 == 0)
 	{
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
@@ -29,11 +30,22 @@ static void	execute_pipe(t_cmd *cmds, char **envp)
 	}
 	else
 	{
-		close(fd[1]);
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[0]);
-		if (execve(cmds->path2, cmds->cmd2, envp) == -1)
-			exit(1);
+		id2 = fork();
+		if (id2 == 0)
+		{
+			close(fd[1]);
+			dup2(fd[0], STDIN_FILENO);
+			close(fd[0]);
+			if (execve(cmds->path2, cmds->cmd2, envp) == -1)
+				exit(1);
+		}
+		else
+		{
+			close(fd[0]);
+			close(fd[1]);
+			waitpid(id1, NULL, 0);
+			waitpid(id2, NULL, 0);
+		}
 	}
 }
 
@@ -121,6 +133,7 @@ int	main(int argc, char **argv, char **envp)
 			line_read = readline(prompt);
 			if (!line_read)
 			{
+				//Ctrl-D need to change
 				ft_printf("\n%sexit\n", prompt);
 				return (0);
 			}

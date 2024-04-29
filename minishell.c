@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/29 14:04:53 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/29 14:33:29 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	*create_prompt(void)
 	char	*hostname;
 	char	*prompt;
 
-	if (getcwd(cwd, sizeof(cwd)) == NULL) 
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
 		perror("getcwd failed");
 		return (NULL);
@@ -39,17 +39,18 @@ static char	*create_prompt(void)
 	return (prompt);
 }
 
-static char	*get_path(char **tokens)
+static char	**create_paths(char **tokens)
 {
 	char	*path_pointer;
 	char	**paths;
 	int		i;
-	char	*res;
 
 	path_pointer = getenv("PATH");
 	if (!path_pointer)
 		return (NULL);
 	paths = ft_split(path_pointer, ':');
+	if (!paths)
+		return (NULL);
 	i = 0;
 	while (paths[i])
 	{
@@ -57,7 +58,17 @@ static char	*get_path(char **tokens)
 		paths[i] = join_and_free(paths[i], tokens[0]);
 		i++;
 	}
+	return (paths);
+}
+
+char	*get_path(char **tokens)
+{
+	int		i;
+	char	*res;
+	char	**paths;
+
 	i = 0;
+	paths = create_paths(tokens);
 	while (paths[i])
 	{
 		if (access(paths[i], F_OK) == 0)
@@ -73,23 +84,6 @@ static char	*get_path(char **tokens)
 	free_split(paths);
 	ft_printf("minishell: %s: command not found\n", tokens[0]);
 	return (NULL);
-}
-
-static void	execute_command(char **tokens, char **envp)
-{
-	int		id;
-	char	*path_str;
-
-	id = fork();
-	if (id == 0)
-	{
-		path_str = get_path(tokens);
-		execve(path_str, tokens, envp);
-		free(path_str);
-		exit(1);
-	}
-	else
-		wait(NULL);
 }
 
 static void	execute(char *line_read, char **tokens, char **envp)
@@ -117,7 +111,7 @@ static void	execute(char *line_read, char **tokens, char **envp)
 	}
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	char	*line_read;
 	char	*prompt;
@@ -132,7 +126,6 @@ int main(int argc, char **argv, char **envp)
 			line_read = readline(prompt);
 			if (!line_read)
 			{
-				//Ctrl-D - prints '^D' before exit
 				ft_printf("\n%sexit\n", prompt);
 				return (0);
 			}
@@ -146,4 +139,3 @@ int main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
-

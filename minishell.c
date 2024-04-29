@@ -6,28 +6,11 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/29 14:47:06 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/29 15:19:46 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	execute_command(char **tokens, char **envp)
-{
-	int		id;
-	char	*path_str;
-
-	id = fork();
-	if (id == 0)
-	{
-		path_str = get_path(tokens);
-		execve(path_str, tokens, envp);
-		free(path_str);
-		exit(1);
-	}
-	else
-		wait(NULL);
-}
 
 static void	execute_pipe(t_cmd *cmds, char **envp)
 {
@@ -52,6 +35,23 @@ static void	execute_pipe(t_cmd *cmds, char **envp)
 		if (execve(cmds->path2, cmds->cmd2, envp) == -1)
 			exit(1);
 	}
+}
+
+static void	execute_command(char **tokens, char **envp)
+{
+	int		id;
+	char	*path_str;
+
+	id = fork();
+	if (id == 0)
+	{
+		path_str = get_path(tokens);
+		execve(path_str, tokens, envp);
+		free(path_str);
+		exit(1);
+	}
+	else
+		wait(NULL);
 }
 
 static void	execute(char *line_read, char **tokens, char **envp)

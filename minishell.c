@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/29 17:13:40 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/30 11:17:35 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,13 +133,16 @@ int	main(int argc, char **argv, char **envp)
 			line_read = readline(prompt);
 			if (!line_read)
 			{
-				//Ctrl-D need to change
+				//Ctrl-D prints '^D' before 'exit'
 				ft_printf("exit\n");
 				free(prompt);
 				return (0);
 			}
 			add_history(line_read);
 			tokens = ft_split(line_read, ' ');
+			if (!tokens)
+				return (0);
+			parse_tokens(tokens);
 			execute(line_read, tokens, envp);
 			free(line_read);
 			free_split(tokens);

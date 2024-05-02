@@ -6,7 +6,7 @@
 #    By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/15 10:22:54 by tparratt          #+#    #+#              #
-#    Updated: 2024/04/30 11:41:12 by tparratt         ###   ########.fr        #
+#    Updated: 2024/05/02 14:52:17 by tparratt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,11 +22,13 @@ CC			=	cc
 
 RM			=	rm -f
 
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-I /Users/$(USER)/.brew/opt/readline/include/readline.h -Wextra -Wall -Werror
+
+LDFLAGS 	=	-L /Users/$(USER)/.brew/opt/readline/lib
 
 $(NAME):	$(OBJ)
 			make -C ./libft
-			$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) -lreadline
+			$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) $(LDFLAGS) -lreadline
 
 all:		$(NAME)
 

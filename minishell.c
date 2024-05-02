@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/30 11:17:35 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/04/30 11:45:11 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ int	main(int argc, char **argv, char **envp)
 			tokens = ft_split(line_read, ' ');
 			if (!tokens)
 				return (0);
-			parse_tokens(tokens);
+			//parse_tokens();
 			execute(line_read, tokens, envp);
 			free(line_read);
 			free_split(tokens);

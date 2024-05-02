@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/30 11:45:11 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/02 16:23:11 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,24 @@ static char	*create_prompt(void)
 	return (prompt);
 }
 
+//Ctrl+C sends SIGINT. Ctrl+\ sends SIGQUIT
+static void	handle_signal(int signal)
+{
+	if (signal == SIGINT)
+	{
+		ft_printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	if (signal == SIGQUIT)
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line_read;
@@ -127,13 +145,14 @@ int	main(int argc, char **argv, char **envp)
 	argv = NULL;
 	if (argc == 1)
 	{
+		signal(SIGINT, handle_signal);
+		signal(SIGQUIT, handle_signal);
 		while (1)
 		{
 			prompt = create_prompt();
 			line_read = readline(prompt);
 			if (!line_read)
 			{
-				//Ctrl-D prints '^D' before 'exit'
 				ft_printf("exit\n");
 				free(prompt);
 				return (0);

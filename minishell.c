@@ -6,48 +6,11 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/03 12:23:08 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/03 14:09:33 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	execute_pipe(t_cmd *cmds, char **envp)
-{
-	int		fd[2];
-	pid_t	id1;
-	pid_t	id2;
-
-	pipe(fd);
-	id1 = fork();
-	if (id1 == 0)
-	{
-		close(fd[0]);
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
-		if (execve(cmds->path1, cmds->cmd1, envp) == -1)
-			exit(1);
-	}
-	else
-	{
-		id2 = fork();
-		if (id2 == 0)
-		{
-			close(fd[1]);
-			dup2(fd[0], STDIN_FILENO);
-			close(fd[0]);
-			if (execve(cmds->path2, cmds->cmd2, envp) == -1)
-				exit(1);
-		}
-		else
-		{
-			close(fd[0]);
-			close(fd[1]);
-			waitpid(id1, NULL, 0);
-			waitpid(id2, NULL, 0);
-		}
-	}
-}
 
 static void	execute_command(char **tokens, char **envp)
 {

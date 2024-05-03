@@ -6,13 +6,13 @@
 #    By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/15 10:22:54 by tparratt          #+#    #+#              #
-#    Updated: 2024/05/02 14:52:17 by tparratt         ###   ########.fr        #
+#    Updated: 2024/05/03 14:07:32 by tparratt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	minishell
 
-SRC			=	minishell.c paths.c utils.c
+SRC			=	minishell.c paths.c utils.c pipe.c
 
 LIBFT		=	libft/libft.a
 

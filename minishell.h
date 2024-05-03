@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/03 14:08:03 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/03 15:21:57 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,8 @@ char		*join_and_free(char *prompt, char *str);
 int			contains_pipe(char *line_read);
 extern void	rl_replace_line(const char *text, int clear_undo);
 void		execute_pipe(t_cmd *cmds, char **envp);
+void    	echo(char **args);
+void    	pwd(void);
+void		cd(char **args);
 
 #endif

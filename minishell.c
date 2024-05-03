@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/03 14:09:33 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/03 15:22:33 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,25 @@ static void	execute_command(char **tokens, char **envp)
 	int		id;
 	char	*path_str;
 
-	id = fork();
-	if (id == 0)
-	{
-		path_str = get_path(tokens);
-		execve(path_str, tokens, envp);
-		free(path_str);
-		exit(1);
-	}
+	if (!ft_strncmp(tokens[0], "echo", 5) && !ft_strncmp(tokens[1], "-n", 3))
+		echo(tokens);
+	else if (!ft_strncmp(tokens[0], "pwd", 4))
+		pwd();
+	else if (!ft_strncmp(tokens[0], "cd", 3))
+		cd(tokens);
 	else
-		wait(NULL);
+	{
+		id = fork();
+		if (id == 0)
+		{
+			path_str = get_path(tokens);
+			execve(path_str, tokens, envp);
+			free(path_str);
+			exit(1);
+		}
+		else
+			wait(NULL);
+	}
 }
 
 static void	execute(char *line_read, char **tokens, char **envp)

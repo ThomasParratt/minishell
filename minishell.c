@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/02 16:23:11 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/03 12:23:08 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,10 +151,10 @@ int	main(int argc, char **argv, char **envp)
 		{
 			prompt = create_prompt();
 			line_read = readline(prompt);
+			free(prompt);
 			if (!line_read)
 			{
 				ft_printf("exit\n");
-				free(prompt);
 				return (0);
 			}
 			add_history(line_read);
@@ -165,7 +165,6 @@ int	main(int argc, char **argv, char **envp)
 			execute(line_read, tokens, envp);
 			free(line_read);
 			free_split(tokens);
-			free(prompt);
 		}
 	}
 	return (0);

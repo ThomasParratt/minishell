@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/29 14:47:19 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/06 15:02:33 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ char	*get_path(char **tokens)
 			res = ft_strdup(paths[i]);
 			if (!res)
 				exit(1);
-			free_split(paths);
+			free_2d(paths);
 			return (res);
 		}
 		i++;
 	}
-	free_split(paths);
+	free_2d(paths);
 	ft_printf("minishell: %s: command not found\n", tokens[0]);
 	return (NULL);
 }

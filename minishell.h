@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/03 15:21:57 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/06 15:42:12 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,18 @@ typedef struct s_cmd
 }				t_cmd;
 
 char		*get_path(char **tokens);
-void		free_split(char **tab);
-void		print_split(char **split);
+void		free_2d(char **tab);
+void		print_2d(char **split);
 char		*join_and_free(char *prompt, char *str);
 int			contains_pipe(char *line_read);
 extern void	rl_replace_line(const char *text, int clear_undo);
-void		execute_pipe(t_cmd *cmds, char **envp);
+void		execute_pipe(t_cmd *cmds, char **argc);
 void    	echo(char **args);
 void    	pwd(void);
-void		cd(char **args);
+void		cd(char **args, char **envp);
+void		env(char **envp);
+void		exit_cmd(void);
+char		**export(char **args, char **envp);
+char		**unset(char **args, char **envp);
 
 #endif

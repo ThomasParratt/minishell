@@ -6,23 +6,31 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/03 15:22:33 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/06 15:52:56 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	execute_command(char **tokens, char **envp)
+static char	**execute_command(char **tokens, char **envp)
 {
 	int		id;
 	char	*path_str;
 
-	if (!ft_strncmp(tokens[0], "echo", 5) && !ft_strncmp(tokens[1], "-n", 3))
+	if (!ft_strncmp(tokens[0], "echo", 4) && !ft_strncmp(tokens[1], "-n", 3))
 		echo(tokens);
-	else if (!ft_strncmp(tokens[0], "pwd", 4))
+	else if (!ft_strncmp(tokens[0], "pwd", 3))
 		pwd();
-	else if (!ft_strncmp(tokens[0], "cd", 3))
-		cd(tokens);
+	else if (!ft_strncmp(tokens[0], "cd", 2))
+		cd(tokens, envp);
+	else if (!ft_strncmp(tokens[0], "env", 3))
+		env(envp);
+	else if (!ft_strncmp(tokens[0], "exit", 4))
+		exit_cmd();
+	else if (!ft_strncmp(tokens[0], "export", 6))
+		envp = export(tokens, envp);
+	else if (!ft_strncmp(tokens[0], "unset", 5))
+		envp = unset(tokens, envp);
 	else
 	{
 		id = fork();
@@ -36,16 +44,17 @@ static void	execute_command(char **tokens, char **envp)
 		else
 			wait(NULL);
 	}
+	return (envp);
 }
 
-static void	execute(char *line_read, char **tokens, char **envp)
+static char	**execute(char *line_read, char **tokens, char **envp)
 {
 	char	**pipe_cmds;
 	t_cmd	*cmds;
 
 	cmds = malloc(sizeof(t_cmd));
 	if (!contains_pipe(line_read))
-		execute_command(tokens, envp);
+		envp = execute_command(tokens, envp);
 	else if (contains_pipe(line_read))
 	{
 		pipe_cmds = ft_split(line_read, '|');
@@ -53,14 +62,15 @@ static void	execute(char *line_read, char **tokens, char **envp)
 		cmds->path1 = get_path(cmds->cmd1);
 		cmds->cmd2 = ft_split(pipe_cmds[1], ' ');
 		cmds->path2 = get_path(cmds->cmd2);
-		free_split(pipe_cmds);
+		free_2d(pipe_cmds);
 		execute_pipe(cmds, envp);
-		free_split(cmds->cmd1);
-		free_split(cmds->cmd2);
+		free_2d(cmds->cmd1);
+		free_2d(cmds->cmd2);
 		free(cmds->path1);
 		free(cmds->path2);
 		free(cmds);
 	}
+	return (envp);
 }
 
 static char	*create_prompt(void)
@@ -134,9 +144,9 @@ int	main(int argc, char **argv, char **envp)
 			if (!tokens)
 				return (0);
 			//parse_tokens();
-			execute(line_read, tokens, envp);
+			envp = execute(line_read, tokens, envp); //need to free envp on exit
 			free(line_read);
-			free_split(tokens);
+			free_2d(tokens);
 		}
 	}
 	return (0);

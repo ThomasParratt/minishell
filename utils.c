@@ -6,13 +6,13 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/04/29 14:43:38 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/06 15:02:33 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_split(char **tab)
+void	free_2d(char **tab)
 {
 	size_t	i;
 
@@ -25,7 +25,7 @@ void	free_split(char **tab)
 	free(tab);
 }
 
-void	print_split(char **split)
+void	print_2d(char **split)
 {
 	int	i;
 

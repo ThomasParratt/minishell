@@ -6,21 +6,39 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/06 15:02:33 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:02:47 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**create_paths(char **tokens)
+static char	*ft_getenv(char **envp, char *str)
+{
+	int		i;
+	char	*path_pointer;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], str, ft_strlen(str)))
+			path_pointer = envp[i];
+		i++;
+	}
+	return (path_pointer);
+}
+
+static char	**create_paths(char **tokens, char **envp)
 {
 	char	*path_pointer;
 	char	**paths;
 	int		i;
 
-	path_pointer = getenv("PATH");
+	path_pointer = ft_getenv(envp, "PATH");
 	if (!path_pointer)
+	{
+		ft_printf("minishell: %s: No such file or directory\n", tokens[0]);
 		return (NULL);
+	}
 	paths = ft_split(path_pointer, ':');
 	if (!paths)
 		return (NULL);
@@ -34,14 +52,19 @@ static char	**create_paths(char **tokens)
 	return (paths);
 }
 
-char	*get_path(char **tokens)
+char	*get_path(char **tokens, char **envp)
 {
 	int		i;
 	char	*res;
 	char	**paths;
 
 	i = 0;
-	paths = create_paths(tokens);
+	paths = create_paths(tokens, envp);
+	if (!paths)
+	{
+		ft_printf("minishell: %s: No such file or directory\n", tokens[0]);
+		return (NULL);
+	}
 	while (paths[i])
 	{
 		if (access(paths[i], F_OK) == 0)

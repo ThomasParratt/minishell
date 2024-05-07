@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 14:04:47 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:19:10 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ static char	**execute_command(char **tokens, char **envp)
 	else if (!ft_strncmp(tokens[0], "exit", 4))
 		exit_cmd();
 	else if (!ft_strncmp(tokens[0], "export", 6))
-		envp = export(tokens, envp);
+		envp = export(tokens[1], envp);
 	else if (!ft_strncmp(tokens[0], "unset", 5))
-		envp = unset(tokens, envp);
+		envp = unset(tokens[1], envp);
 	else
 	{
 		id = fork();

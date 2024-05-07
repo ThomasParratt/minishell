@@ -6,27 +6,16 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/06 12:18:21 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:22:13 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	reset_pwd(char *new_pwd, char **envp)
+static void	reset_pwd(char *pwd, char *new_pwd, char **envp)
 {
-	int		i;
-
-	i = 0;
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], "PWD=", 4) == 0)
-			i++;
-		else
-			break ;
-	}
-	ft_printf("pwd = %s\n\n", getenv("PWD"));
-	envp[i] = ft_strjoin("PWD=", new_pwd);
-	ft_printf("pwd = %s\n\n", getenv("PWD")); // PWD is not changing
+	unset(pwd, envp);
+	export(new_pwd, envp);
 }
 
 static char	*get_new_pwd(char *pwd, int slash_count)
@@ -82,13 +71,13 @@ void	cd(char **args, char **envp)
 
 	if (args[1] && ft_strncmp(args[1], "..", 2) == 0)
 	{
-		pwd = getenv("PWD");
+		pwd = ft_getenv(envp, "PWD");
 		if (!pwd)
 			exit(1);
 		slash_count = get_slash_count(pwd);
 		new_pwd = get_new_pwd(pwd, slash_count);
 		chdir(new_pwd);
-		reset_pwd(new_pwd, envp);
+		reset_pwd(pwd, new_pwd, envp);
 		free(new_pwd);
 	}
 }

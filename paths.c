@@ -6,13 +6,13 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 14:02:47 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:21:28 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*ft_getenv(char **envp, char *str)
+char	*ft_getenv(char **envp, char *str)
 {
 	int		i;
 	char	*path_pointer;
@@ -36,7 +36,7 @@ static char	**create_paths(char **tokens, char **envp)
 	path_pointer = ft_getenv(envp, "PATH");
 	if (!path_pointer)
 	{
-		ft_printf("minishell: %s: No such file or directory\n", tokens[0]);
+		ft_printf("minishell: %s: No such file or directory\n", tokens[0]); //why does this not print for pipes?
 		return (NULL);
 	}
 	paths = ft_split(path_pointer, ':');

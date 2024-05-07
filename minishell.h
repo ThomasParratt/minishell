@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 13:51:40 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:21:44 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ void    	pwd(void);
 void		cd(char **args, char **envp);
 void		env(char **envp);
 void		exit_cmd(void);
-char		**export(char **args, char **envp);
-char		**unset(char **args, char **envp);
+char		**export(char *arg, char **envp);
+char		**unset(char *arg, char **envp);
+char		*ft_getenv(char **envp, char *str);
 
 #endif

@@ -6,16 +6,19 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 14:21:28 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/07 16:20:30 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//need to change so that it doesn't include the variable name, (using code from my export file?)
 char	*ft_getenv(char **envp, char *str)
 {
 	int		i;
 	char	*path_pointer;
+	char	*res;
+	int		j;
 
 	i = 0;
 	while (envp[i])
@@ -24,7 +27,20 @@ char	*ft_getenv(char **envp, char *str)
 			path_pointer = envp[i];
 		i++;
 	}
-	return (path_pointer);
+	i = 0;
+	while (path_pointer[i] != '=')
+		i++;
+	i++;
+	j = 0;
+	res = malloc(sizeof(char) * ft_strlen(path_pointer) - i + 1);
+	while (path_pointer[i])
+	{
+		res[j] = path_pointer[i];
+		j++;
+		i++;
+	}
+	res[j] = '\0';
+	return (res);
 }
 
 static char	**create_paths(char **tokens, char **envp)
@@ -36,7 +52,7 @@ static char	**create_paths(char **tokens, char **envp)
 	path_pointer = ft_getenv(envp, "PATH");
 	if (!path_pointer)
 	{
-		ft_printf("minishell: %s: No such file or directory\n", tokens[0]); //why does this not print for pipes?
+		ft_printf("minishell: %s: No such file or directory\n", tokens[0]); //this does not print
 		return (NULL);
 	}
 	paths = ft_split(path_pointer, ':');

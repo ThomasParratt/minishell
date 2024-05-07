@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 14:19:10 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/07 16:05:54 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	**execute_command(char **tokens, char **envp)
 	else if (!ft_strncmp(tokens[0], "pwd", 3))
 		pwd();
 	else if (!ft_strncmp(tokens[0], "cd", 2))
-		cd(tokens, envp);
+		envp = cd(tokens, envp);
 	else if (!ft_strncmp(tokens[0], "env", 3))
 		env(envp);
 	else if (!ft_strncmp(tokens[0], "exit", 4))
@@ -73,18 +73,14 @@ static char	**execute(char *line_read, char **tokens, char **envp)
 	return (envp);
 }
 
-static char	*create_prompt(void)
+static char	*create_prompt(char **envp)
 {
-	char	cwd[1024];
+	char	*cwd;
 	char	*username;
 	char	*hostname;
 	char	*prompt;
 
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd failed");
-		return (NULL);
-	}
+	cwd = ft_getenv(envp, "PWD");
 	username = getenv("USER");
 	if (!username)
 		username = "unknown";
@@ -131,7 +127,7 @@ int	main(int argc, char **argv, char **envp)
 		signal(SIGQUIT, handle_signal);
 		while (1)
 		{
-			prompt = create_prompt();
+			prompt = create_prompt(envp);
 			line_read = readline(prompt);
 			free(prompt);
 			if (!line_read)

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 14:21:44 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/07 15:48:40 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ extern void	rl_replace_line(const char *text, int clear_undo);
 void		execute_pipe(t_cmd *cmds, char **argc);
 void    	echo(char **args);
 void    	pwd(void);
-void		cd(char **args, char **envp);
+char		**cd(char **args, char **envp);
 void		env(char **envp);
 void		exit_cmd(void);
 char		**export(char *arg, char **envp);

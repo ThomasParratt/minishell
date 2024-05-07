@@ -6,17 +6,19 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 14:22:13 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/07 16:25:13 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	reset_pwd(char *pwd, char *new_pwd, char **envp)
+/*static void	reset_pwd(char *pwd, char *new_pwd, char **envp)
 {
+	ft_printf("pwd = %s\n", pwd);
+	ft_printf("new_pwd = %s\n", new_pwd);
 	unset(pwd, envp);
 	export(new_pwd, envp);
-}
+}*/
 
 static char	*get_new_pwd(char *pwd, int slash_count)
 {
@@ -63,7 +65,7 @@ static int	get_slash_count(char *str)
 	return (count);
 }
 
-void	cd(char **args, char **envp)
+char	**cd(char **args, char **envp)
 {
 	char	*pwd;
 	int		slash_count;
@@ -72,12 +74,14 @@ void	cd(char **args, char **envp)
 	if (args[1] && ft_strncmp(args[1], "..", 2) == 0)
 	{
 		pwd = ft_getenv(envp, "PWD");
-		if (!pwd)
-			exit(1);
 		slash_count = get_slash_count(pwd);
 		new_pwd = get_new_pwd(pwd, slash_count);
+		pwd = ft_strjoin("OLD", pwd);
+		envp = export(new_pwd, envp);//segfault in here
+		envp = export(pwd, envp);
+		ft_printf("new_pwd = %s\n", new_pwd);
 		chdir(new_pwd);
-		reset_pwd(pwd, new_pwd, envp);
-		free(new_pwd);
+		//reset_pwd(pwd, new_pwd, envp);
 	}
+	return (envp);
 }

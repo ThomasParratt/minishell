@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 12:28:55 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:04:47 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	**execute_command(char **tokens, char **envp)
 		id = fork();
 		if (id == 0)
 		{
-			path_str = get_path(tokens);
+			path_str = get_path(tokens, envp);
 			execve(path_str, tokens, envp);
 			free(path_str);
 			exit(1);
@@ -59,9 +59,9 @@ static char	**execute(char *line_read, char **tokens, char **envp)
 	{
 		pipe_cmds = ft_split(line_read, '|');
 		cmds->cmd1 = ft_split(pipe_cmds[0], ' ');
-		cmds->path1 = get_path(cmds->cmd1);
+		cmds->path1 = get_path(cmds->cmd1, envp);
 		cmds->cmd2 = ft_split(pipe_cmds[1], ' ');
-		cmds->path2 = get_path(cmds->cmd2);
+		cmds->path2 = get_path(cmds->cmd2, envp);
 		free_2d(pipe_cmds);
 		execute_pipe(cmds, envp);
 		free_2d(cmds->cmd1);

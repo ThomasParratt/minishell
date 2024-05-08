@@ -6,11 +6,29 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/06 15:02:33 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/08 14:22:22 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+//Ctrl+C sends SIGINT. Ctrl+\ sends SIGQUIT
+void	handle_signal(int signal)
+{
+	if (signal == SIGINT)
+	{
+		ft_printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	if (signal == SIGQUIT)
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+}
 
 void	free_2d(char **tab)
 {
@@ -25,14 +43,14 @@ void	free_2d(char **tab)
 	free(tab);
 }
 
-void	print_2d(char **split)
+void	print_2d(char **tab)
 {
 	int	i;
 
 	i = 0;
-	while (split[i])
+	while (tab[i])
 	{
-		ft_printf("%s\n", split[i]);
+		ft_printf("%s\n", tab[i]);
 		i++;
 	}
 }

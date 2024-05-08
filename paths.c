@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 16:20:30 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/08 14:31:16 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ char	*ft_getenv(char **envp, char *str)
 	i++;
 	j = 0;
 	res = malloc(sizeof(char) * ft_strlen(path_pointer) - i + 1);
+	if (!res)
+		return (NULL);
 	while (path_pointer[i])
 	{
 		res[j] = path_pointer[i];
@@ -58,6 +60,7 @@ static char	**create_paths(char **tokens, char **envp)
 	paths = ft_split(path_pointer, ':');
 	if (!paths)
 		return (NULL);
+	free(path_pointer);
 	i = 0;
 	while (paths[i])
 	{

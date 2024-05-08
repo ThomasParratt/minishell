@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/06 15:30:50 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/08 14:49:30 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,26 @@ void	exit_cmd(void)
 {
 	ft_printf("exit\n");
 	exit(0);
+}
+
+char	**check_builtins(char **tokens, char **envp, char *line_read)
+{
+	if (!ft_strncmp(tokens[0], "echo", 4) && !ft_strncmp(tokens[1], "-n", 3))
+		echo(tokens);
+	else if (!ft_strncmp(tokens[0], "pwd", 3))
+		pwd();
+	else if (!ft_strncmp(tokens[0], "cd", 2))
+		envp = cd(tokens, envp);
+	else if (!ft_strncmp(tokens[0], "env", 3))
+		env(envp);
+	else if (!ft_strncmp(tokens[0], "exit", 4))
+		exit_cmd();
+	else if (!ft_strncmp(tokens[0], "export", 6))
+		envp = export(tokens[1], envp);
+	else if (!ft_strncmp(tokens[0], "unset", 5))
+		envp = unset(tokens[1], envp);
+	else
+		execute(line_read, tokens, envp);
+	return (envp);
 }
 

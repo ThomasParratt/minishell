@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 16:05:01 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/08 15:27:30 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static char	*env_exists(char *arg, char **envp)
 		if (!ft_strncmp(envp[i], arg, len))
 		{
 			new_arg = malloc(sizeof(char) * len + 1);
+			if (!new_arg)
+				exit(1);
 			j = 0;
 			while (envp[i][j] != '=')
 			{
@@ -62,6 +64,8 @@ char	**export(char *arg, char **envp)
 	char	*new_arg;
 
 	new_envp = malloc_envp(envp);
+	if (!new_envp)
+		exit(1);
 	new_arg = env_exists(arg, envp);
 	if (new_arg)
 		envp = unset(new_arg, envp);
@@ -91,9 +95,7 @@ char	**unset(char *arg, char **envp)
 	j = 0;
 	while (envp[i])
 	{
-		if (!ft_strncmp(envp[i], arg, ft_strlen(arg)))
-			new_envp[j] = ft_strdup(envp[i + 1]);
-		else
+		if (ft_strncmp(envp[i], arg, ft_strlen(arg)))
 		{
 			new_envp[j] = ft_strdup(envp[i]);
 			j++;

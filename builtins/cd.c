@@ -6,24 +6,18 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/07 16:25:13 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/08 10:25:53 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/*static void	reset_pwd(char *pwd, char *new_pwd, char **envp)
-{
-	ft_printf("pwd = %s\n", pwd);
-	ft_printf("new_pwd = %s\n", new_pwd);
-	unset(pwd, envp);
-	export(new_pwd, envp);
-}*/
-
+//res should not have a slash at the end
 static char	*get_new_pwd(char *pwd, int slash_count)
 {
 	int		i;
 	int		num;
+	int		count;
 	char	*res;
 
 	i = 0;
@@ -35,12 +29,10 @@ static char	*get_new_pwd(char *pwd, int slash_count)
 		i++;
 	}
 	res = malloc(sizeof(char) * i + 1);
+	count = i;
 	i = 0;
-	num = 0;
-	while (pwd[i] && num != slash_count)
+	while (pwd[i] && i < count - 1)
 	{
-		if (pwd[i] == '/')
-			num++;
 		res[i] = pwd[i];
 		i++;
 	}
@@ -76,12 +68,14 @@ char	**cd(char **args, char **envp)
 		pwd = ft_getenv(envp, "PWD");
 		slash_count = get_slash_count(pwd);
 		new_pwd = get_new_pwd(pwd, slash_count);
-		pwd = ft_strjoin("OLD", pwd);
-		envp = export(new_pwd, envp);//segfault in here
+		pwd = ft_strjoin("OLDPWD=", pwd);
+		envp = export(ft_strjoin("PWD=", new_pwd), envp);
 		envp = export(pwd, envp);
-		ft_printf("new_pwd = %s\n", new_pwd);
-		chdir(new_pwd);
-		//reset_pwd(pwd, new_pwd, envp);
+		if (chdir(new_pwd) != 0)
+		{
+			ft_printf("Error changing directory\n");
+			exit(1);
+		}
 	}
 	return (envp);
 }

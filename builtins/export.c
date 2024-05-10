@@ -6,30 +6,18 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/08 15:27:30 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/10 17:18:02 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-static char	**malloc_envp(char **envp)
-{
-	char	**new_envp;
-	int		i;
-
-	i = 0;
-	while (envp[i])
-		i++;
-	new_envp = malloc(sizeof(char *) * (i + 2));
-	return (new_envp);
-}
 
 static char	*env_exists(char *arg, char **envp)
 {
 	int		len;
 	int		i;
 	int		j;
-	char	*new_arg;
+	char	*existing;
 
 	len = 0;
 	while (arg[len] != '=')
@@ -39,56 +27,69 @@ static char	*env_exists(char *arg, char **envp)
 	{
 		if (!ft_strncmp(envp[i], arg, len))
 		{
-			new_arg = malloc(sizeof(char) * len + 1);
-			if (!new_arg)
+			existing = malloc(sizeof(char) * len + 1);
+			if (!existing)
 				exit(1);
 			j = 0;
 			while (envp[i][j] != '=')
 			{
-				new_arg[j] = envp[i][j];
+				existing[j] = envp[i][j];
 				j++;
 			}
-			new_arg[j] = '\0';
-			return (new_arg);
+			existing[j] = '\0';
+			return (existing);
 		}
 		i++;
 	}
 	return (NULL);
 }
 
+static char	**unset_existing(char *arg, char **envp)
+{
+	char		**new_envp;
+	char		*existing;
+
+	existing = env_exists(arg, envp);
+	if (existing)
+	{
+		new_envp = unset(existing, envp);
+		free(existing);
+		return (new_envp);
+	}
+	return (envp);
+}
+
 //check correct syntax e.g. HELLO=hello
 char	**export(char *arg, char **envp)
 {
-	char	**new_envp;
-	int		i;
-	char	*new_arg;
+	char		**new_envp;
+	int			i;
 
+	envp = unset_existing(arg, envp);
 	new_envp = malloc_envp(envp);
 	if (!new_envp)
 		exit(1);
-	new_arg = env_exists(arg, envp);
-	if (new_arg)
-		envp = unset(new_arg, envp);
 	i = 0;
 	while (envp[i])
 	{
 		if (!ft_strncmp(envp[i], "_=", 2))
 		{
-			new_envp[i + 1] = envp[i];
+			new_envp[i + 1] = ft_strdup(envp[i]);
 			new_envp[i] = ft_strdup(arg);
 		}
 		else
 			new_envp[i] = ft_strdup(envp[i]);
 		i++;
 	}
+	free_2d(envp);
 	return (new_envp);
 }
 
 char	**unset(char *arg, char **envp)
 {
-	char	**new_envp;
-	int		i;
-	int		j;
+	char		**new_envp;
+	int			i;
+	int			j;
 
 	new_envp = malloc_envp(envp);
 	i = 0;
@@ -103,6 +104,7 @@ char	**unset(char *arg, char **envp)
 		i++;
 	}
 	new_envp[j] = NULL;
+	free_2d(envp);
 	return (new_envp);
 }
 

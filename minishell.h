@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/08 14:50:25 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/10 15:07:06 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,7 @@ char		*ft_getenv(char **envp, char *str);
 void		handle_signal(int signal);
 char		**check_builtins(char **tokens, char **envp, char *line_read);
 char		**execute(char *line_read, char **tokens, char **envp);
+char		**malloc_envp(char **envp);
+char		**envp_dup(char **envp);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/08 14:49:30 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/10 14:09:15 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	exit_cmd(void)
 
 char	**check_builtins(char **tokens, char **envp, char *line_read)
 {
+	//static int	allocated;
+
 	if (!ft_strncmp(tokens[0], "echo", 4) && !ft_strncmp(tokens[1], "-n", 3))
 		echo(tokens);
 	else if (!ft_strncmp(tokens[0], "pwd", 3))

@@ -6,13 +6,12 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/08 14:31:16 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/10 16:52:39 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//need to change so that it doesn't include the variable name, (using code from my export file?)
 char	*ft_getenv(char **envp, char *str)
 {
 	int		i;
@@ -32,7 +31,7 @@ char	*ft_getenv(char **envp, char *str)
 		i++;
 	i++;
 	j = 0;
-	res = malloc(sizeof(char) * ft_strlen(path_pointer) - i + 1);
+	res = malloc(sizeof(char) * (ft_strlen(path_pointer) - i + 1));
 	if (!res)
 		return (NULL);
 	while (path_pointer[i])

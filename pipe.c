@@ -6,11 +6,21 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:06:44 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/03 14:09:58 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/10 15:07:43 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	contains_pipe(char *line_read)
+{
+	int		i;
+
+	i = 0;
+	if (ft_strchr(line_read, '|'))
+		return (1);
+	return (0);
+}
 
 static void	id2(pid_t id1, int *fd, t_cmd *cmds, char **envp)
 {

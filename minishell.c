@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/08 14:50:42 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/10 17:25:19 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int	main(int argc, char **argv, char **envp)
 	char	**tokens;
 
 	argv = NULL;
+	envp = envp_dup(envp);
 	if (argc == 1)
 	{
 		signal(SIGINT, handle_signal);

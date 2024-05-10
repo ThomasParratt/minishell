@@ -6,11 +6,39 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/08 14:22:22 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/10 15:08:14 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	**malloc_envp(char **envp)
+{
+	char	**new_envp;
+	int		i;
+
+	i = 0;
+	while (envp[i])
+		i++;
+	new_envp = malloc(sizeof(char *) * (i + 2));
+	return (new_envp);
+}
+
+char	**envp_dup(char **envp)
+{
+	char	**res;
+	int		i;
+
+	res = malloc_envp(envp);
+	i = 0;
+	while (envp[i])
+	{
+		res[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	res[i] = NULL;
+	return (res);
+}
 
 //Ctrl+C sends SIGINT. Ctrl+\ sends SIGQUIT
 void	handle_signal(int signal)
@@ -68,14 +96,4 @@ char	*join_and_free(char *prompt, char *str)
 	free(prompt);
 	prompt = temp;
 	return (prompt);
-}
-
-int	contains_pipe(char *line_read)
-{
-	int		i;
-
-	i = 0;
-	if (ft_strchr(line_read, '|'))
-		return (1);
-	return (0);
 }

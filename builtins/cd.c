@@ -6,11 +6,19 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/10 16:16:14 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:45:33 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static void	free_strings(char *str1, char *str2, char *str3, char *str4)
+{
+	free(str1);
+	free(str2);
+	free(str3);
+	free(str4);
+}
 
 char	**cd(char **args, char **envp)
 {
@@ -19,6 +27,8 @@ char	**cd(char **args, char **envp)
 	char	*old_pwd;
 	char	*new_pwd_path;
 
+	if (!args[1])
+		return (envp);
 	if (chdir(args[1]) == -1)
 		exit(1);
 	old_pwd_path = ft_getenv(envp, "PWD");
@@ -28,14 +38,13 @@ char	**cd(char **args, char **envp)
 	if (!old_pwd)
 		exit(1);
 	new_pwd_path = getcwd(NULL, 0);
+	if (!new_pwd_path)
+		exit(1);
 	new_pwd = ft_strjoin("PWD=", new_pwd_path);
 	if (!new_pwd)
 		exit(1);
 	envp = export(old_pwd, envp);
 	envp = export(new_pwd, envp);
-	free(old_pwd);
-	free(new_pwd);
-	free(old_pwd_path);
-	free(new_pwd_path);
+	free_strings(old_pwd, new_pwd, old_pwd_path, new_pwd_path);
 	return (envp);
 }

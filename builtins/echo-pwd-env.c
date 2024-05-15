@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   echo-pwd-env.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/10 14:09:15 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:47:36 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	echo(char **args)
+static void	echon(char **args)
 {
 	int	i;
 
@@ -27,49 +27,57 @@ void	echo(char **args)
 	}
 }
 
+void	echo(char **args)
+{
+	int	i;
+
+	if (!args[1])
+		ft_printf("\n");
+	else
+	{
+		if (!ft_strncmp(args[1], "-n", 3))
+			echon(args);
+		else
+		{
+			i = 1;
+			while (args[i])
+			{
+				if (args[i + 1] == NULL)
+					ft_printf("%s", args[i]);
+				else
+					ft_printf("%s ", args[i]);
+				i++;
+			}
+			ft_printf("\n");
+		}
+	}
+}
+
 void	pwd(void)
 {
 	char	cwd[1024];
 
 	if (!getcwd(cwd, sizeof(cwd)))
-	{
-		perror("pwd command failure");
 		exit(1);
-	}
 	ft_printf("%s\n", cwd);
 }
 
-void	env(char **envp)
+void	env(char **args, char **envp)
 {
-	print_2d(envp);
-}
-
-void	exit_cmd(void)
-{
-	ft_printf("exit\n");
-	exit(0);
-}
-
-char	**check_builtins(char **tokens, char **envp, char *line_read)
-{
-	//static int	allocated;
-
-	if (!ft_strncmp(tokens[0], "echo", 4) && !ft_strncmp(tokens[1], "-n", 3))
-		echo(tokens);
-	else if (!ft_strncmp(tokens[0], "pwd", 3))
-		pwd();
-	else if (!ft_strncmp(tokens[0], "cd", 2))
-		envp = cd(tokens, envp);
-	else if (!ft_strncmp(tokens[0], "env", 3))
-		env(envp);
-	else if (!ft_strncmp(tokens[0], "exit", 4))
-		exit_cmd();
-	else if (!ft_strncmp(tokens[0], "export", 6))
-		envp = export(tokens[1], envp);
-	else if (!ft_strncmp(tokens[0], "unset", 5))
-		envp = unset(tokens[1], envp);
+	if (args[1])
+		ft_printf("env: too many arguments\n");
 	else
-		execute(line_read, tokens, envp);
-	return (envp);
+		print_2d(envp);
 }
 
+//handle arguments?
+void	exit_cmd(char **args)
+{
+	if (args[1])
+		ft_printf("exit: too many arguments\n");
+	else
+	{
+		ft_printf("exit\n");
+		exit(0);
+	}
+}

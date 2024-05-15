@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/10 15:07:06 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/15 13:41:07 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ char		*join_and_free(char *prompt, char *str);
 int			contains_pipe(char *line_read);
 extern void	rl_replace_line(const char *text, int clear_undo);
 void		execute_pipe(t_cmd *cmds, char **argc);
-void    	echo(char **args);
-void    	pwd(void);
+void		echo(char **args);
+void		pwd(void);
 char		**cd(char **args, char **envp);
-void		env(char **envp);
-void		exit_cmd(void);
+void		env(char **args, char **envp);
+void		exit_cmd(char **args);
 char		**export(char *arg, char **envp);
 char		**unset(char *arg, char **envp);
 char		*ft_getenv(char **envp, char *str);

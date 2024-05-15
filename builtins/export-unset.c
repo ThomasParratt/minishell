@@ -1,22 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   export-unset.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/10 17:18:02 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/15 14:05:21 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static char	*get_existing_name(char *existing, char **envp, int i)
+{
+	int	j;
+
+	if (!existing)
+		exit(1);
+	j = 0;
+	while (envp[i][j] != '=')
+	{
+		existing[j] = envp[i][j];
+		j++;
+	}
+	existing[j] = '\0';
+	return (existing);
+}
+
 static char	*env_exists(char *arg, char **envp)
 {
 	int		len;
 	int		i;
-	int		j;
 	char	*existing;
 
 	len = 0;
@@ -28,15 +43,7 @@ static char	*env_exists(char *arg, char **envp)
 		if (!ft_strncmp(envp[i], arg, len))
 		{
 			existing = malloc(sizeof(char) * len + 1);
-			if (!existing)
-				exit(1);
-			j = 0;
-			while (envp[i][j] != '=')
-			{
-				existing[j] = envp[i][j];
-				j++;
-			}
-			existing[j] = '\0';
+			existing = get_existing_name(existing, envp, i);
 			return (existing);
 		}
 		i++;
@@ -59,7 +66,6 @@ static char	**unset_existing(char *arg, char **envp)
 	return (envp);
 }
 
-//check correct syntax e.g. HELLO=hello
 char	**export(char *arg, char **envp)
 {
 	char		**new_envp;
@@ -107,5 +113,3 @@ char	**unset(char *arg, char **envp)
 	free_2d(envp);
 	return (new_envp);
 }
-
-

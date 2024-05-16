@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/16 12:24:50 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/16 13:19:36 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,6 @@ char	**export_cmd(char **args, char **envp)
 {
 	if (!args[1])
 		print_declare(envp);
-	//else if (!ft_strchr(args[1], '='))
-	//	ft_printf("No '='\n"); //add var name to declare list
 	else
 		envp = export(args[1], envp);
 	return (envp);

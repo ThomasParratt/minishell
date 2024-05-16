@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:47:13 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/15 13:55:27 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/16 12:21:24 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,7 @@ char	**check_builtins(char **tokens, char **envp, char *line_read)
 	else if (!ft_strncmp(tokens[0], "exit", 5))
 		exit_cmd(tokens);
 	else if (!ft_strncmp(tokens[0], "export", 7))
-	{
-		if (!tokens[1] || !ft_strchr(tokens[1], '='))
-			return (envp); //declare list if !tokens[1]. If a env variable is exported without '=' it is added to declare list
-		envp = export(tokens[1], envp);
-	}
+		envp = export_cmd(tokens, envp);
 	else if (!ft_strncmp(tokens[0], "unset", 6))
 	{
 		if (!tokens[1])

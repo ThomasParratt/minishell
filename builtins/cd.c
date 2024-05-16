@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/15 13:45:33 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/16 12:40:15 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static void	free_strings(char *str1, char *str2, char *str3, char *str4)
 	free(str4);
 }
 
+//need to check invalid args
 char	**cd(char **args, char **envp)
 {
 	char	*old_pwd_path;
@@ -29,6 +30,11 @@ char	**cd(char **args, char **envp)
 
 	if (!args[1])
 		return (envp);
+	if (ft_strncmp("../", args[1], 3) != 0 || ft_strncmp("..", args[1], 3) != 0 || ft_strncmp("/", args[1], 1) != 0)
+	{
+		ft_printf("minishell: cd: %s: No such file or directory\n", args[1]);
+		return (envp);
+	}
 	if (chdir(args[1]) == -1)
 		exit(1);
 	old_pwd_path = ft_getenv(envp, "PWD");

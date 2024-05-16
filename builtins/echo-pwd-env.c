@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/15 13:47:36 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/16 12:12:44 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,20 @@ void	pwd(void)
 
 void	env(char **args, char **envp)
 {
+	int	i;
+
 	if (args[1])
 		ft_printf("env: too many arguments\n");
 	else
-		print_2d(envp);
+	{
+		i = 0;
+		while (envp[i])
+		{
+			if (ft_strchr(envp[i], '='))
+				ft_printf("%s\n", envp[i]);
+			i++;
+		}
+	}
 }
 
 //handle arguments?

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 11:41:22 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/16 11:45:49 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/17 14:21:24 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 char	**unset(char *arg, char **envp)
 {
-	char		**new_envp;
-	int			i;
-	int			j;
+	char	**new_envp;
+	int		i;
+	int		j;
 
 	new_envp = malloc_envp(envp);
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/16 14:00:03 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/17 13:08:34 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,6 @@ char	**cd(char **args, char **envp)
 
 	if (!args[1])
 		return (envp);
-	/*if (ft_strncmp("../", args[1], 3) != 0 || ft_strncmp("..", args[1], 3) != 0 || ft_strncmp("/", args[1], 1) != 0)
-	{
-		ft_printf("minishell: cd: %s: No such file or directory\n", args[1]);
-		return (envp);
-	}*/
 	if (chdir(args[1]) == -1)
 		exit(1);
 	old_pwd_path = ft_getenv(envp, "PWD");
@@ -50,7 +45,7 @@ char	**cd(char **args, char **envp)
 	if (!new_pwd)
 		exit(1);
 	envp = export(old_pwd, envp);
-	envp = export(new_pwd, envp);
+	envp = export(new_pwd, envp); // segfault in here but not always
 	free_strings(old_pwd, new_pwd, old_pwd_path, new_pwd_path);
 	return (envp);
 }

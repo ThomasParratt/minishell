@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/17 14:20:39 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/17 14:30:13 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static char	**unset_existing(char *arg, char **envp)
 	char		**new_envp;
 	char		*existing;
 
-	existing = env_exists(arg, envp); //segfault in here
+	existing = env_exists(arg, envp);
 	if (existing)
 	{
 		new_envp = unset(existing, envp);

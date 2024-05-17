@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/17 13:08:34 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/17 14:30:24 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	**cd(char **args, char **envp)
 	if (!new_pwd)
 		exit(1);
 	envp = export(old_pwd, envp);
-	envp = export(new_pwd, envp); // segfault in here but not always
+	envp = export(new_pwd, envp);
 	free_strings(old_pwd, new_pwd, old_pwd_path, new_pwd_path);
 	return (envp);
 }

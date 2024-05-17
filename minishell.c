@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/16 13:58:46 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/17 14:27:25 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	main(int argc, char **argv, char **envp)
 
 	argv = NULL;
 	envp = envp_dup(envp);
-	//envp = export("OLDPWD", envp);
+	envp = export("OLDPWD", envp);
 	if (argc == 1)
 	{
 		signal(SIGINT, handle_signal);

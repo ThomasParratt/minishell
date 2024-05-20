@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/17 14:27:25 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:51:12 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ int	main(int argc, char **argv, char **envp)
 	argv = NULL;
 	envp = envp_dup(envp);
 	envp = export("OLDPWD", envp);
+	set_term_attr();
 	if (argc == 1)
 	{
 		signal(SIGINT, handle_signal);
@@ -101,9 +102,11 @@ int	main(int argc, char **argv, char **envp)
 			free(prompt);
 			if (!line_read)
 			{
-				ft_printf("exit\n");
+				ft_printf("exit\n"); // I don't want this to print on  a new line
 				return (0);
 			}
+			if (ft_strlen(line_read) == 0)
+				continue ;
 			add_history(line_read);
 			tokens = ft_split(line_read, ' ');
 			if (!tokens)

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/10 15:08:14 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/20 11:58:29 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,6 @@ char	**envp_dup(char **envp)
 	}
 	res[i] = NULL;
 	return (res);
-}
-
-//Ctrl+C sends SIGINT. Ctrl+\ sends SIGQUIT
-void	handle_signal(int signal)
-{
-	if (signal == SIGINT)
-	{
-		ft_printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	if (signal == SIGQUIT)
-	{
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
 }
 
 void	free_2d(char **tab)

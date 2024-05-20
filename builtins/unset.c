@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 11:41:22 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/17 14:21:24 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/20 11:09:46 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,19 @@ char	**unset(char *arg, char **envp)
 	new_envp[j] = NULL;
 	free_2d(envp);
 	return (new_envp);
+}
+
+char	**unset_cmd(char **args, char **envp)
+{
+	int	i;
+
+	if (!args[1])
+		return (envp);
+	i = 1;
+	while (args[i])
+	{
+		envp = unset(args[i], envp);
+		i++;
+	}
+	return (envp);
 }

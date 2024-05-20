@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:47:13 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/16 13:29:38 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:25:44 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,7 @@ char	**check_builtins(char **tokens, char **envp, char *line_read)
 	else if (!ft_strncmp(tokens[0], "export", 7))
 		envp = export_cmd(tokens, envp);
 	else if (!ft_strncmp(tokens[0], "unset", 6))
-	{
-		if (!tokens[1])
-			return (envp);
-		envp = unset(tokens[1], envp);
-	}
+		envp = unset_cmd(tokens, envp);
 	else
 		execute(line_read, tokens, envp);
 	return (envp);

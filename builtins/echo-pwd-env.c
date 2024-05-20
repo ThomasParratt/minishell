@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/16 12:12:44 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/20 11:45:56 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	env(char **args, char **envp)
 void	exit_cmd(char **args)
 {
 	if (args[1])
-		ft_printf("exit: too many arguments\n");
+		ft_printf("exit: too many arguments\n"); //handle status code
 	else
 	{
 		ft_printf("exit\n");

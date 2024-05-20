@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/17 14:30:13 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/20 10:53:07 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,18 @@ static void	print_declare(char **envp)
 
 char	**export_cmd(char **args, char **envp)
 {
+	int	i;
+
 	if (!args[1])
 		print_declare(envp);
 	else
-		envp = export(args[1], envp);
+	{
+		i = 1;
+		while (args[i])
+		{
+			envp = export(args[i], envp);
+			i++;
+		}
+	}
 	return (envp);
 }

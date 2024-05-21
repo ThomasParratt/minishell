@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/20 13:52:39 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/21 16:12:57 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <signal.h>
 # include <stdio.h>
 # include <termios.h>
+# include <string.h>
+# include <errno.h>
 
 typedef struct s_cmd
 {
@@ -49,9 +51,10 @@ char		**unset(char *arg, char **envp);
 char		*ft_getenv(char **envp, char *str);
 void		handle_signal(int signal);
 void		set_term_attr(void);
-char		**check_builtins(char **tokens, char **envp, char *line_read);
+char		**check_tokens(char **tokens, char **envp, char *line_read);
 char		**execute(char *line_read, char **tokens, char **envp);
 char		**malloc_envp(char **envp);
 char		**envp_dup(char **envp);
+void		print_error_message(char **args);
 
 #endif

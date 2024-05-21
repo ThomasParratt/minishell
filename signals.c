@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:58:47 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/20 15:48:42 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/21 10:18:38 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,12 @@ void	handle_signal(int signal)
 	if (signal == SIGINT)
 	{
 		ft_printf("\n");
-		rl_on_new_line(); //prompt on new line
-		rl_replace_line("", 0); //nothing after prompt
-		rl_redisplay(); //displays prompt
+		rl_on_new_line();
+		rl_redisplay();
 	}
 	if (signal == SIGQUIT)
 	{
 		rl_on_new_line();
-		rl_replace_line("", 0);
 		rl_redisplay();
 	}
 }

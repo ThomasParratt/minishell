@@ -6,13 +6,13 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:47:13 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/20 15:25:44 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/21 16:12:27 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	**check_builtins(char **tokens, char **envp, char *line_read)
+char	**check_tokens(char **tokens, char **envp, char *line_read)
 {
 	if (!ft_strncmp(tokens[0], "echo", 5))
 		echo(tokens);

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/20 11:45:56 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/21 16:27:37 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	env(char **args, char **envp)
 	int	i;
 
 	if (args[1])
-		ft_printf("env: too many arguments\n");
+		ft_printf("minishell: env: too many arguments\n");
 	else
 	{
 		i = 0;
@@ -80,14 +80,30 @@ void	env(char **args, char **envp)
 	}
 }
 
-//handle arguments?
 void	exit_cmd(char **args)
 {
+	int	i;
+	int	num;
+
+	ft_printf("exit\n");
 	if (args[1])
-		ft_printf("exit: too many arguments\n"); //handle status code
+	{
+		i = 0;
+		while (args[1][i])
+		{
+			if (!ft_isdigit(args[1][i]))
+			{
+				ft_printf("minishell: exit: %s: numeric argument required\n", args[1]);
+				exit(255);
+			}
+			i++;
+		}
+		num = ft_atoi(args[1]);
+		exit(num);
+	}
 	else
 	{
-		ft_printf("exit\n");
-		exit(0);
+		ft_printf("errno = %d\n", errno); // this won't work
+		exit(errno);
 	}
 }

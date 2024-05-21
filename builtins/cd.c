@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/20 10:46:47 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/21 14:49:35 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	check_args(char **args)
 		return (1);
 	if (chdir(args[1]) == -1)
 	{
-		ft_printf("minishell: cd: %s: No such file or directory\n", args[1]);
+		print_error_message(args);
 		return (1);
 	}
 	return (0);

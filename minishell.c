@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/21 16:24:21 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/22 10:49:31 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,14 @@ char	**execute(char *line_read, char **tokens, char **envp)
 	return (envp);
 }
 
-static char	*create_prompt(char **envp)
+static char	*create_prompt(void)
 {
 	char	*cwd;
 	char	*username;
 	char	*hostname;
 	char	*prompt;
 
-	cwd = ft_getenv(envp, "PWD");
+	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		exit(1);
 	username = getenv("USER");
@@ -101,7 +101,7 @@ int	main(int argc, char **argv, char **envp)
 		signal(SIGQUIT, handle_signal);
 		while (1)
 		{
-			prompt = create_prompt(envp);
+			prompt = create_prompt();
 			line_read = readline(prompt);
 			if (!line_read)
 				return (0);

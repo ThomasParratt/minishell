@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/21 16:12:57 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/22 10:05:49 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ typedef struct s_cmd
 	char	**cmd2;
 	char	*path2;
 }				t_cmd;
+
+typedef struct s_data
+{
+	int		err_num;
+	char	**envp;
+}				t_data;
 
 char		*get_path(char **tokens, char **envp);
 void		free_2d(char **tab);

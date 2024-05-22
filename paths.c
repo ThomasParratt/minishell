@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/21 12:01:25 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/21 16:46:30 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*ft_getenv(char **envp, char *str)
 	}
 	res[j] = '\0';
 	return (res);
-} 
+}
 
 static char	**create_paths(char **tokens, char **envp)
 {

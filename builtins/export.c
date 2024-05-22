@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/20 10:53:07 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/22 11:25:29 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	*get_existing_name(char *existing, char **envp, int i)
 	if (!existing)
 		exit(1);
 	j = 0;
-	while (envp[i][j] != '=')
+	while (envp[i][j] != '=' && envp[i][j] != '\0')
 	{
 		existing[j] = envp[i][j];
 		j++;

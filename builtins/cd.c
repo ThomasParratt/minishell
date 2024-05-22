@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/21 14:49:35 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/22 11:04:32 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ char	**cd(char **args, char **envp)
 	char	*old_pwd;
 	char	*new_pwd_path;
 
-	if (check_args(args) == 1)
-		return (envp);
-	old_pwd_path = ft_getenv(envp, "PWD");
+	old_pwd_path = getcwd(NULL, 0);
 	if (!old_pwd_path)
 		exit(1);
+	if (check_args(args) == 1)
+		return (envp);
 	old_pwd = ft_strjoin("OLDPWD=", old_pwd_path);
 	if (!old_pwd)
 		exit(1);

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/22 12:49:24 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/22 14:22:35 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ static int	check_args(char **args, t_data *data)
 		return (1);
 	if (chdir(args[1]) == -1)
 	{
+		data->err_num = errno;
 		print_error_message(args, data);
-		data->err_num = 1;
 		return (1);
 	}
 	return (0);

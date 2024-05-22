@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/22 12:47:52 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/22 13:16:15 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ typedef struct s_cmd
 
 typedef struct s_data
 {
-	int		err_num;
 	char	**envp;
+	int		err_num;
 }				t_data;
 
 char		*get_path(char **tokens, char **envp);

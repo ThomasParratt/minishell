@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/22 10:05:49 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/22 12:47:52 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,20 +47,20 @@ extern void	rl_replace_line(const char *text, int clear_undo);
 void		execute_pipe(t_cmd *cmds, char **argc);
 void		echo(char **args);
 void		pwd(void);
-char		**cd(char **args, char **envp);
-void		env(char **args, char **envp);
-void		exit_cmd(char **args);
-char		**export_cmd(char **args, char **envp);
-char		**export(char *arg, char **envp);
-char		**unset_cmd(char **args, char **envp);
-char		**unset(char *arg, char **envp);
+void		cd(char **args, t_data *data);
+void		env(char **args, t_data *data);
+void		exit_cmd(char **args, t_data *data);
+void		export_cmd(char **args, t_data *data);
+void		export(char *arg, t_data *data);
+void		unset_cmd(char **args, t_data *data);
+void		unset(char *arg, t_data *data);
 char		*ft_getenv(char **envp, char *str);
 void		handle_signal(int signal);
 void		set_term_attr(void);
-char		**check_tokens(char **tokens, char **envp, char *line_read);
+void		check_tokens(char **tokens, t_data *data, char *line_read);
 char		**execute(char *line_read, char **tokens, char **envp);
 char		**malloc_envp(char **envp);
 char		**envp_dup(char **envp);
-void		print_error_message(char **args);
+void		print_error_message(char **args, t_data *data);
 
 #endif

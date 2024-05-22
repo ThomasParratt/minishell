@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/21 16:27:37 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/22 12:05:54 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	pwd(void)
 	ft_printf("%s\n", cwd);
 }
 
-void	env(char **args, char **envp)
+void	env(char **args, t_data *data)
 {
 	int	i;
 
@@ -71,16 +71,16 @@ void	env(char **args, char **envp)
 	else
 	{
 		i = 0;
-		while (envp[i])
+		while (data->envp[i])
 		{
-			if (ft_strchr(envp[i], '='))
-				ft_printf("%s\n", envp[i]);
+			if (ft_strchr(data->envp[i], '='))
+				ft_printf("%s\n", data->envp[i]);
 			i++;
 		}
 	}
 }
 
-void	exit_cmd(char **args)
+void	exit_cmd(char **args, t_data *data)
 {
 	int	i;
 	int	num;
@@ -103,7 +103,7 @@ void	exit_cmd(char **args)
 	}
 	else
 	{
-		ft_printf("errno = %d\n", errno); // this won't work
-		exit(errno);
+		ft_printf("errno = %d\n", data->err_num); // this won't work
+		exit(data->err_num);
 	}
 }

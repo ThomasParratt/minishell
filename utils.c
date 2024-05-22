@@ -6,17 +6,17 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/21 14:37:27 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/22 12:47:00 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_error_message(char **args)
+void	print_error_message(char **args, t_data *data)
 {
 	char	*err_str;
 
-	err_str = strerror(errno);
+	err_str = strerror(data->err_num);
 	ft_printf("minishell: %s: %s: %s\n", args[0], args[1], err_str);
 }
 

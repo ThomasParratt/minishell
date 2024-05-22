@@ -6,46 +6,45 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 11:41:22 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/20 11:09:46 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/22 12:25:54 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	**unset(char *arg, char **envp)
+void	unset(char *arg, t_data *data)
 {
 	char	**new_envp;
 	int		i;
 	int		j;
 
-	new_envp = malloc_envp(envp);
+	new_envp = malloc_envp(data->envp);
 	i = 0;
 	j = 0;
-	while (envp[i])
+	while (data->envp[i])
 	{
-		if (ft_strncmp(envp[i], arg, ft_strlen(arg)))
+		if (ft_strncmp(data->envp[i], arg, ft_strlen(arg)))
 		{
-			new_envp[j] = ft_strdup(envp[i]);
+			new_envp[j] = ft_strdup(data->envp[i]);
 			j++;
 		}
 		i++;
 	}
 	new_envp[j] = NULL;
-	free_2d(envp);
-	return (new_envp);
+	free_2d(data->envp);
+	data->envp = new_envp;
 }
 
-char	**unset_cmd(char **args, char **envp)
+void	unset_cmd(char **args, t_data *data)
 {
 	int	i;
 
 	if (!args[1])
-		return (envp);
+		return ;
 	i = 1;
 	while (args[i])
 	{
-		envp = unset(args[i], envp);
+		unset(args[i], data);
 		i++;
 	}
-	return (envp);
 }

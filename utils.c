@@ -6,18 +6,16 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/22 12:47:00 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/24 12:13:10 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_error_message(char **args, t_data *data)
+void	malloc_failure(void)
 {
-	char	*err_str;
-
-	err_str = strerror(data->err_num);
-	ft_printf("minishell: %s: %s: %s\n", args[0], args[1], err_str);
+	ft_putendl_fd("minishell: malloc failure", 2);
+	exit(ENOMEM);
 }
 
 char	**malloc_envp(char **envp)
@@ -29,6 +27,8 @@ char	**malloc_envp(char **envp)
 	while (envp[i])
 		i++;
 	new_envp = malloc(sizeof(char *) * (i + 2));
+	if (!new_envp)
+		return (NULL);
 	return (new_envp);
 }
 
@@ -38,10 +38,14 @@ char	**envp_dup(char **envp)
 	int		i;
 
 	res = malloc_envp(envp);
+	if (!res)
+		return (NULL);
 	i = 0;
 	while (envp[i])
 	{
 		res[i] = ft_strdup(envp[i]);
+		if (!res[i])
+			return(NULL);
 		i++;
 	}
 	res[i] = NULL;
@@ -81,7 +85,7 @@ char	*join_and_free(char *prompt, char *str)
 	if (!temp)
 	{
 		free(prompt);
-		return (NULL);
+		malloc_failure();
 	}
 	free(prompt);
 	prompt = temp;

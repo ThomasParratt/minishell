@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/22 12:25:29 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/24 12:11:08 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ static char	*env_exists(char *arg, t_data *data)
 		if (!ft_strncmp(data->envp[i], arg, len))
 		{
 			existing = malloc(sizeof(char) * len + 1);
+			if (!existing)
+				malloc_failure();
 			existing = get_existing_name(existing, data, i);
 			return (existing);
 		}
@@ -71,14 +73,18 @@ void	export(char *arg, t_data *data)
 	unset_existing(arg, data);
 	new_envp = malloc_envp(data->envp);
 	if (!new_envp)
-		exit(1);
+		malloc_failure();
 	i = 0;
 	while (data->envp[i])
 	{
 		new_envp[i] = ft_strdup(data->envp[i]);
+		if (!new_envp[i])
+			malloc_failure();
 		i++;
 	}
 	new_envp[i] = ft_strdup(arg);
+	if (!new_envp[i])
+		malloc_failure();
 	i++;
 	new_envp[i] = NULL;
 	free_2d(data->envp);

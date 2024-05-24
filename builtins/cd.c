@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/22 14:22:35 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/24 11:45:47 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ static int	check_args(char **args, t_data *data)
 		return (1);
 	if (chdir(args[1]) == -1)
 	{
+		ft_putstr_fd("minishell: cd: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putendl_fd(": error changing directory", 2);
 		data->err_num = errno;
-		print_error_message(args, data);
 		return (1);
 	}
 	return (0);
@@ -42,18 +44,21 @@ void	cd(char **args, t_data *data)
 
 	old_pwd_path = getcwd(NULL, 0);
 	if (!old_pwd_path)
-		exit(1);
+		exit(errno);
 	if (check_args(args, data) == 1)
+	{
+		free(old_pwd_path);
 		return ;
-	old_pwd = ft_strjoin("OLDPWD=", old_pwd_path);
+	}
+	old_pwd = NULL;
 	if (!old_pwd)
-		exit(1);
+		malloc_failure();
 	new_pwd_path = getcwd(NULL, 0);
 	if (!new_pwd_path)
-		exit(1);
+		exit(errno);
 	new_pwd = ft_strjoin("PWD=", new_pwd_path);
 	if (!new_pwd)
-		exit(1);
+		malloc_failure();
 	export(old_pwd, data);
 	export(new_pwd, data);
 	free_strings(old_pwd, new_pwd, old_pwd_path, new_pwd_path);

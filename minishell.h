@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/22 13:16:15 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/24 11:47:19 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,6 @@ void		check_tokens(char **tokens, t_data *data, char *line_read);
 char		**execute(char *line_read, char **tokens, char **envp);
 char		**malloc_envp(char **envp);
 char		**envp_dup(char **envp);
-void		print_error_message(char **args, t_data *data);
+void		malloc_failure(void);
 
 #endif

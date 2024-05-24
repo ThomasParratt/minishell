@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/22 12:48:55 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/24 11:58:26 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,8 @@ int	main(int argc, char **argv, char **envp)
 	data.err_num = 0;
 	data.envp = envp_dup(envp);
 	if (!data.envp)
-		return (0);
+		malloc_failure();
 	export("OLDPWD", &data);
-	if (!data.envp)
-		return (0);
 	set_term_attr();
 	if (argc == 1)
 	{

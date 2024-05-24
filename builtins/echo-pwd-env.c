@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/22 13:19:39 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/24 11:42:13 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,13 @@ void	echo(char **args)
 
 void	pwd(void)
 {
-	char	cwd[1024];
+	char	*cwd;
 
-	if (!getcwd(cwd, sizeof(cwd)))
-		exit(1);
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		exit(errno);
 	ft_printf("%s\n", cwd);
+	free(cwd);
 }
 
 void	env(char **args, t_data *data)
@@ -67,7 +69,10 @@ void	env(char **args, t_data *data)
 	int	i;
 
 	if (args[1])
-		ft_printf("minishell: env: too many arguments\n");
+	{
+		ft_putendl_fd("minishell: env: too many arguments", 2);
+		data->err_num = 1;
+	}
 	else
 	{
 		i = 0;
@@ -93,7 +98,9 @@ void	exit_cmd(char **args, t_data *data)
 		{
 			if (!ft_isdigit(args[1][i]))
 			{
-				ft_printf("minishell: exit: %s: numeric argument required\n", args[1]);
+				ft_putstr_fd("minishell: exit: ", 2);
+				ft_putstr_fd(args[1], 2);
+				ft_putendl_fd(": numeric argument required", 2);
 				exit(255);
 			}
 			i++;

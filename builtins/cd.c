@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 09:29:33 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/24 11:45:47 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/24 16:39:16 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	cd(char **args, t_data *data)
 		free(old_pwd_path);
 		return ;
 	}
-	old_pwd = NULL;
+	old_pwd = ft_strjoin("OLDPWD=", old_pwd_path);
 	if (!old_pwd)
 		malloc_failure();
 	new_pwd_path = getcwd(NULL, 0);

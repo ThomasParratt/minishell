@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/24 12:13:10 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/24 12:20:59 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	**envp_dup(char **envp)
 	{
 		res[i] = ft_strdup(envp[i]);
 		if (!res[i])
-			return(NULL);
+			return (NULL);
 		i++;
 	}
 	res[i] = NULL;

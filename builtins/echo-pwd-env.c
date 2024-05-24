@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/24 11:42:13 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/24 15:00:16 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,5 @@ void	exit_cmd(char **args, t_data *data)
 		exit(num);
 	}
 	else
-	{
-		ft_printf("errno = %d\n", data->err_num);
 		exit(data->err_num);
-	}
 }

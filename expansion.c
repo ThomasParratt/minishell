@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/27 11:49:29 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 13:05:15 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@
 	return (new_tokens);
 }*/
 
-char	**expansion(char **tokens, t_data *data)
+void	expansion(t_mini *tokens, t_data *data)
 {
 	int		i;
 	int		start;
@@ -97,17 +97,17 @@ char	**expansion(char **tokens, t_data *data)
 	char	*env_value;
 
 	i = 0;
-	new_tokens = malloc_envp(tokens);
-	while (tokens[i])
+	new_tokens = malloc_envp(tokens->metaed);
+	while (tokens->metaed[i])
 	{
-		len = ft_strlen(tokens[i]);
-		if (ft_strchr(tokens[i], '$'))
+		len = ft_strlen(tokens->metaed[i]);
+		if (ft_strchr(tokens->metaed[i], '$'))
 		{
 			start = 0;
-			while (tokens[i][start] != '$')
+			while (tokens->metaed[i][start] != '$')
 				start++;
 			start++;
-			env_name = ft_substr(tokens[i], start, len - start);
+			env_name = ft_substr(tokens->metaed[i], start, len - start);
 			if (!env_name)
 				malloc_failure();
 			env_value = ft_getenv(data->envp, env_name);
@@ -120,21 +120,12 @@ char	**expansion(char **tokens, t_data *data)
 			free(env_value);
 		}
 		else
-			new_tokens[i] = ft_strdup(tokens[i]);
+			new_tokens[i] = ft_strdup(tokens->metaed[i]);
 		i++;
 	}
 	new_tokens[i] = NULL;
-	free(tokens);
+	free(tokens->metaed);
 	//print_2d(new_tokens);
-	return (new_tokens);
+	tokens->metaed = new_tokens;
 }
 
-/*char	**expansion(char **tokens, t_data *data)
-{
-	char **new_tokens = malloc_envp(tokens);
-	new_tokens[0] = ft_substr(tokens[0], 3, 5);
-	free(tokens);
-	ft_printf("%d\n", data->err_num);
-	print_2d(new_tokens);
-	return (new_tokens);
-}*/

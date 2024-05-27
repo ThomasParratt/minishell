@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/24 16:34:13 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 09:35:41 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	main(int argc, char **argv, char **envp)
 				free(line_read);
 				return (0);
 			}
-			//tokens = expansion(tokens, &data);
+			tokens = expansion(tokens, &data);
 			check_tokens(tokens, &data, line_read);
 			free(line_read);
 			free_2d(tokens);

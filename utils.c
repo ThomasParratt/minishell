@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/24 12:20:59 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 14:23:57 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,18 @@ void	malloc_failure(void)
 	exit(ENOMEM);
 }
 
-char	**malloc_envp(char **envp)
+char	**malloc_2d(char **arr)
 {
-	char	**new_envp;
+	char	**new_arr;
 	int		i;
 
 	i = 0;
-	while (envp[i])
+	while (arr[i])
 		i++;
-	new_envp = malloc(sizeof(char *) * (i + 2));
-	if (!new_envp)
+	new_arr = malloc(sizeof(char *) * (i + 2));
+	if (!new_arr)
 		return (NULL);
-	return (new_envp);
+	return (new_arr);
 }
 
 char	**envp_dup(char **envp)
@@ -37,7 +37,7 @@ char	**envp_dup(char **envp)
 	char	**res;
 	int		i;
 
-	res = malloc_envp(envp);
+	res = malloc_2d(envp);
 	if (!res)
 		return (NULL);
 	i = 0;

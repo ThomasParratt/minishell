@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/24 12:11:08 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 14:24:15 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	export(char *arg, t_data *data)
 	int		i;
 
 	unset_existing(arg, data);
-	new_envp = malloc_envp(data->envp);
+	new_envp = malloc_2d(data->envp);
 	if (!new_envp)
 		malloc_failure();
 	i = 0;

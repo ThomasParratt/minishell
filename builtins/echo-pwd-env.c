@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/27 13:09:40 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 16:54:08 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	echo(char **args)
 			i = 1;
 			while (args[i])
 			{
-				if (args[i + 1] == NULL)
+				if (args[i + 1] == NULL || ft_strlen(args[i]) == 0)
 					ft_printf("%s", args[i]);
 				else
 					ft_printf("%s ", args[i]);

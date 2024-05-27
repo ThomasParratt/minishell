@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/27 13:07:29 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:49:14 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,14 @@ typedef struct s_data
 {
 	char	**envp;
 	int		err_num;
+	int		flag;
 }				t_data;
 
 typedef struct s_mini
 {
     char        **metaed;
     int         pipe_num;
-}   t_mini;
+}   			t_mini;
 
 char		*get_path(char **tokens, char **envp);
 void		free_2d(char **tab);
@@ -63,12 +64,12 @@ void		unset(char *arg, t_data *data);
 char		*ft_getenv(char **envp, char *str);
 void		handle_signal(int signal);
 void		set_term_attr(void);
-void		check_tokens(t_mini *tokens, t_data *data, char *line_read);
-char		**execute(char *line_read, char **tokens, char **envp);
-char		**malloc_envp(char **envp);
+void		check_tokens(t_mini *line, t_data *data, char *line_read);
+char		**execute(char *line_read, char **line, char **envp);
+char		**malloc_2d(char **arr);
 char		**envp_dup(char **envp);
 void		malloc_failure(void);
-void		expansion(t_mini *tokens, t_data *data);
+void		expansion(t_mini *line, t_data *data);
 void    	validating(char *argv, t_mini *line);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:27:51 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/27 13:46:02 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 14:52:11 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,6 @@ void	validating(char *argv, t_mini *line)
 			printf("zsh: parse error near i + 1\n"); //needs a function to output the second redirection
 		i++;
 	}
-	//i--;
 	if (ft_strncmp(line->metaed[i], "|", ft_strlen(line->metaed[i])) == 0 || \
 		(is_it_redirect(line->metaed[i]) == 0))
 		printf("zsh: parse error near \\n\n");

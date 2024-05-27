@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/27 13:14:52 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 16:12:51 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*line_read;
 	char	*prompt;
-	//char	**tokens;
 	t_data	data;
 	t_mini	line;
 
@@ -111,7 +110,6 @@ int	main(int argc, char **argv, char **envp)
 				continue ;
 			add_history(line_read);
 			line = (t_mini){0};
-			//ft_printf("line read = %s\n", line_read);
 			validating(line_read, &line);
 			expansion(&line, &data);
 			check_tokens(&line, &data, line_read);

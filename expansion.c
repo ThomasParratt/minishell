@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/27 13:05:15 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 17:11:14 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@
 	return (new_tokens);
 }*/
 
-void	expansion(t_mini *tokens, t_data *data)
+void	expansion(t_mini *line, t_data *data)
 {
 	int		i;
 	int		start;
@@ -96,36 +96,51 @@ void	expansion(t_mini *tokens, t_data *data)
 	char	*env_name;
 	char	*env_value;
 
+	//print_2d(line->metaed);
 	i = 0;
-	new_tokens = malloc_envp(tokens->metaed);
-	while (tokens->metaed[i])
+	new_tokens = malloc_2d(line->metaed);
+	while (line->metaed[i])
 	{
-		len = ft_strlen(tokens->metaed[i]);
-		if (ft_strchr(tokens->metaed[i], '$'))
+		//len = ft_strlen(line->metaed[i]);
+		//data->flag = 0;
+		if (ft_strchr(line->metaed[i], '$'))
 		{
 			start = 0;
-			while (tokens->metaed[i][start] != '$')
+			while (line->metaed[i][start] != '$') //this only works if $ is first in the string
 				start++;
 			start++;
-			env_name = ft_substr(tokens->metaed[i], start, len - start);
+			len = 1;
+			while (line->metaed[i][len] && line->metaed[i][len] != '$' && line->metaed[i][len] != ' ')
+				len++;
+			env_name = ft_substr(line->metaed[i], start, len - start);
 			if (!env_name)
 				malloc_failure();
+			ft_printf("env_name = %s\n", env_name);
 			env_value = ft_getenv(data->envp, env_name);
 			if (!env_value)
-				malloc_failure();
-			new_tokens[i] = ft_strdup(env_value);
-			if (!new_tokens[i])
-				malloc_failure();
-			free(env_name);
-			free(env_value);
+			{
+				new_tokens[i] = ft_strdup("");
+				if (!new_tokens[i])
+					malloc_failure();
+				free(env_name);
+				free(env_value);
+			}
+			else
+			{
+				new_tokens[i] = ft_strdup(env_value);
+				if (!new_tokens[i])
+					malloc_failure();
+				free(env_name);
+				free(env_value);
+			}
 		}
 		else
-			new_tokens[i] = ft_strdup(tokens->metaed[i]);
+			new_tokens[i] = ft_strdup(line->metaed[i]);
 		i++;
 	}
 	new_tokens[i] = NULL;
-	free(tokens->metaed);
-	//print_2d(new_tokens);
-	tokens->metaed = new_tokens;
+	free_2d(line->metaed);
+	line->metaed = new_tokens;
+	//print_2d(line->metaed);
 }
 

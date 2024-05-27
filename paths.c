@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/21 16:46:30 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 16:52:06 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,16 @@ char	*ft_getenv(char **envp, char *str)
 	while (envp[i])
 	{
 		if (!ft_strncmp(envp[i], str, ft_strlen(str)))
+		{
 			path_pointer = envp[i];
+			break ;
+		}
+		else
+			path_pointer = NULL;
 		i++;
 	}
+	if (!path_pointer)
+		return (NULL);
 	i = 0;
 	while (path_pointer[i] != '=')
 		i++;
@@ -33,7 +40,7 @@ char	*ft_getenv(char **envp, char *str)
 	j = 0;
 	res = malloc(sizeof(char) * (ft_strlen(path_pointer) - i + 1));
 	if (!res)
-		return (NULL);
+		malloc_failure();
 	while (path_pointer[i])
 	{
 		res[j] = path_pointer[i];

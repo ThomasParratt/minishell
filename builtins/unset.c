@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 11:41:22 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/24 12:15:59 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/27 14:24:48 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	unset(char *arg, t_data *data)
 	int		i;
 	int		j;
 
-	new_envp = malloc_envp(data->envp);
+	new_envp = malloc_2d(data->envp);
 	if (!new_envp)
 		malloc_failure();
 	i = 0;

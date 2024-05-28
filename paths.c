@@ -6,46 +6,43 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/27 16:52:06 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/28 11:50:19 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_getenv(char **envp, char *str)
+char *ft_getenv(char **envp, char *str) 
 {
 	int		i;
 	char	*path_pointer;
 	char	*res;
 	int		j;
+	int		len;
 
 	i = 0;
+	path_pointer = NULL;
+	j = 0;
+	len = ft_strlen(str);
 	while (envp[i])
 	{
-		if (!ft_strncmp(envp[i], str, ft_strlen(str)))
+		if (!ft_strncmp(envp[i], str, len) && envp[i][len] == '=')
 		{
 			path_pointer = envp[i];
 			break ;
 		}
-		else
-			path_pointer = NULL;
 		i++;
 	}
 	if (!path_pointer)
 		return (NULL);
-	i = 0;
-	while (path_pointer[i] != '=')
-		i++;
-	i++;
-	j = 0;
-	res = malloc(sizeof(char) * (ft_strlen(path_pointer) - i + 1));
+	path_pointer += len + 1;
+	res = malloc(sizeof(char) * (ft_strlen(path_pointer) + 1));
 	if (!res)
 		malloc_failure();
-	while (path_pointer[i])
+	while (path_pointer[j])
 	{
-		res[j] = path_pointer[i];
+		res[j] = path_pointer[j];
 		j++;
-		i++;
 	}
 	res[j] = '\0';
 	return (res);

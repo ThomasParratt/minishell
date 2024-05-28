@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/28 11:19:09 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:31:32 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,58 @@
 	return (i);
 }*/
 
+static int	get_len(t_mini *line, int i)
+{
+	int	len;
+	int	dollar_count;
+	int	quote_count;
+
+	len = 0;
+	dollar_count = 0;
+	quote_count = 0;
+	while (line->metaed[i][len] && quote_count < 2 && dollar_count < 2) //this is weird
+	{
+		if (line->metaed[i][len] == '$')
+			dollar_count++;
+		if (line->metaed[i][len] == '"')
+			quote_count++;
+		if (dollar_count < 2 && quote_count < 2)
+			len++;
+	}
+	return (len);
+}
+
+static int	get_start(t_mini *line, int i)
+{
+	int	start;
+
+	start = 0;
+	while (line->metaed[i][start] != '$')
+		start++;
+	start++;
+	return (start);
+}
+
+static char	*get_env_name(t_mini *line, int i)
+{
+	int		start;
+	int		len;
+	char	*env_name;
+
+	start = get_start(line, i);
+	len = get_len(line, i);
+	env_name = ft_substr(line->metaed[i], start, len - start);
+	if (!env_name)
+		malloc_failure();
+	return (env_name);
+}
+
 void	expansion(t_mini *line, t_data *data)
 {
 	int		i;
-	int		start;
-	int		len;
 	char	**new_tokens;
 	char	*env_name;
 	char	*env_value;
-	int		dollar_count;
-	int		quote_count;
 
 	ft_printf("metaed BEFORE expansion:\n");
 	print_2d(line->metaed);
@@ -48,50 +90,26 @@ void	expansion(t_mini *line, t_data *data)
 	new_tokens = malloc_2d(line->metaed);
 	while (line->metaed[i])
 	{
-		if (line->metaed[i][0] == '\'' && line->metaed[i][ft_strlen(line->metaed[i]) - 1] == '\'')
-			new_tokens[i] = ft_strdup(line->metaed[i]);
-		else if (ft_strchr(line->metaed[i], '$'))
+		if (ft_strchr(line->metaed[i], '$') && line->metaed[i][0] != '\'' && line->metaed[i][ft_strlen(line->metaed[i]) - 1] != '\'')
 		{
-			start = 0;
-			while (line->metaed[i][start] != '$')
-				start++;
-			start++;
-			len = 0;
-			dollar_count = 0;
-			quote_count = 0;
-			while (line->metaed[i][len] && quote_count < 2 && dollar_count < 2) //this is weird
-			{
-				if (line->metaed[i][len] == '$')
-					dollar_count++;
-				if (line->metaed[i][len] == '"')
-					quote_count++;
-				if (dollar_count < 2 && quote_count < 2)
-					len++;
-			}
-			env_name = ft_substr(line->metaed[i], start, len - start);
-			if (!env_name)
-				malloc_failure();
+			env_name = get_env_name(line, i);
 			ft_printf("env_name = %s\n", env_name);
 			env_value = ft_getenv(data->envp, env_name);
 			if (!env_value)
-			{
 				new_tokens[i] = ft_strdup("");
-				if (!new_tokens[i])
-					malloc_failure();
-				free(env_name);
-				free(env_value);
-			}
 			else
-			{
 				new_tokens[i] = ft_strdup(env_value);
-				if (!new_tokens[i])
-					malloc_failure();
-				free(env_name);
-				free(env_value);
-			}
+			if (!new_tokens[i])
+				malloc_failure();
+			free(env_name);
+			free(env_value);
 		}
 		else
+		{
 			new_tokens[i] = ft_strdup(line->metaed[i]);
+			if (!new_tokens[i])
+				malloc_failure();
+		}
 		i++;
 	}
 	ft_printf("\n");

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/28 12:31:32 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:19:25 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,6 @@
 //handle where he '$' doesn't come immediately after the '"' e.g. "hello $VAR"
 // e.g. "$VAR hello" "hello$VARhello" "$VARhello" "hello$VAR"
 //handle string beginning and ending in single quotes, i.e. remove the quotes
-
-/*static int	count_char(char *str, char c)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			i++;
-	}
-	return (i);
-}*/
 
 static int	get_len(t_mini *line, int i)
 {
@@ -76,12 +63,30 @@ static char	*get_env_name(t_mini *line, int i)
 	return (env_name);
 }
 
+static int	count_char(char *str, char c)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			count++;
+		i++;
+	}
+	return (count);
+}
+
 void	expansion(t_mini *line, t_data *data)
 {
 	int		i;
+	int		j;
 	char	**new_tokens;
 	char	*env_name;
 	char	*env_value;
+	int		dollar_count;
 
 	ft_printf("metaed BEFORE expansion:\n");
 	print_2d(line->metaed);
@@ -92,17 +97,24 @@ void	expansion(t_mini *line, t_data *data)
 	{
 		if (ft_strchr(line->metaed[i], '$') && line->metaed[i][0] != '\'' && line->metaed[i][ft_strlen(line->metaed[i]) - 1] != '\'')
 		{
-			env_name = get_env_name(line, i);
-			ft_printf("env_name = %s\n", env_name);
-			env_value = ft_getenv(data->envp, env_name);
-			if (!env_value)
-				new_tokens[i] = ft_strdup("");
-			else
-				new_tokens[i] = ft_strdup(env_value);
-			if (!new_tokens[i])
-				malloc_failure();
-			free(env_name);
-			free(env_value);
+			dollar_count = count_char(line->metaed[i], '$');
+			ft_printf("dollar count = %d\n", dollar_count);
+			j = 0;
+			while (j < dollar_count)
+			{
+				env_name = get_env_name(line, i);
+				ft_printf("env_name = %s\n", env_name);
+				env_value = ft_getenv(data->envp, env_name);
+				if (!env_value)
+					new_tokens[i] = ft_strdup("");
+				else
+					new_tokens[i] = ft_strdup(env_value);
+				if (!new_tokens[i])
+					malloc_failure();
+				free(env_name);
+				free(env_value);
+				j++;
+			}
 		}
 		else
 		{

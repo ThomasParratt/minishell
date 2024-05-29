@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/29 10:57:27 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/29 14:04:20 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,18 +59,27 @@ static int	get_start(t_mini *line, int i, int j)
 	return (start);
 }
 
-static char	*get_env_name(t_mini *line, int i, int j)
+static char	*get_env_value(t_mini *line, int i, int j, t_data *data)
 {
 	int		start;
 	int		len;
 	char	*env_name;
+	char	*env_value;
 
 	start = get_start(line, i, j);
 	len = get_len(line, i, j);
-	env_name = ft_substr(line->metaed[i], start, len - start);
+	if (ft_strchr(env_name, ' '))
+		env_name = ft_substr(line->metaed[i], start, (len - 1) - start); // if space at end of name. But then doesn't 'print' space
+	else
+		env_name = ft_substr(line->metaed[i], start, len - start);
 	if (!env_name)
 		malloc_failure();
-	return (env_name);
+	ft_printf("env_name = %s\n", env_name);
+	env_value = ft_getenv(data->envp, env_name);
+	if (!env_value)
+		return (NULL);
+	free(env_name);
+	return (env_value);
 }
 
 static int	count_char(char *str, char c)
@@ -89,12 +98,19 @@ static int	count_char(char *str, char c)
 	return (count);
 }
 
+static void	expand(char **new_tokens, int j, int i, char *str)
+{
+	if (j > 0)
+		new_tokens[i] = join_and_free(new_tokens[i], str);
+	else
+		new_tokens[i] = ft_strdup(str);
+}
+
 void	expansion(t_mini *line, t_data *data)
 {
 	int		i;
 	int		j;
 	char	**new_tokens;
-	char	*env_name;
 	char	*env_value;
 	int		dollar_count;
 
@@ -113,27 +129,14 @@ void	expansion(t_mini *line, t_data *data)
 			while (j < dollar_count)
 			{
 				ft_printf("j = %d\n", j);
-				env_name = get_env_name(line, i, j);
-				ft_printf("env_name = %s\n", env_name);
-				env_value = ft_getenv(data->envp, env_name);
+				env_value = get_env_value(line, i, j, data);
 				if (!env_value)
-				{
-					if (j > 0)
-						new_tokens[i] = join_and_free(new_tokens[i], "");
-					else
-						new_tokens[i] = ft_strdup("");
-				}
+					expand(new_tokens, j, i, "");
 				else
-				{
-					if (j > 0)
-						new_tokens[i] = join_and_free(new_tokens[i], env_value);
-					else
-						new_tokens[i] = ft_strdup(env_value);
-					ft_printf("new_tokens[i] = %s\n", new_tokens[i]);
-				}
+					expand(new_tokens, j, i, env_value);
+				ft_printf("new_tokens[i] = %s\n", new_tokens[i]);
 				if (!new_tokens[i])
 					malloc_failure();
-				free(env_name);
 				free(env_value);
 				j++;
 			}

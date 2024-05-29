@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/28 13:19:25 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/29 10:57:27 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 // e.g. "$VAR hello" "hello$VARhello" "$VARhello" "hello$VAR"
 //handle string beginning and ending in single quotes, i.e. remove the quotes
 
-static int	get_len(t_mini *line, int i)
+static int	get_len(t_mini *line, int i, int j)
 {
 	int	len;
 	int	dollar_count;
@@ -26,37 +26,47 @@ static int	get_len(t_mini *line, int i)
 	len = 0;
 	dollar_count = 0;
 	quote_count = 0;
-	while (line->metaed[i][len] && quote_count < 2 && dollar_count < 2) //this is weird
+	while (line->metaed[i][len] && quote_count < 2 && dollar_count < (j + 2)) //this is weird
 	{
 		if (line->metaed[i][len] == '$')
 			dollar_count++;
 		if (line->metaed[i][len] == '"')
 			quote_count++;
-		if (dollar_count < 2 && quote_count < 2)
+		if (dollar_count < (j + 2) && quote_count < 2)
 			len++;
 	}
+	ft_printf("len = %d\n", len);
 	return (len);
 }
 
-static int	get_start(t_mini *line, int i)
+static int	get_start(t_mini *line, int i, int j)
 {
 	int	start;
+	int	count;
 
 	start = 0;
-	while (line->metaed[i][start] != '$')
+	count = 0;
+	while (line->metaed[i][start])
+	{
+		if (line->metaed[i][start] == '$')
+			count++;
+		if (count == j + 1)
+			break ;
 		start++;
+	}
 	start++;
+	ft_printf("start = %d\n", start);
 	return (start);
 }
 
-static char	*get_env_name(t_mini *line, int i)
+static char	*get_env_name(t_mini *line, int i, int j)
 {
 	int		start;
 	int		len;
 	char	*env_name;
 
-	start = get_start(line, i);
-	len = get_len(line, i);
+	start = get_start(line, i, j);
+	len = get_len(line, i, j);
 	env_name = ft_substr(line->metaed[i], start, len - start);
 	if (!env_name)
 		malloc_failure();
@@ -102,13 +112,25 @@ void	expansion(t_mini *line, t_data *data)
 			j = 0;
 			while (j < dollar_count)
 			{
-				env_name = get_env_name(line, i);
+				ft_printf("j = %d\n", j);
+				env_name = get_env_name(line, i, j);
 				ft_printf("env_name = %s\n", env_name);
 				env_value = ft_getenv(data->envp, env_name);
 				if (!env_value)
-					new_tokens[i] = ft_strdup("");
+				{
+					if (j > 0)
+						new_tokens[i] = join_and_free(new_tokens[i], "");
+					else
+						new_tokens[i] = ft_strdup("");
+				}
 				else
-					new_tokens[i] = ft_strdup(env_value);
+				{
+					if (j > 0)
+						new_tokens[i] = join_and_free(new_tokens[i], env_value);
+					else
+						new_tokens[i] = ft_strdup(env_value);
+					ft_printf("new_tokens[i] = %s\n", new_tokens[i]);
+				}
 				if (!new_tokens[i])
 					malloc_failure();
 				free(env_name);

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 15:05:39 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/30 16:13:28 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:38:19 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	function(t_mini *line, t_tokens *token)
 			i++;
 		j++;
 	}
-	j = 0;
+	/*j = 0;
 	while (j < line->pipe_num)
 	{
 		i = 0;
@@ -128,5 +128,5 @@ void	function(t_mini *line, t_tokens *token)
 			i++;
 		}
 		j++;
-	}
+	}*/
 }

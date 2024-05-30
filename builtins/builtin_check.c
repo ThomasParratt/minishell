@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:47:13 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/30 16:25:46 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/30 17:27:55 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@ void	check_tokens(t_tokens *token, t_data *data, char *line_read, t_mini *line)
 	int	i;
 
 	i = 0;
-	ft_printf("command = %s\n", token[i].command[0]);
 	while (i < line->pipe_num)
 	{
-		ft_printf("command = %s\n", token[i].command[0]);
 		if (!ft_strncmp(token[i].command[0], "echo", 5))
+		{
+			ft_printf("my echo\n");
 			echo(token[i].command);
+		}
 		else if (!ft_strncmp(token[i].command[0], "pwd", 4))
 			pwd();
 		else if (!ft_strncmp(token[i].command[0], "cd", 3))

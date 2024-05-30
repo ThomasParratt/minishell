@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/30 12:41:19 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/30 15:48:50 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,14 @@ static int	count_char(char *str, char c)
 		i++;
 	}
 	return (count);
-}*/
+}
 
-/*static void	expand(char *new_tokens, char *str)
+static void	expand(char **new_tokens, int j, int i, char *str)
 {
-		new_tokens = join_and_free(new_tokens, str);
+		if (j > 0)
+			new_tokens[i] = join_and_free(new_tokens[i], str);
+		else
+			new_tokens[i] = ft_strdup(str);
 }*/
 
 // get start, get len, ft_substr
@@ -109,7 +112,7 @@ static char	*get_substring(char *str, int j)
 
 	start = j;
 	len = j;
-	while (str[len] != '$' && str[len] != '\0' && str[len] != ' ' && str[len] != '"')
+	while (str[len] != '$' && str[len] != '\0' && str[len] != '"' && str[len] != ' ')
 		len++;
 	ft_printf("len = %d\n", len);
 	len = len - start;
@@ -126,7 +129,7 @@ void	expansion(t_mini *line, t_data *data)
 	int		j;
 	char	**new_tokens;
 	char	*env_value;
-	//int	dollar_count;
+	//int		dollar_count;
 	char	*substring;
 	int		index;
 
@@ -174,7 +177,7 @@ void	expansion(t_mini *line, t_data *data)
 					else
 						new_tokens[i] = join_and_free(new_tokens[i], substring);
 				}
-				j = j + ft_strlen(substring) + 1; //problem with iteration
+				j += ft_strlen(substring) + 1; //problem with iteration
 				free(substring);
 			}
 			/*dollar_count = count_char(line->metaed[i], '$');
@@ -197,7 +200,8 @@ void	expansion(t_mini *line, t_data *data)
 		}
 		else
 		{
-			//remove quotes
+			//remove single and double quotes from the beginning and end of string
+			//remove double quotes from inside the string
 			new_tokens[i] = ft_strdup(line->metaed[i]);
 			if (!new_tokens[i])
 				malloc_failure();

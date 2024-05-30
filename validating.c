@@ -6,29 +6,11 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:27:51 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/27 14:52:11 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/30 15:50:57 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// char	*minishell_substr(char *s, int strt, size_t len)
-// {
-// 	char	*sub_s;
-// 	char	c;
-
-// 	if (s[strt] == '\'' || s[strt] == '\"')
-// 	{
-// 		c = s[strt];
-// 		if (s[len] == c)
-// 			strt += 1;
-// 	}
-// 	sub_s = (char *)malloc(len + 1);
-// 	if (sub_s == NULL)
-// 		//malloc_error
-// 	ft_strlcpy(sub_s, s + strt, len + 1);
-// 	return (sub_s);
-// }
 
 static int	ft_skip(char *s, int i)
 {
@@ -113,24 +95,7 @@ static void	minishell_split(char *s, t_mini *line)
 	line->metaed[j] = NULL;
 }
 
-// int ft_redirection(t_mini  *line, int i)
-// {
-//     int len;
-
-//     len = ft_strlen(line->metaed[i]);
-//     if (ft_strncmp(line->metaed[i], "<<", len) == 0)
-//         printf("heredoc\n"); //discuss how to handle: here or before when taking in the args
-//     // line->token->redirect
-//     while (line->metaed[i] != NULL)
-//     {
-//         if (line->metaed[i][0] == '|')
-//             line->pipe_num++;
-//         i++;
-//     }
-//     return (line->pipe_num);
-// }
-
-static int	is_it_redirect(char *s)
+int	is_it_redirect(char *s)
 {
 	int	len;
 
@@ -140,36 +105,6 @@ static int	is_it_redirect(char *s)
 		return (0);
 	return (-1);
 }
-
-
-// void    sort_args(t_mini *line)
-// {
-//     int i;
-//     int len;
-//     int check;
-
-//     i = 0;
-//     check = 0;
-//     while (line->metaed[i] != NULL)
-//     {
-//         len = ft_strlen(line->metaed[i]);
-//         if (ft_strncmp(line->metaed[i], "|", len) == 0)
-//         {
-//             if (i == 0)
-//                 printf("zsh: parse error near '|'\n"); //exit_error; discuss: echo | echo, echo | ; the 2nd example asks for a command (pipe>)
-//             line->pipe_num++;
-//         }
-//         else if (is_it_redirect(line->metaed[i]) == 0)
-//             check = ft_redirection(line, i); //needs to become i if not -1
-//         else
-//             check = ft_save(line, len, i); //needs to be 0 if not -1
-//         if (check == -1)
-//             printf("malloc error\n"); //needs to exit and clean
-//         else if (check > 0)
-//             i = check;
-//         i++;
-//     }
-// }
 
 void	validating(char *argv, t_mini *line)
 {

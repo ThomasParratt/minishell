@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/30 11:20:25 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:26:16 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,18 @@ typedef struct s_mini
     int         pipe_num;
 }   			t_mini;
 
+typedef struct s_tokens
+{
+    char    **command;
+    char    **redirect;
+}   t_tokens;
+
+typedef	struct s_alloc
+{
+	int	redir;
+	int	other;
+}	t_alloc;
+
 char		*get_path(char **tokens, char **envp);
 void		free_2d(char **tab);
 void		print_2d(char **tab);
@@ -64,12 +76,15 @@ void		unset(char *arg, t_data *data);
 char		*ft_getenv(char **envp, char *str);
 void		handle_signal(int signal);
 void		set_term_attr(void);
-void		check_tokens(t_mini *line, t_data *data, char *line_read);
+void		check_tokens(t_tokens *token, t_data *data, char *line_read, t_mini *line);
 char		**execute(char *line_read, char **line, char **envp);
 char		**malloc_2d(char **arr);
 char		**envp_dup(char **envp);
 void		malloc_failure(void);
 void		expansion(t_mini *line, t_data *data);
 void    	validating(char *argv, t_mini *line);
+int			is_it_redirect(char *s);
+void		function(t_mini *line, t_tokens *token);
+void    	p_count(t_mini *line);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/29 14:04:20 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/30 12:41:19 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 // e.g. "$VAR hello" "hello$VARhello" "$VARhello" "hello$VAR"
 //handle string beginning and ending in single quotes, i.e. remove the quotes
 
-static int	get_len(t_mini *line, int i, int j)
+/*static int	get_len(t_mini *line, int i, int j)
 {
 	int	len;
 	int	dollar_count;
@@ -68,10 +68,7 @@ static char	*get_env_value(t_mini *line, int i, int j, t_data *data)
 
 	start = get_start(line, i, j);
 	len = get_len(line, i, j);
-	if (ft_strchr(env_name, ' '))
-		env_name = ft_substr(line->metaed[i], start, (len - 1) - start); // if space at end of name. But then doesn't 'print' space
-	else
-		env_name = ft_substr(line->metaed[i], start, len - start);
+	env_name = ft_substr(line->metaed[i], start, len - start);
 	if (!env_name)
 		malloc_failure();
 	ft_printf("env_name = %s\n", env_name);
@@ -96,23 +93,42 @@ static int	count_char(char *str, char c)
 		i++;
 	}
 	return (count);
-}
+}*/
 
-static void	expand(char **new_tokens, int j, int i, char *str)
+/*static void	expand(char *new_tokens, char *str)
 {
-	if (j > 0)
-		new_tokens[i] = join_and_free(new_tokens[i], str);
-	else
-		new_tokens[i] = ft_strdup(str);
+		new_tokens = join_and_free(new_tokens, str);
+}*/
+
+// get start, get len, ft_substr
+static char	*get_substring(char *str, int j)
+{
+	int		start;
+	int		len;
+	char	*substring;
+
+	start = j;
+	len = j;
+	while (str[len] != '$' && str[len] != '\0' && str[len] != ' ' && str[len] != '"')
+		len++;
+	ft_printf("len = %d\n", len);
+	len = len - start;
+	substring = ft_substr(str, start, len);
+	ft_printf("substring = %s\n", substring);
+	return (substring);
 }
 
+//Until we reach a $ or null terminator - join that
+//If we reach a $ - do what I have already until we reach a $ or null terminator OR WHITESPACE
 void	expansion(t_mini *line, t_data *data)
 {
 	int		i;
 	int		j;
 	char	**new_tokens;
 	char	*env_value;
-	int		dollar_count;
+	//int	dollar_count;
+	char	*substring;
+	int		index;
 
 	ft_printf("metaed BEFORE expansion:\n");
 	print_2d(line->metaed);
@@ -121,9 +137,47 @@ void	expansion(t_mini *line, t_data *data)
 	new_tokens = malloc_2d(line->metaed);
 	while (line->metaed[i])
 	{
-		if (ft_strchr(line->metaed[i], '$') && line->metaed[i][0] != '\'' && line->metaed[i][ft_strlen(line->metaed[i]) - 1] != '\'')
+		if (ft_strchr(line->metaed[i], '$') && line->metaed[i][0] != '\'' && line->metaed[i][ft_strlen(line->metaed[i])] != '\'')
 		{
-			dollar_count = count_char(line->metaed[i], '$');
+			j = 0;
+			index = 0;
+			if (line->metaed[i][0] == '"')
+				j++;
+			while (line->metaed[i][j] && line->metaed[i][j] != '"')
+			{
+				if (line->metaed[i][j] == '$')
+				{
+					j++;
+					substring = get_substring(line->metaed[i], j);
+					env_value = ft_getenv(data->envp, substring);
+					ft_printf("env_value = %s\n", env_value);
+					if (!env_value)
+					{
+						if (!new_tokens[i])
+							new_tokens[i] = ft_strdup("");
+						else
+							new_tokens[i] = join_and_free(new_tokens[i], "");
+					}
+					else
+					{
+						if (!new_tokens[i])
+							new_tokens[i] = ft_strdup(env_value);
+						else
+							new_tokens[i] = join_and_free(new_tokens[i], env_value);
+					}
+				}
+				else
+				{
+					substring = get_substring(line->metaed[i], j); //until we reach a $ or null terminator OR WHITESPACE;
+					if (!new_tokens[i])
+						new_tokens[i] = ft_strdup(substring);
+					else
+						new_tokens[i] = join_and_free(new_tokens[i], substring);
+				}
+				j = j + ft_strlen(substring) + 1; //problem with iteration
+				free(substring);
+			}
+			/*dollar_count = count_char(line->metaed[i], '$');
 			ft_printf("dollar count = %d\n", dollar_count);
 			j = 0;
 			while (j < dollar_count)
@@ -139,14 +193,16 @@ void	expansion(t_mini *line, t_data *data)
 					malloc_failure();
 				free(env_value);
 				j++;
-			}
+			}*/
 		}
 		else
 		{
+			//remove quotes
 			new_tokens[i] = ft_strdup(line->metaed[i]);
 			if (!new_tokens[i])
 				malloc_failure();
 		}
+		ft_printf("new_tokens[i] = %s\n", new_tokens[i]);
 		i++;
 	}
 	ft_printf("\n");
@@ -157,5 +213,4 @@ void	expansion(t_mini *line, t_data *data)
 	print_2d(line->metaed);
 	ft_printf("\n");
 }
-
 

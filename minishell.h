@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/30 16:26:16 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/31 15:14:20 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <termios.h>
 # include <string.h>
 # include <errno.h>
+
+extern volatile sig_atomic_t sig;
 
 typedef struct s_cmd
 {
@@ -63,7 +65,7 @@ void		print_2d(char **tab);
 char		*join_and_free(char *prompt, char *str);
 int			contains_pipe(char *line_read);
 extern void	rl_replace_line(const char *text, int clear_undo);
-void		execute_pipe(t_cmd *cmds, char **argc);
+void		execute_pipe(t_cmd *cmds, char **envp);
 void		echo(char **args);
 void		pwd(void);
 void		cd(char **args, t_data *data);
@@ -76,7 +78,7 @@ void		unset(char *arg, t_data *data);
 char		*ft_getenv(char **envp, char *str);
 void		handle_signal(int signal);
 void		set_term_attr(void);
-void		check_tokens(t_tokens *token, t_data *data, char *line_read, t_mini *line);
+void		check_tokens(t_tokens *token, t_data *data, t_mini *line);
 char		**execute(char *line_read, char **line, char **envp);
 char		**malloc_2d(char **arr);
 char		**envp_dup(char **envp);
@@ -86,5 +88,6 @@ void    	validating(char *argv, t_mini *line);
 int			is_it_redirect(char *s);
 void		function(t_mini *line, t_tokens *token);
 void    	p_count(t_mini *line);
+void		execute_command(char **tokens, char **envp);
 
 #endif

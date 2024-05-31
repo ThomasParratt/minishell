@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 15:05:39 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/30 16:38:19 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/31 12:18:23 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int    c_count(t_mini *line, t_alloc *ed, int i)
     ed->other = 0;
     while (line->metaed[i] != NULL)
     {
-		if (ft_strncmp(line->metaed[i], "|", ft_strlen(line->metaed[i])) == 0)
+		if (ft_strlen(line->metaed[i]) != 0 && ft_strncmp(line->metaed[i], "|", ft_strlen(line->metaed[i])) == 0)
 			break ;
         else if (is_it_redirect(line->metaed[i]) == 0)
         {
@@ -41,7 +41,7 @@ void    p_count(t_mini *line)
     line->pipe_num = 0;
     while (line->metaed[i] != NULL)
     {
-        if (ft_strncmp(line->metaed[i], "|", ft_strlen(line->metaed[i])) == 0)
+        if (ft_strlen(line->metaed[i]) != 0 && ft_strncmp(line->metaed[i], "|", ft_strlen(line->metaed[i])) == 0)
             line->pipe_num++;
         i++;
     }

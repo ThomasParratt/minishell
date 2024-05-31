@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 13:27:51 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/30 15:50:57 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/31 12:10:26 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,8 @@ int	is_it_redirect(char *s)
 	int	len;
 
 	len = ft_strlen(s);
-	if (ft_strncmp(s, "<", len) == 0 || ft_strncmp(s, ">", len) == 0 || \
-			ft_strncmp(s, ">>", len) == 0 || ft_strncmp(s, "<<", len) == 0)
+	if (len != 0 && (ft_strncmp(s, "<", len) == 0 || ft_strncmp(s, ">", len) == 0 || \
+			ft_strncmp(s, ">>", len) == 0 || ft_strncmp(s, "<<", len) == 0))
 		return (0);
 	return (-1);
 }

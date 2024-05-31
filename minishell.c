@@ -6,13 +6,15 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/30 16:26:02 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/31 15:25:07 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	execute_command(char **tokens, char **envp)
+volatile sig_atomic_t sig = 0;
+
+void	execute_command(char **tokens, char **envp)
 {
 	int		id;
 	char	*path_str;
@@ -21,6 +23,7 @@ static void	execute_command(char **tokens, char **envp)
 	if (id == 0)
 	{
 		path_str = get_path(tokens, envp);
+		ft_printf("path_str = %s\n", path_str);
 		execve(path_str, tokens, envp);
 		free(path_str);
 		exit(1);
@@ -83,10 +86,10 @@ static char	*create_prompt(void)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*line_read;
-	char	*prompt;
-	t_data	data;
-	t_mini	line;
+	char		*line_read;
+	char		*prompt;
+	t_data		data;
+	t_mini		line;
 	t_tokens	*token;
 
 	argv = NULL;
@@ -98,8 +101,12 @@ int	main(int argc, char **argv, char **envp)
 	set_term_attr();
 	if (argc == 1)
 	{
-		signal(SIGINT, handle_signal);
-		signal(SIGQUIT, handle_signal);
+		struct sigaction sa;
+        sa.sa_handler = handle_signal;
+        sa.sa_flags = 0;
+
+        sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGQUIT, &sa, NULL);
 		while (1)
 		{
 			prompt = create_prompt();
@@ -118,9 +125,18 @@ int	main(int argc, char **argv, char **envp)
 			if (!token)
 				printf("malloc\n");
 			function(&line, token);
-			check_tokens(token, &data, line_read, &line);
+			check_tokens(token, &data, &line);
 			free(line_read);
 			free_2d(line.metaed);
+			// while (1)
+			// {
+			// 	if (sig) 
+			// 	{
+            //      	sig = 0;  // Reset the flag
+            //     	break ;  // Exit the outer loop
+            // 	}
+			// 	ft_printf("HELLO\n");
+			// }
 		}
 	}
 	return (0);

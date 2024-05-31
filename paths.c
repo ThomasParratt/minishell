@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/28 11:50:19 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/31 15:24:07 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,18 @@ char	*get_path(char **tokens, char **envp)
 	char	*res;
 	char	**paths;
 
-	i = 0;
+	if (!ft_strncmp(tokens[0], "./", 2))
+	{
+		res = ft_getenv(envp, "PWD");
+		return (res);
+	}
 	paths = create_paths(tokens, envp);
 	if (!paths)
 	{
 		ft_printf("minishell: %s: No such file or directory\n", tokens[0]);
 		return (NULL);
 	}
+	i = 0;
 	while (paths[i])
 	{
 		if (access(paths[i], F_OK) == 0)

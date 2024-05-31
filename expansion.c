@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/30 17:42:25 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/05/31 14:58:59 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static char	*get_substring(char *str, int j)
 	len = j;
 	if (str[start - 1] == '$')
 	{
-		while (str[len] != '$' && str[len] != '\0' && str[len] != '"'  && str[len] != ' ')
+		while (str[len] != '$' && str[len] != '\0' && str[len] != '"' && str[len] != ' ')
 			len++;
 	}
 	else
@@ -38,28 +38,27 @@ static char	*get_substring(char *str, int j)
 			len++;
 	}
 	len = len - start;
-	ft_printf("start = %d\n", start);
-	ft_printf("len = %d\n", len);
 	substring = ft_substr(str, start, len);
-	ft_printf("substring = %s\n", substring);
 	return (substring);
 }
 
-//Until we reach a $ or null terminator - join that
-//If we reach a $ - do what I have already until we reach a $ or null terminator OR WHITESPACE
+static void	dup_or_join(char **new_tokens, int loop, int i, char *str)
+{
+	if (loop == 0)
+		new_tokens[i] = ft_strdup(str);
+	else
+		new_tokens[i] = join_and_free(new_tokens[i], str);
+}
+
 void	expansion(t_mini *line, t_data *data)
 {
 	int		i;
 	int		j;
 	char	**new_tokens;
 	char	*env_value;
-	//int		dollar_count;
 	char	*substring;
 	int		loop;
 
-	ft_printf("metaed BEFORE expansion:\n");
-	print_2d(line->metaed);
-	ft_printf("\n");
 	i = 0;
 	new_tokens = malloc_2d(line->metaed);
 	while (line->metaed[i])
@@ -77,35 +76,15 @@ void	expansion(t_mini *line, t_data *data)
 					j++;
 					substring = get_substring(line->metaed[i], j);
 					env_value = ft_getenv(data->envp, substring);
-					ft_printf("env_value = %s\n", env_value);
 					if (!env_value)
-					{
-						if (loop == 0)
-							new_tokens[i] = ft_strdup("");
-						else
-							new_tokens[i] = join_and_free(new_tokens[i], "");
-					}
+						dup_or_join(new_tokens, loop, i, "");
 					else
-					{
-						if (loop == 0)
-						{
-							ft_printf("new_tokens[i] doesn't exist\n");
-							new_tokens[i] = ft_strdup(env_value);
-						}
-						else
-						{
-							ft_printf("new_tokens[i] already exists\n");
-							new_tokens[i] = join_and_free(new_tokens[i], env_value);
-						}
-					}
+						dup_or_join(new_tokens, loop, i, env_value);
 				}
 				else
 				{
-					substring = get_substring(line->metaed[i], j); //until we reach a $ or null terminator OR WHITESPACE;
-					if (!new_tokens[i])
-						new_tokens[i] = ft_strdup(substring);
-					else
-						new_tokens[i] = join_and_free(new_tokens[i], substring);
+					substring = get_substring(line->metaed[i], j);
+					dup_or_join(new_tokens, loop, i, substring);
 				}
 				j += ft_strlen(substring);
 				free(substring);
@@ -114,21 +93,15 @@ void	expansion(t_mini *line, t_data *data)
 		}
 		else
 		{
-			//remove single and double quotes from the beginning and end of string
-			//remove double quotes from inside the string
+			// replace unprintable character with $
 			new_tokens[i] = ft_strdup(line->metaed[i]);
 			if (!new_tokens[i])
 				malloc_failure();
 		}
-		ft_printf("new_tokens[i] = %s\n", new_tokens[i]);
 		i++;
 	}
-	ft_printf("\n");
 	new_tokens[i] = NULL;
 	free_2d(line->metaed);
 	line->metaed = new_tokens;
-	ft_printf("metaed AFTER expansion:\n");
-	print_2d(line->metaed);
-	ft_printf("\n");
 }
 

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/31 15:24:07 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/03 15:44:25 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ char	*get_path(char **tokens, char **envp)
 			if (!res)
 				exit(1);
 			free_2d(paths);
+			ft_printf("path = %s\n", res);
 			return (res);
 		}
 		i++;

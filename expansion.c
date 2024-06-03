@@ -6,19 +6,12 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/03 10:45:59 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/03 15:11:24 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//handle $?
-//handle where he '$' doesn't come immediately after the '"' e.g. "hello $VAR"
-// e.g. "$VAR hello" "hello$VARhello" "$VARhello" "hello$VAR"
-//handle string beginning and ending in single quotes, i.e. remove the quotes
-
-
-// get start, get len, ft_substr
 static char	*get_substring(char *str, int j)
 {
 	int		start;
@@ -52,55 +45,73 @@ static void	dup_or_join(char **new_tokens, int loop, int i, char *str)
 		new_tokens[i] = join_and_free(new_tokens[i], str);
 }
 
+static void	duplicate(t_mini *line, char **new_tokens, int i)
+{
+	int	len;
+
+	len = ft_strlen(line->metaed[i]);
+	if (!ft_isprint(line->metaed[i][0]) && !ft_isprint(line->metaed[i][len]))
+		new_tokens[i] = ft_substr(line->metaed[i], 1, len - 1);
+	else
+		new_tokens[i] = ft_strdup(line->metaed[i]);
+	if (!new_tokens[i])
+		malloc_failure();
+}
+
+static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
+{
+	int		j;
+	int		loop;
+	char	*substring;
+	char	*env_value;
+
+	j = 0;
+	loop = 0;
+	if (line->metaed[i][0] == '"')
+		j++;
+	while (line->metaed[i][j] && line->metaed[i][j] != '"')
+	{
+		if (line->metaed[i][j] == '$')
+		{
+			j++;
+			if (line->metaed[i][j] == '?')
+			{
+				dup_or_join(new_tokens, loop, i, ft_itoa(data->err_num));
+				j++;
+				break ;
+			}
+			substring = get_substring(line->metaed[i], j);
+			env_value = ft_getenv(data->envp, substring);
+			if (!env_value)
+				dup_or_join(new_tokens, loop, i, "");
+			else
+				dup_or_join(new_tokens, loop, i, env_value);
+			free(env_value);
+		}
+		else
+		{
+			substring = get_substring(line->metaed[i], j);
+			dup_or_join(new_tokens, loop, i, substring);
+		}
+		j += ft_strlen(substring);
+		free(substring);
+		loop++;
+	}
+}
+
 void	expansion(t_mini *line, t_data *data)
 {
 	int		i;
-	int		j;
 	char	**new_tokens;
-	char	*env_value;
-	char	*substring;
-	int		loop;
 
 	i = 0;
 	new_tokens = malloc_2d(line->metaed);
 	while (line->metaed[i])
 	{
 		if (ft_strchr(line->metaed[i], '$') && line->metaed[i][0] != '\'' && line->metaed[i][ft_strlen(line->metaed[i])] != '\'')
-		{
-			j = 0;
-			loop = 0;
-			if (line->metaed[i][0] == '"')
-				j++;
-			while (line->metaed[i][j] && line->metaed[i][j] != '"')
-			{
-				if (line->metaed[i][j] == '$')
-				{
-					j++;
-					substring = get_substring(line->metaed[i], j);
-					env_value = ft_getenv(data->envp, substring);
-					if (!env_value)
-						dup_or_join(new_tokens, loop, i, "");
-					else
-						dup_or_join(new_tokens, loop, i, env_value);
-					free(env_value);
-				}
-				else
-				{
-					substring = get_substring(line->metaed[i], j);
-					dup_or_join(new_tokens, loop, i, substring);
-				}
-				j += ft_strlen(substring);
-				free(substring);
-				loop++;
-			}
-		}
+			expand(line, new_tokens, data, i);
 		else
-		{
-			// replace unprintable character with $
-			new_tokens[i] = ft_strdup(line->metaed[i]);
-			if (!new_tokens[i])
-				malloc_failure();
-		}
+			duplicate(line, new_tokens, i);
 		i++;
 	}
 	new_tokens[i] = NULL;

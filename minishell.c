@@ -6,57 +6,11 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/03 10:47:37 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/03 11:58:29 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-volatile sig_atomic_t sig = 0;
-
-void	execute_command(char **tokens, char **envp)
-{
-	int		id;
-	char	*path_str;
-
-	id = fork();
-	if (id == 0)
-	{
-		path_str = get_path(tokens, envp);
-		ft_printf("path_str = %s\n", path_str);
-		execve(path_str, tokens, envp);
-		free(path_str);
-		exit(1);
-	}
-	else
-		wait(NULL);
-}
-
-char	**execute(char *line_read, char **tokens, char **envp)
-{
-	char	**pipe_cmds;
-	t_cmd	*cmds;
-
-	cmds = malloc(sizeof(t_cmd));
-	if (!contains_pipe(line_read))
-		execute_command(tokens, envp);
-	else if (contains_pipe(line_read))
-	{
-		pipe_cmds = ft_split(line_read, '|');
-		cmds->cmd1 = ft_split(pipe_cmds[0], ' ');
-		cmds->path1 = get_path(cmds->cmd1, envp);
-		cmds->cmd2 = ft_split(pipe_cmds[1], ' ');
-		cmds->path2 = get_path(cmds->cmd2, envp);
-		free_2d(pipe_cmds);
-		execute_pipe(cmds, envp);
-		free_2d(cmds->cmd1);
-		free_2d(cmds->cmd2);
-		free(cmds->path1);
-		free(cmds->path2);
-		free(cmds);
-	}
-	return (envp);
-}
 
 static char	*create_prompt(void)
 {
@@ -102,7 +56,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc == 1)
 	{
 		struct sigaction	sa;
-        sa.sa_handler = handle_signal;
+		sa.sa_handler = handle_signal;
 
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGQUIT, &sa, NULL);
@@ -122,7 +76,7 @@ int	main(int argc, char **argv, char **envp)
 			p_count(&line);
 			token = malloc(sizeof(t_tokens) * (line.pipe_num));
 			if (!token)
-				printf("malloc\n");
+				malloc_failure();
 			function(&line, token);
 			check_tokens(token, &data, &line);
 			free(line_read);

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/03 10:55:01 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:56:16 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void		print_2d(char **tab);
 char		*join_and_free(char *prompt, char *str);
 int			contains_pipe(char *line_read);
 extern void	rl_replace_line(const char *text, int clear_undo);
-void		execute_pipe(t_cmd *cmds, char **envp);
+void		execute_pipe(t_tokens *token, t_data *data, t_mini *line);
 void		echo(char **args);
 void		pwd(void);
 void		cd(char **args, t_data *data);
@@ -86,6 +86,8 @@ void		validating(char *argv, t_mini *line);
 int			is_it_redirect(char *s);
 void		function(t_mini *line, t_tokens *token);
 void		p_count(t_mini *line);
-void		execute_command(char **tokens, char **envp);
+void		execute_command(t_tokens *token, t_data *data);
+int			execute_builtin(t_tokens *token, t_data *data);
+int			is_builtin(t_tokens *token);
 
 #endif

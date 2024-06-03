@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/31 15:14:20 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/03 10:55:01 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@
 # include <termios.h>
 # include <string.h>
 # include <errno.h>
-
-extern volatile sig_atomic_t sig;
 
 typedef struct s_cmd
 {
@@ -43,21 +41,21 @@ typedef struct s_data
 
 typedef struct s_mini
 {
-    char        **metaed;
-    int         pipe_num;
-}   			t_mini;
+	char	**metaed;
+	int		pipe_num;
+}				t_mini;
 
 typedef struct s_tokens
 {
-    char    **command;
-    char    **redirect;
-}   t_tokens;
+	char	**command;
+	char	**redirect;
+}				t_tokens;
 
-typedef	struct s_alloc
+typedef struct s_alloc
 {
 	int	redir;
 	int	other;
-}	t_alloc;
+}				t_alloc;
 
 char		*get_path(char **tokens, char **envp);
 void		free_2d(char **tab);
@@ -84,10 +82,10 @@ char		**malloc_2d(char **arr);
 char		**envp_dup(char **envp);
 void		malloc_failure(void);
 void		expansion(t_mini *line, t_data *data);
-void    	validating(char *argv, t_mini *line);
+void		validating(char *argv, t_mini *line);
 int			is_it_redirect(char *s);
 void		function(t_mini *line, t_tokens *token);
-void    	p_count(t_mini *line);
+void		p_count(t_mini *line);
 void		execute_command(char **tokens, char **envp);
 
 #endif

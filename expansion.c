@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/31 14:58:59 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/03 10:45:59 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ static char	*get_substring(char *str, int j)
 	}
 	len = len - start;
 	substring = ft_substr(str, start, len);
+	if (!substring)
+		malloc_failure();
 	return (substring);
 }
 
@@ -80,6 +82,7 @@ void	expansion(t_mini *line, t_data *data)
 						dup_or_join(new_tokens, loop, i, "");
 					else
 						dup_or_join(new_tokens, loop, i, env_value);
+					free(env_value);
 				}
 				else
 				{

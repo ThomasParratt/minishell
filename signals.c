@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:58:47 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/31 14:12:05 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/03 10:55:13 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,10 @@ void	handle_signal(int signal)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-		sig = 1;
 	}
 	if (signal == SIGQUIT)
 	{
 		rl_on_new_line();
 		rl_redisplay();
-		sig = 1;
 	}
 }

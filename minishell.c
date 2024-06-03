@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/31 15:25:07 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/03 10:47:37 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,8 @@ int	main(int argc, char **argv, char **envp)
 	set_term_attr();
 	if (argc == 1)
 	{
-		struct sigaction sa;
+		struct sigaction	sa;
         sa.sa_handler = handle_signal;
-        sa.sa_flags = 0;
 
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGQUIT, &sa, NULL);
@@ -128,6 +127,8 @@ int	main(int argc, char **argv, char **envp)
 			check_tokens(token, &data, &line);
 			free(line_read);
 			free_2d(line.metaed);
+			free(token);
+			free_2d(token->command);
 			// while (1)
 			// {
 			// 	if (sig) 

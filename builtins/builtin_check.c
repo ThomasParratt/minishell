@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:47:13 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/05 10:33:41 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:46:27 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,7 @@ int	is_builtin(t_tokens *token, int i)
 void	execute_builtin(t_tokens *token, t_data *data, int i)
 {
 	if (!ft_strncmp(token[i].command[0], "echo", 5))
-	{
-		ft_printf("my echo\n");
 		echo(token[i].command);
-	}
 	else if (!ft_strncmp(token[i].command[0], "pwd", 4))
 		pwd();
 	else if (!ft_strncmp(token[i].command[0], "cd", 3))

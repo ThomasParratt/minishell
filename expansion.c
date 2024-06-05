@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/03 15:11:24 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:55:21 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ static char	*get_substring(char *str, int j)
 	len = j;
 	if (str[start - 1] == '$')
 	{
-		while (str[len] != '$' && str[len] != '\0' && str[len] != '"' && str[len] != ' ')
+		while (str[len] != '$' && str[len] != '\0'/* && str[len] != '"' */&& str[len] != ' ')
 			len++;
 	}
 	else
 	{
-		while (str[len] != '$' && str[len] != '\0' && str[len] != '"')
+		while (str[len] != '$' && str[len] != '\0'/* && str[len] != '"'*/)
 			len++;
 	}
 	len = len - start;
@@ -47,13 +47,22 @@ static void	dup_or_join(char **new_tokens, int loop, int i, char *str)
 
 static void	duplicate(t_mini *line, char **new_tokens, int i)
 {
-	int	len;
+	int	j;
 
-	len = ft_strlen(line->metaed[i]);
-	if (!ft_isprint(line->metaed[i][0]) && !ft_isprint(line->metaed[i][len]))
-		new_tokens[i] = ft_substr(line->metaed[i], 1, len - 1);
-	else
-		new_tokens[i] = ft_strdup(line->metaed[i]);
+	if (ft_strchr(line->metaed[i], 7))
+	{
+		j = 0;
+		while (line->metaed[i][j])
+		{
+			if (line->metaed[i][j] == 7)
+			{
+				line->metaed[i][j] = '$';
+				break ;
+			}
+			j++;
+		}
+	}
+	new_tokens[i] = ft_strdup(line->metaed[i]);
 	if (!new_tokens[i])
 		malloc_failure();
 }
@@ -67,9 +76,9 @@ static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
 
 	j = 0;
 	loop = 0;
-	if (line->metaed[i][0] == '"')
-		j++;
-	while (line->metaed[i][j] && line->metaed[i][j] != '"')
+	// if (line->metaed[i][0] == '"')
+	// 	j++;
+	while (line->metaed[i][j]/* && line->metaed[i][j] != '"'*/)
 	{
 		if (line->metaed[i][j] == '$')
 		{
@@ -108,7 +117,7 @@ void	expansion(t_mini *line, t_data *data)
 	new_tokens = malloc_2d(line->metaed);
 	while (line->metaed[i])
 	{
-		if (ft_strchr(line->metaed[i], '$') && line->metaed[i][0] != '\'' && line->metaed[i][ft_strlen(line->metaed[i])] != '\'')
+		if (ft_strchr(line->metaed[i], '$')/* && line->metaed[i][0] != '\'' && line->metaed[i][ft_strlen(line->metaed[i])] != '\''*/)
 			expand(line, new_tokens, data, i);
 		else
 			duplicate(line, new_tokens, i);

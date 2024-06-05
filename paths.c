@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/03 15:44:25 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:58:48 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static char	**create_paths(char **tokens, char **envp)
 	path_pointer = ft_getenv(envp, "PATH");
 	if (!path_pointer)
 	{
-		ft_printf("minishell: %s: No such file or directory\n", tokens[0]); //this does not print
+		ft_printf("minishell: %s: No such file or directory\n", tokens[0]);
 		return (NULL);
 	}
 	paths = ft_split(path_pointer, ':');
@@ -100,7 +100,6 @@ char	*get_path(char **tokens, char **envp)
 			if (!res)
 				exit(1);
 			free_2d(paths);
-			ft_printf("path = %s\n", res);
 			return (res);
 		}
 		i++;

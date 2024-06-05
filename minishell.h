@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/05 10:34:25 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:34:53 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_data
 typedef struct s_mini
 {
 	char	**metaed;
+	char	**element;
 	int		pipe_num;
 }				t_mini;
 
@@ -87,5 +88,10 @@ void		p_count(t_mini *line);
 void		execute_command(t_tokens *token, t_data *data);
 void		execute_builtin(t_tokens *token, t_data *data, int i);
 int			is_builtin(t_tokens *token, int i);
+int			first_split(char *argv, t_mini *line);
+int			second_split(t_mini *line);
+void		trim_quotes(t_mini *line);
+int			is_it_space(char *s, int i);
+int			ft_skip(char *s, int i);
 
 #endif

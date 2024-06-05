@@ -6,21 +6,18 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:06:44 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/05 10:51:43 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/05 17:43:40 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	contains_pipe(char *line_read)
-{
-	int		i;
-
-	i = 0;
-	if (ft_strchr(line_read, '|'))
-		return (1);
-	return (0);
-}
+// int	contains_pipe(char *line_read)
+// {
+// 	if (ft_strchr(line_read, '|'))
+// 		return (1);
+// 	return (0);
+// }
 
 // static void	id2(pid_t id1, int *fd, t_tokens *token, t_data *data)
 // {
@@ -44,7 +41,44 @@ int	contains_pipe(char *line_read)
 // 	}
 // }
 
-void	execute(t_tokens *tokens, t_data *data, t_mini *line)
+static void	redirections(t_tokens *token, int i)
+{
+	int	j;
+	int	input_fd;
+	int	output_fd;
+
+	j = 0;
+	while (token[i].redirect[j])
+	{
+		if (strcmp(token[i].redirect[j], "<") == 0)
+		{
+			input_fd = open(token[i].redirect[j + 1], O_RDONLY);
+			if (input_fd == -1 || dup2(input_fd, STDIN_FILENO) == -1)
+				exit(1);
+			close(input_fd);
+			j++;
+		}
+		else if (strcmp(token[i].redirect[j], ">") == 0)
+		{
+			output_fd = open(token[i].redirect[j + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (output_fd == -1 || dup2(output_fd, STDOUT_FILENO) == -1)
+				exit(1);
+			close(output_fd);
+			j++;
+		}
+		else if (strcmp(token[i].redirect[j], ">>") == 0)
+		{
+			output_fd = open(token[i].redirect[j + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if (output_fd == -1 || dup2(output_fd, STDOUT_FILENO) == -1)
+				exit(1);
+			close(output_fd);
+			j++;
+		}
+		j++;
+	}
+}
+
+void	execute(t_tokens *token, t_data *data, t_mini *line)
 {
 	int		i;
 	int		fd[2];
@@ -62,6 +96,7 @@ void	execute(t_tokens *tokens, t_data *data, t_mini *line)
 			exit(1);
 		else if (pid == 0) // Child process
 		{
+			redirections(token, i);
 			if (in_fd != STDIN_FILENO) // Redirect input
 			{
 				if (dup2(in_fd, STDIN_FILENO) == -1)
@@ -75,14 +110,14 @@ void	execute(t_tokens *tokens, t_data *data, t_mini *line)
 					exit(1);
 				close(fd[1]);
 			}
-			if (is_builtin(tokens, i))
+			if (is_builtin(token, i))
 			{
-				execute_builtin(tokens, data, i);
+				execute_builtin(token, data, i);
 				exit(0); // Exit child process after executing builtin
 			}
 			else
 			{
-				if (execve(get_path(tokens[i].command, data->envp), tokens[i].command, data->envp) == -1)
+				if (execve(get_path(token[i].command, data->envp), token[i].command, data->envp) == -1)
 					exit(1);
 			}
 		}

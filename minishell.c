@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/05 14:46:05 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/05 17:47:19 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,26 @@ static char	*create_prompt(void)
 	prompt = join_and_free(prompt, "$ ");
 	return (prompt);
 }
+
+// static void	free_all(char *line_read, t_tokens *token, t_mini *line)
+// {
+// 	int	i;
+
+// 	free(line_read);
+// 	free_2d(line->metaed);
+// 	i = 0;
+// 	while (token[i].command && token[i].command[0])
+// 	{
+// 		free_2d(token[i].command);
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (token[i].redirect && token[i].redirect[0])
+// 	{
+// 		free_2d(token[i].redirect);
+// 		i++;
+// 	}
+// }
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -83,15 +103,6 @@ int	main(int argc, char **argv, char **envp)
 			free_2d(line.metaed);
 			free_2d(token->command);
 			free(token);
-			// while (1)
-			// {
-			// 	if (sig) 
-			// 	{
-            //      	sig = 0;  // Reset the flag
-            //     	break ;  // Exit the outer loop
-            // 	}
-			// 	ft_printf("HELLO\n");
-			// }
 		}
 	}
 	return (0);

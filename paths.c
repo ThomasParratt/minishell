@@ -6,13 +6,13 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/05 15:58:48 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/05 16:01:18 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *ft_getenv(char **envp, char *str) 
+char	*ft_getenv(char **envp, char *str)
 {
 	int		i;
 	char	*path_pointer;

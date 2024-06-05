@@ -22,12 +22,12 @@ static char	*get_substring(char *str, int j)
 	len = j;
 	if (str[start - 1] == '$')
 	{
-		while (str[len] != '$' && str[len] != '\0'/* && str[len] != '"' */&& str[len] != ' ')
+		while (str[len] != '$' && str[len] != '\0' && ft_isalpha(str[len]))
 			len++;
 	}
 	else
 	{
-		while (str[len] != '$' && str[len] != '\0'/* && str[len] != '"'*/)
+		while (str[len] != '$' && str[len] != '\0')
 			len++;
 	}
 	len = len - start;
@@ -76,9 +76,7 @@ static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
 
 	j = 0;
 	loop = 0;
-	// if (line->metaed[i][0] == '"')
-	// 	j++;
-	while (line->metaed[i][j]/* && line->metaed[i][j] != '"'*/)
+	while (line->metaed[i][j])
 	{
 		if (line->metaed[i][j] == '$')
 		{
@@ -117,7 +115,7 @@ void	expansion(t_mini *line, t_data *data)
 	new_tokens = malloc_2d(line->metaed);
 	while (line->metaed[i])
 	{
-		if (ft_strchr(line->metaed[i], '$')/* && line->metaed[i][0] != '\'' && line->metaed[i][ft_strlen(line->metaed[i])] != '\''*/)
+		if (ft_strchr(line->metaed[i], '$'))
 			expand(line, new_tokens, data, i);
 		else
 			duplicate(line, new_tokens, i);
@@ -127,4 +125,3 @@ void	expansion(t_mini *line, t_data *data)
 	free_2d(line->metaed);
 	line->metaed = new_tokens;
 }
-

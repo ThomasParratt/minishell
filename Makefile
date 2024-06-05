@@ -6,13 +6,28 @@
 #    By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/15 10:22:54 by tparratt          #+#    #+#              #
-#    Updated: 2024/06/05 15:29:50 by tparratt         ###   ########.fr        #
+#    Updated: 2024/06/05 16:04:06 by tparratt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	minishell
 
-SRC			=	minishell.c validation.c first_split.c second_split.c trim.c parsing.c expansion.c paths.c utils.c pipe.c signals.c builtins/echo-pwd-env.c builtins/cd.c builtins/export.c builtins/unset.c builtins/builtin_check.c
+SRC			=	minishell.c \
+					validation.c \
+					first_split.c \
+					second_split.c \
+					trim.c \
+					parsing.c \
+					expansion.c \
+					paths.c \
+					utils.c \
+					pipe.c \
+					signals.c \
+					builtins/echo-pwd-env.c \
+					builtins/cd.c \
+					builtins/export.c \
+					builtins/unset.c \
+					builtins/builtin_check.c \
 
 LIBFT		=	libft/libft.a
 

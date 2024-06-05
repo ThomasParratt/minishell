@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:06:44 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/03 17:04:59 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/05 10:51:43 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,51 +44,56 @@ int	contains_pipe(char *line_read)
 // 	}
 // }
 
-void	execute_pipe(t_tokens *tokens, t_data *data, t_mini *line)
+void	execute(t_tokens *tokens, t_data *data, t_mini *line)
 {
 	int		i;
 	int		fd[2];
 	pid_t	pid;
 	int		in_fd;
 
+	in_fd = STDIN_FILENO;
 	i = 0;
-	in_fd = STDIN_FILENO; // Initially, the input is from the standard input
-	ft_printf("pipe_num = %d\n", line->pipe_num);
 	while (i < line->pipe_num)
 	{
-		if (i < line->pipe_num - 1)
-			pipe(fd); // Create a pipe for all but the last command
-		// add builtin check here?
+		if (i < line->pipe_num - 1 && pipe(fd) == -1)
+			exit(1);
 		pid = fork();
-		if (pid == 0) // Child process
+		if (pid == -1)
+			exit(1);
+		else if (pid == 0) // Child process
 		{
-			if (i > 0)
+			if (in_fd != STDIN_FILENO) // Redirect input
 			{
-				// Get input from the previous command
-				dup2(in_fd, STDIN_FILENO);
+				if (dup2(in_fd, STDIN_FILENO) == -1)
+					exit(1);
 				close(in_fd);
 			}
-			if (i < line->pipe_num - 1)
+			if (i < line->pipe_num - 1) // Redirect output
 			{
-				// Send output to the next command
 				close(fd[0]);
-				dup2(fd[1], STDOUT_FILENO);
+				if (dup2(fd[1], STDOUT_FILENO) == -1)
+					exit(1);
 				close(fd[1]);
 			}
-			// Execute the command
-			if (execute_builtin(tokens, data) == 0) // incorrect
-				exit(1);
-			if (execve(get_path(tokens[i].command, data->envp), tokens[i].command, data->envp) == -1)
-				exit(1);
+			if (is_builtin(tokens, i))
+			{
+				execute_builtin(tokens, data, i);
+				exit(0); // Exit child process after executing builtin
+			}
+			else
+			{
+				if (execve(get_path(tokens[i].command, data->envp), tokens[i].command, data->envp) == -1)
+					exit(1);
+			}
 		}
 		else // Parent process
 		{
-			if (i > 0)
+			if (in_fd != STDIN_FILENO)
 				close(in_fd);
 			if (i < line->pipe_num - 1)
 			{
-				close(fd[1]);
-				in_fd = fd[0];
+				close(fd[1]); // close write end of pipe
+				in_fd = fd[0]; // set read end of pipe
 			}
 		}
 		i++;
@@ -102,24 +107,29 @@ void	execute_pipe(t_tokens *tokens, t_data *data, t_mini *line)
 	}
 }
 
-void	execute_command(t_tokens *token, t_data *data)
-{
-	int		id;
-	char	*path_str;
 
-	id = fork();
-	if (id == 0)
-	{
-		path_str = get_path(token[0].command, data->envp);
-		if (execute_builtin(token, data) == 0)
-			exit(1);
-		execve(path_str, token[0].command, data->envp);
-		free(path_str);
-		exit(1);
-	}
-	else
-		wait(NULL);
-}
+
+// void	execute_command(t_tokens *token, t_data *data)
+// {
+// 	int		id;
+// 	char	*path_str;
+
+// 	if (is_builtin(token, 0) == 1)
+// 		execute_builtin(token, data, 0);
+// 	else
+// 	{
+// 		id = fork();
+// 		if (id == 0)
+// 		{
+// 			path_str = get_path(token[0].command, data->envp);
+// 			execve(path_str, token[0].command, data->envp);
+// 			free(path_str);
+// 			exit(1);
+// 		}
+// 		else
+// 			wait(NULL);
+// 	}
+// }
 
 // char	**execute(char *line_read, char **tokens, char **envp)
 // {

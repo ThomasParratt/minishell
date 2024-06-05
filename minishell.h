@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/03 16:56:16 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/05 10:34:25 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void		print_2d(char **tab);
 char		*join_and_free(char *prompt, char *str);
 int			contains_pipe(char *line_read);
 extern void	rl_replace_line(const char *text, int clear_undo);
-void		execute_pipe(t_tokens *token, t_data *data, t_mini *line);
+void		execute(t_tokens *token, t_data *data, t_mini *line);
 void		echo(char **args);
 void		pwd(void);
 void		cd(char **args, t_data *data);
@@ -76,8 +76,6 @@ void		unset(char *arg, t_data *data);
 char		*ft_getenv(char **envp, char *str);
 void		handle_signal(int signal);
 void		set_term_attr(void);
-void		check_tokens(t_tokens *token, t_data *data, t_mini *line);
-char		**execute(char *line_read, char **line, char **envp);
 char		**malloc_2d(char **arr);
 char		**envp_dup(char **envp);
 void		malloc_failure(void);
@@ -87,7 +85,7 @@ int			is_it_redirect(char *s);
 void		function(t_mini *line, t_tokens *token);
 void		p_count(t_mini *line);
 void		execute_command(t_tokens *token, t_data *data);
-int			execute_builtin(t_tokens *token, t_data *data);
-int			is_builtin(t_tokens *token);
+void		execute_builtin(t_tokens *token, t_data *data, int i);
+int			is_builtin(t_tokens *token, int i);
 
 #endif

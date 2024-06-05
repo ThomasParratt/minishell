@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/03 11:58:29 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/05 10:33:34 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,11 @@ int	main(int argc, char **argv, char **envp)
 			if (!token)
 				malloc_failure();
 			function(&line, token);
-			check_tokens(token, &data, &line);
+			execute(token, &data, &line);
 			free(line_read);
 			free_2d(line.metaed);
-			free(token);
 			free_2d(token->command);
+			free(token);
 			// while (1)
 			// {
 			// 	if (sig) 

@@ -80,20 +80,41 @@ static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
 	{
 		if (line->metaed[i][j] == '$')
 		{
-			j++;
-			if (line->metaed[i][j] == '?')
+			if (ft_strlen(line->metaed[i]) == 1)
 			{
-				dup_or_join(new_tokens, loop, i, ft_itoa(data->err_num));
-				j++;
+				dup_or_join(new_tokens, loop, i, "$");
+				j++; // is this needed
 				break ;
 			}
-			substring = get_substring(line->metaed[i], j);
-			env_value = ft_getenv(data->envp, substring);
-			if (!env_value)
-				dup_or_join(new_tokens, loop, i, "");
+			else if (line->metaed[i][j + 1] == ' ' || line->metaed[i][j + 1] == '?')
+			{
+				j++;
+				if (line->metaed[i][j] == ' ')
+				{
+					dup_or_join(new_tokens, loop, i, "$ ");
+					j++;
+					loop++;
+					continue ;
+				}
+				if (line->metaed[i][j] == '?')
+				{
+					dup_or_join(new_tokens, loop, i, ft_itoa(data->err_num));
+					j++;
+					loop++;
+					continue ;
+				}
+			}
 			else
-				dup_or_join(new_tokens, loop, i, env_value);
-			free(env_value);
+			{
+				j++;
+				substring = get_substring(line->metaed[i], j);
+				env_value = ft_getenv(data->envp, substring);
+				if (!env_value)
+					dup_or_join(new_tokens, loop, i, "");
+				else
+					dup_or_join(new_tokens, loop, i, env_value);
+				free(env_value);
+			}
 		}
 		else
 		{

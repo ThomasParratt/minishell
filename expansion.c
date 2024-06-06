@@ -22,7 +22,7 @@ static char	*get_substring(char *str, int j)
 	len = j;
 	if (str[start - 1] == '$')
 	{
-		while (str[len] != '$' && str[len] != '\0' && ft_isalpha(str[len]))
+		while (str[len] != '$' && str[len] != '\0' && (ft_isalnum(str[len]) || str[len] == '_'))
 			len++;
 	}
 	else

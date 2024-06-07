@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/05 15:34:53 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/07 14:08:15 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@
 # include <string.h>
 # include <errno.h>
 
-typedef struct s_cmd
-{
-	char	**cmd1;
-	char	*path1;
-	char	**cmd2;
-	char	*path2;
-}				t_cmd;
+// typedef struct s_cmd
+// {
+// 	char	**cmd1;
+// 	char	*path1;
+// 	char	**cmd2;
+// 	char	*path2;
+// }				t_cmd;
 
 typedef struct s_data
 {
@@ -93,5 +93,6 @@ int			second_split(t_mini *line);
 void		trim_quotes(t_mini *line);
 int			is_it_space(char *s, int i);
 int			ft_skip(char *s, int i);
+int			is_whitespace(char c);
 
 #endif

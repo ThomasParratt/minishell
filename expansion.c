@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/07 14:01:00 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/07 14:15:51 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,10 @@ static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
 				dup_or_join(new_tokens, loop, i, "$");
 				break ;
 			}
-			else if (line->metaed[i][j + 1] == ' ' || line->metaed[i][j + 1] == '?' || line->metaed[i][j + 1] == '\0' || line->metaed[i][j + 1] == '$')
+			else if (is_whitespace(line->metaed[i][j + 1]) || line->metaed[i][j + 1] == '?' || line->metaed[i][j + 1] == '\0' || line->metaed[i][j + 1] == '$')
 			{
 				j++;
-				if (line->metaed[i][j] == ' ')
+				if (is_whitespace(line->metaed[i][j]))
 					dup_or_join(new_tokens, loop, i, "$ ");
 				else if (line->metaed[i][j] == '?')
 					dup_or_join(new_tokens, loop, i, ft_itoa(data->err_num));

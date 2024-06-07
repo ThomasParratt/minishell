@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/05 15:55:21 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/07 09:55:24 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,12 @@ static char	*get_substring(char *str, int j)
 	len = j;
 	if (str[start - 1] == '$')
 	{
-		while (str[len] != '$' && str[len] != '\0'/* && str[len] != '"' */&& str[len] != ' ')
+		while (str[len] != '$' && str[len] != '\0' && (ft_isalnum(str[len]) || str[len] == '_'))
 			len++;
 	}
 	else
 	{
-		while (str[len] != '$' && str[len] != '\0'/* && str[len] != '"'*/)
+		while (str[len] != '$' && str[len] != '\0')
 			len++;
 	}
 	len = len - start;
@@ -76,26 +76,45 @@ static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
 
 	j = 0;
 	loop = 0;
-	// if (line->metaed[i][0] == '"')
-	// 	j++;
-	while (line->metaed[i][j]/* && line->metaed[i][j] != '"'*/)
+	while (line->metaed[i][j])
 	{
 		if (line->metaed[i][j] == '$')
 		{
-			j++;
-			if (line->metaed[i][j] == '?')
+			if (ft_strlen(line->metaed[i]) == 1)
 			{
-				dup_or_join(new_tokens, loop, i, ft_itoa(data->err_num));
-				j++;
+				dup_or_join(new_tokens, loop, i, "$");
+				j++; // is this needed
 				break ;
 			}
-			substring = get_substring(line->metaed[i], j);
-			env_value = ft_getenv(data->envp, substring);
-			if (!env_value)
-				dup_or_join(new_tokens, loop, i, "");
+			else if (line->metaed[i][j + 1] == ' ' || line->metaed[i][j + 1] == '?')
+			{
+				j++;
+				if (line->metaed[i][j] == ' ')
+				{
+					dup_or_join(new_tokens, loop, i, "$ ");
+					j++;
+					loop++;
+					continue ;
+				}
+				if (line->metaed[i][j] == '?')
+				{
+					dup_or_join(new_tokens, loop, i, ft_itoa(data->err_num));
+					j++;
+					loop++;
+					continue ;
+				}
+			}
 			else
-				dup_or_join(new_tokens, loop, i, env_value);
-			free(env_value);
+			{
+				j++;
+				substring = get_substring(line->metaed[i], j);
+				env_value = ft_getenv(data->envp, substring);
+				if (!env_value)
+					dup_or_join(new_tokens, loop, i, "");
+				else
+					dup_or_join(new_tokens, loop, i, env_value);
+				free(env_value);
+			}
 		}
 		else
 		{
@@ -117,7 +136,7 @@ void	expansion(t_mini *line, t_data *data)
 	new_tokens = malloc_2d(line->metaed);
 	while (line->metaed[i])
 	{
-		if (ft_strchr(line->metaed[i], '$')/* && line->metaed[i][0] != '\'' && line->metaed[i][ft_strlen(line->metaed[i])] != '\''*/)
+		if (ft_strchr(line->metaed[i], '$'))
 			expand(line, new_tokens, data, i);
 		else
 			duplicate(line, new_tokens, i);
@@ -127,4 +146,3 @@ void	expansion(t_mini *line, t_data *data)
 	free_2d(line->metaed);
 	line->metaed = new_tokens;
 }
-

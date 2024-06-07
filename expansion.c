@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/07 09:55:24 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/07 13:51:42 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static void	duplicate(t_mini *line, char **new_tokens, int i)
 		malloc_failure();
 }
 
+
 static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
 {
 	int		j;
@@ -83,26 +84,22 @@ static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
 			if (ft_strlen(line->metaed[i]) == 1)
 			{
 				dup_or_join(new_tokens, loop, i, "$");
-				j++; // is this needed
 				break ;
 			}
-			else if (line->metaed[i][j + 1] == ' ' || line->metaed[i][j + 1] == '?')
+			else if (line->metaed[i][j + 1] == ' ' || line->metaed[i][j + 1] == '?' || line->metaed[i][j + 1] == '\0' || line->metaed[i][j + 1] == '$')
 			{
 				j++;
 				if (line->metaed[i][j] == ' ')
-				{
 					dup_or_join(new_tokens, loop, i, "$ ");
-					j++;
-					loop++;
-					continue ;
-				}
-				if (line->metaed[i][j] == '?')
-				{
+				else if (line->metaed[i][j] == '?')
 					dup_or_join(new_tokens, loop, i, ft_itoa(data->err_num));
-					j++;
-					loop++;
-					continue ;
-				}
+				else if (line->metaed[i][j] == '\0')
+					dup_or_join(new_tokens, loop, i, "$");
+				else if (line->metaed[i][j] == '$')
+					dup_or_join(new_tokens, loop, i, "$$");
+				j++;
+				loop++;
+				continue ;
 			}
 			else
 			{

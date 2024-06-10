@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 12:40:52 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 15:18:38 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@ void	print_error(char *message, char **args)
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(args[0], 2);
 	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(args[1], 2);
-	ft_putstr_fd(": ", 2);
+	if (!args[2])
+	{
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": ", 2);
+	}
 	ft_putendl_fd(message, 2);
 }
 

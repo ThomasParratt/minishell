@@ -6,46 +6,52 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/07 14:26:26 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:34:32 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+char	*get_env_value(char **envp, char *str)
+{
+	char	*env;
+	char	*env_value;
+	int		i;
+
+	env = ft_getenv(envp, str);
+	i = 0;
+	while (env[i] != '=')
+		i++;
+	i++;
+	env_value = ft_substr(env, i, ft_strlen(env));
+	return (env_value);
+}
+
 char	*ft_getenv(char **envp, char *str)
 {
 	int		i;
 	char	*path_pointer;
-	char	*res;
 	int		j;
 	int		len;
 
 	i = 0;
-	path_pointer = NULL;
 	j = 0;
+	path_pointer = NULL;
 	len = ft_strlen(str);
 	while (envp[i])
 	{
 		if (!ft_strncmp(envp[i], str, len) && envp[i][len] == '=')
 		{
-			path_pointer = envp[i];
+			path_pointer = ft_strdup(envp[i]);
+			if (!path_pointer)
+				malloc_failure();
 			break ;
 		}
 		i++;
 	}
 	if (!path_pointer)
 		return (NULL);
-	path_pointer += len + 1;
-	res = malloc(sizeof(char) * (ft_strlen(path_pointer) + 1));
-	if (!res)
-		malloc_failure();
-	while (path_pointer[j])
-	{
-		res[j] = path_pointer[j];
-		j++;
-	}
-	res[j] = '\0';
-	return (res);
+	return (path_pointer);
 }
 
 static char	**create_paths(char **tokens, char **envp)
@@ -56,10 +62,7 @@ static char	**create_paths(char **tokens, char **envp)
 
 	path_pointer = ft_getenv(envp, "PATH");
 	if (!path_pointer)
-	{
-		ft_printf("minishell: %s: No such file or directory\n", tokens[0]);
 		return (NULL);
-	}
 	paths = ft_split(path_pointer, ':');
 	if (!paths)
 		return (NULL);
@@ -82,15 +85,14 @@ char	*get_path(char **tokens, char **envp)
 
 	if (!ft_strncmp(tokens[0], "./", 2))
 	{
-		res = ft_getenv(envp, "PWD");
+		res = ft_strdup(tokens[0]);
+		if (!res)
+			malloc_failure();
 		return (res);
 	}
 	paths = create_paths(tokens, envp);
 	if (!paths)
-	{
-		ft_printf("minishell: %s: No such file or directory\n", tokens[0]);
 		return (NULL);
-	}
 	i = 0;
 	while (paths[i])
 	{
@@ -105,6 +107,6 @@ char	*get_path(char **tokens, char **envp)
 		i++;
 	}
 	free_2d(paths);
-	ft_printf("minishell: %s: command not found\n", tokens[0]);
+	print_error("command not found", tokens);
 	return (NULL);
 }

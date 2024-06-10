@@ -6,7 +6,7 @@
 #    By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/15 10:22:54 by tparratt          #+#    #+#              #
-#    Updated: 2024/06/05 17:35:50 by tparratt         ###   ########.fr        #
+#    Updated: 2024/06/10 15:25:51 by tparratt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ SRC			=	minishell.c \
 					expansion.c \
 					paths.c \
 					utils.c \
-					pipe.c \
+					execution.c \
 					signals.c \
 					builtins/echo-pwd-env.c \
 					builtins/cd.c \

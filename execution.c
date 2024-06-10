@@ -1,16 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe.c                                             :+:      :+:    :+:   */
+/*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:06:44 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 12:23:07 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:47:45 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	shell_lvl_check(t_mini *line)
+{
+	char	*shell_value;
+	int		value;
+	char	*str;
+	char	*str_to_export;
+
+	shell_value = get_env_value(line->envp, "SHLVL");
+	value = ft_atoi(shell_value);
+	value++;
+	str = ft_itoa(value);
+	str_to_export = ft_strjoin("SHLVL=", str);
+	export(str_to_export, line);
+}
 
 static void	redirect_output_append(t_tokens *token, int i, int j)
 {
@@ -87,6 +102,8 @@ void	execute(t_tokens *token, t_mini *line)
 			exit(1);
 		else if (pid == 0) // Child process
 		{
+			if (!ft_strncmp(token[i].command[0], "./minishell", 11))
+				shell_lvl_check(line);
 			if (in_fd != STDIN_FILENO) // Redirect input
 			{
 				if (dup2(in_fd, STDIN_FILENO) == -1)

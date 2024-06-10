@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 15:09:48 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 16:25:19 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <stdio.h>
 # include <termios.h>
 # include <string.h>
-//# include <errno.h>
 
 typedef struct s_mini
 {
@@ -57,7 +56,7 @@ void		echo(char **args);
 void		pwd(void);
 void		cd(char **args, t_mini *line);
 void		env(char **args, t_mini *line);
-void		exit_cmd(char **args);
+void		exit_cmd(char **args, t_mini *line);
 void		export_cmd(char **args, t_mini *line);
 void		export(char *arg, t_mini *line);
 void		unset_cmd(char **args, t_mini *line);
@@ -84,5 +83,6 @@ int			ft_skip(char *s, int i);
 int			is_whitespace(char c);
 void		print_error(char *message, char **args);
 int			export_unset_error_check(char **args, t_mini *line);
+char		*get_env_value(char **envp, char *str);
 
 #endif

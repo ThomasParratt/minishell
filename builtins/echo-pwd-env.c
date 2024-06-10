@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 13:40:47 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 15:59:24 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,22 @@ void	env(char **args, t_mini *line)
 	}
 }
 
-void	exit_cmd(char **args)
+void	exit_cmd(char **args, t_mini *line)
 {
 	int	i;
 	int	num;
 
 	ft_printf("exit\n");
-	if (args[1])
+	i = 0;
+	while (args[i])
+		i++;
+	if (i > 2)
+	{
+		line->err_num = 1;
+		print_error("too many arguments", args);
+		return ;
+	}
+	else if (i > 1)
 	{
 		i = 0;
 		while (args[1][i])
@@ -106,6 +115,6 @@ void	exit_cmd(char **args)
 		num = ft_atoi(args[1]);
 		exit(num);
 	}
-	else
+	else if (i == 1)
 		exit(0);
 }

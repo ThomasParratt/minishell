@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/07 14:20:47 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 12:17:32 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,27 +60,28 @@ static char	*create_prompt(void)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char		*line_read;
-	char		*prompt;
-	t_data		data;
-	t_mini		line;
-	t_tokens	*token;
+	char				*line_read;
+	char				*prompt;
+	t_mini				line;
+	t_tokens			*token;
+	struct sigaction	sa;
 
-	argv = NULL;
-	data.err_num = 0;
-	data.envp = envp_dup(envp);
-	if (!data.envp)
+	(void) argv;
+	line = (t_mini){0};
+	line.err_num = 0;
+	line.envp = envp_dup(envp);
+	if (!line.envp)
 		malloc_failure();
-	export("OLDPWD", &data);
+	export("OLDPWD", &line);
 	set_term_attr();
 	if (argc == 1)
 	{
-		struct sigaction	sa;
 		sa.sa_handler = handle_signal;
 		sigaction(SIGINT, &sa, NULL);
 		sigaction(SIGQUIT, &sa, NULL);
 		while (1)
 		{
+			line.flag = 0;
 			prompt = create_prompt();
 			line_read = readline(prompt);
 			if (!line_read)
@@ -89,20 +90,21 @@ int	main(int argc, char **argv, char **envp)
 			if (ft_strlen(line_read) == 0)
 				continue ;
 			add_history(line_read);
-			line = (t_mini){0};
 			validating(line_read, &line);
-			expansion(&line, &data);
+			expansion(&line);
 			p_count(&line);
 			token = malloc(sizeof(t_tokens) * (line.pipe_num));
 			if (!token)
 				malloc_failure();
 			function(&line, token);
-			execute(token, &data, &line);
+			execute(token, &line);
 			free(line_read);
 			free_2d(line.metaed);
 			free_2d(token->command);
 			free(token);
 		}
 	}
+	else
+		ft_putendl_fd("Minishell cannot take arguments", 2);
 	return (0);
 }

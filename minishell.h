@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/07 14:08:15 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:40:56 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,28 +22,16 @@
 # include <stdio.h>
 # include <termios.h>
 # include <string.h>
-# include <errno.h>
-
-// typedef struct s_cmd
-// {
-// 	char	**cmd1;
-// 	char	*path1;
-// 	char	**cmd2;
-// 	char	*path2;
-// }				t_cmd;
-
-typedef struct s_data
-{
-	char	**envp;
-	int		err_num;
-	int		flag;
-}				t_data;
+//# include <errno.h>
 
 typedef struct s_mini
 {
 	char	**metaed;
 	char	**element;
 	int		pipe_num;
+	char	**envp;
+	int		err_num;
+	int		flag;
 }				t_mini;
 
 typedef struct s_tokens
@@ -64,29 +52,29 @@ void		print_2d(char **tab);
 char		*join_and_free(char *prompt, char *str);
 int			contains_pipe(char *line_read);
 extern void	rl_replace_line(const char *text, int clear_undo);
-void		execute(t_tokens *token, t_data *data, t_mini *line);
+void		execute(t_tokens *token, t_mini *line);
 void		echo(char **args);
 void		pwd(void);
-void		cd(char **args, t_data *data);
-void		env(char **args, t_data *data);
-void		exit_cmd(char **args, t_data *data);
-void		export_cmd(char **args, t_data *data);
-void		export(char *arg, t_data *data);
-void		unset_cmd(char **args, t_data *data);
-void		unset(char *arg, t_data *data);
+void		cd(char **args, t_mini *line);
+void		env(char **args, t_mini *line);
+void		exit_cmd(char **args);
+void		export_cmd(char **args, t_mini *line);
+void		export(char *arg, t_mini *line);
+void		unset_cmd(char **args, t_mini *line);
+void		unset(char *arg, t_mini *line);
 char		*ft_getenv(char **envp, char *str);
 void		handle_signal(int signal);
 void		set_term_attr(void);
 char		**malloc_2d(char **arr);
 char		**envp_dup(char **envp);
 void		malloc_failure(void);
-void		expansion(t_mini *line, t_data *data);
+void		expansion(t_mini *line);
 void		validating(char *argv, t_mini *line);
 int			is_it_redirect(char *s);
 void		function(t_mini *line, t_tokens *token);
 void		p_count(t_mini *line);
-void		execute_command(t_tokens *token, t_data *data);
-void		execute_builtin(t_tokens *token, t_data *data, int i);
+void		execute_command(t_tokens *token, t_mini *line);
+void		execute_builtin(t_tokens *token, t_mini *line, int i);
 int			is_builtin(t_tokens *token, int i);
 int			first_split(char *argv, t_mini *line);
 int			second_split(t_mini *line);
@@ -94,5 +82,6 @@ void		trim_quotes(t_mini *line);
 int			is_it_space(char *s, int i);
 int			ft_skip(char *s, int i);
 int			is_whitespace(char c);
+void		print_error(char *message, char **args);
 
 #endif

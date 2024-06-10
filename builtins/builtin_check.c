@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:47:13 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/05 15:46:27 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:42:13 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,20 @@ int	is_builtin(t_tokens *token, int i)
 		return (0);
 }
 
-void	execute_builtin(t_tokens *token, t_data *data, int i)
+void	execute_builtin(t_tokens *token, t_mini *line, int i)
 {
 	if (!ft_strncmp(token[i].command[0], "echo", 5))
 		echo(token[i].command);
 	else if (!ft_strncmp(token[i].command[0], "pwd", 4))
 		pwd();
 	else if (!ft_strncmp(token[i].command[0], "cd", 3))
-		cd(token[i].command, data);
+		cd(token[i].command, line);
 	else if (!ft_strncmp(token[i].command[0], "env", 4))
-		env(token[i].command, data);
+		env(token[i].command, line);
 	else if (!ft_strncmp(token[i].command[0], "exit", 5))
-		exit_cmd(token[i].command, data);
+		exit_cmd(token[i].command);
 	else if (!ft_strncmp(token[i].command[0], "export", 7))
-		export_cmd(token[i].command, data);
+		export_cmd(token[i].command, line);
 	else if (!ft_strncmp(token[i].command[0], "unset", 6))
-		unset_cmd(token[i].command, data);
+		unset_cmd(token[i].command, line);
 }

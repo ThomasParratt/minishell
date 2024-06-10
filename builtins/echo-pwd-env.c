@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/27 16:54:08 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:40:47 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,33 +59,33 @@ void	pwd(void)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		exit(errno);
+		exit(1);
 	ft_printf("%s\n", cwd);
 	free(cwd);
 }
 
-void	env(char **args, t_data *data)
+void	env(char **args, t_mini *line)
 {
 	int	i;
 
 	if (args[1])
 	{
-		ft_putendl_fd("minishell: env: too many arguments", 2);
-		data->err_num = 1;
+		line->err_num = 1;
+		print_error("too many arguments", args);
 	}
 	else
 	{
 		i = 0;
-		while (data->envp[i])
+		while (line->envp[i])
 		{
-			if (ft_strchr(data->envp[i], '='))
-				ft_printf("%s\n", data->envp[i]);
+			if (ft_strchr(line->envp[i], '='))
+				ft_printf("%s\n", line->envp[i]);
 			i++;
 		}
 	}
 }
 
-void	exit_cmd(char **args, t_data *data)
+void	exit_cmd(char **args)
 {
 	int	i;
 	int	num;
@@ -98,9 +98,7 @@ void	exit_cmd(char **args, t_data *data)
 		{
 			if (!ft_isdigit(args[1][i]))
 			{
-				ft_putstr_fd("minishell: exit: ", 2);
-				ft_putstr_fd(args[1], 2);
-				ft_putendl_fd(": numeric argument required", 2);
+				print_error("numeric argument required", args);
 				exit(255);
 			}
 			i++;
@@ -109,5 +107,5 @@ void	exit_cmd(char **args, t_data *data)
 		exit(num);
 	}
 	else
-		exit(data->err_num);
+		exit(0);
 }

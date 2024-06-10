@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/07 14:15:51 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:15:41 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,20 @@ static void	duplicate(t_mini *line, char **new_tokens, int i)
 		malloc_failure();
 }
 
+static void	special_cases(t_mini *line, char **new_tokens, int loop, int i, int j)
+{
+	if (is_whitespace(line->metaed[i][j]))
+		dup_or_join(new_tokens, loop, i, "$ ");
+	else if (line->metaed[i][j] == '?')
+		dup_or_join(new_tokens, loop, i, ft_itoa(line->err_num));
+	else if (line->metaed[i][j] == '\0')
+		dup_or_join(new_tokens, loop, i, "$");
+	else if (line->metaed[i][j] == '$')
+		dup_or_join(new_tokens, loop, i, "$$");
+}
 
-static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
+
+static void	expand(t_mini *line, char **new_tokens, int i)
 {
 	int		j;
 	int		loop;
@@ -89,14 +101,7 @@ static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
 			else if (is_whitespace(line->metaed[i][j + 1]) || line->metaed[i][j + 1] == '?' || line->metaed[i][j + 1] == '\0' || line->metaed[i][j + 1] == '$')
 			{
 				j++;
-				if (is_whitespace(line->metaed[i][j]))
-					dup_or_join(new_tokens, loop, i, "$ ");
-				else if (line->metaed[i][j] == '?')
-					dup_or_join(new_tokens, loop, i, ft_itoa(data->err_num));
-				else if (line->metaed[i][j] == '\0')
-					dup_or_join(new_tokens, loop, i, "$");
-				else if (line->metaed[i][j] == '$')
-					dup_or_join(new_tokens, loop, i, "$$");
+				special_cases(line, new_tokens, loop, i, j);
 				j++;
 				loop++;
 				continue ;
@@ -105,7 +110,7 @@ static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
 			{
 				j++;
 				substring = get_substring(line->metaed[i], j);
-				env_value = ft_getenv(data->envp, substring);
+				env_value = ft_getenv(line->envp, substring);
 				if (!env_value)
 					dup_or_join(new_tokens, loop, i, "");
 				else
@@ -124,7 +129,7 @@ static void	expand(t_mini *line, char **new_tokens, t_data *data, int i)
 	}
 }
 
-void	expansion(t_mini *line, t_data *data)
+void	expansion(t_mini *line)
 {
 	int		i;
 	char	**new_tokens;
@@ -134,7 +139,7 @@ void	expansion(t_mini *line, t_data *data)
 	while (line->metaed[i])
 	{
 		if (ft_strchr(line->metaed[i], '$'))
-			expand(line, new_tokens, data, i);
+			expand(line, new_tokens, i);
 		else
 			duplicate(line, new_tokens, i);
 		i++;

@@ -6,29 +6,29 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/05/27 14:24:15 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 14:18:52 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char	*get_existing_name(char *existing, t_data *data, int i)
+static char	*get_existing_name(char *existing, t_mini *line, int i)
 {
 	int	j;
 
 	if (!existing)
 		exit(1);
 	j = 0;
-	while (data->envp[i][j] != '=' && data->envp[i][j] != '\0')
+	while (line->envp[i][j] != '=' && line->envp[i][j] != '\0')
 	{
-		existing[j] = data->envp[i][j];
+		existing[j] = line->envp[i][j];
 		j++;
 	}
 	existing[j] = '\0';
 	return (existing);
 }
 
-static char	*env_exists(char *arg, t_data *data)
+static char	*env_exists(char *arg, t_mini *line)
 {
 	int		len;
 	int		i;
@@ -38,14 +38,14 @@ static char	*env_exists(char *arg, t_data *data)
 	while (arg[len] != '=' && arg[len] != '\0')
 		len++;
 	i = 0;
-	while (data->envp[i])
+	while (line->envp[i])
 	{
-		if (!ft_strncmp(data->envp[i], arg, len))
+		if (!ft_strncmp(line->envp[i], arg, len))
 		{
 			existing = malloc(sizeof(char) * len + 1);
 			if (!existing)
 				malloc_failure();
-			existing = get_existing_name(existing, data, i);
+			existing = get_existing_name(existing, line, i);
 			return (existing);
 		}
 		i++;
@@ -53,31 +53,31 @@ static char	*env_exists(char *arg, t_data *data)
 	return (NULL);
 }
 
-static void	unset_existing(char *arg, t_data *data)
+static void	unset_existing(char *arg, t_mini *line)
 {
 	char		*existing;
 
-	existing = env_exists(arg, data);
+	existing = env_exists(arg, line);
 	if (existing)
 	{
-		unset(existing, data);
+		unset(existing, line);
 		free(existing);
 	}
 }
 
-void	export(char *arg, t_data *data)
+void	export(char *arg, t_mini *line)
 {
 	char	**new_envp;
 	int		i;
 
-	unset_existing(arg, data);
-	new_envp = malloc_2d(data->envp);
+	unset_existing(arg, line);
+	new_envp = malloc_2d(line->envp);
 	if (!new_envp)
 		malloc_failure();
 	i = 0;
-	while (data->envp[i])
+	while (line->envp[i])
 	{
-		new_envp[i] = ft_strdup(data->envp[i]);
+		new_envp[i] = ft_strdup(line->envp[i]);
 		if (!new_envp[i])
 			malloc_failure();
 		i++;
@@ -87,35 +87,53 @@ void	export(char *arg, t_data *data)
 		malloc_failure();
 	i++;
 	new_envp[i] = NULL;
-	free_2d(data->envp);
-	data->envp = new_envp;
+	free_2d(line->envp);
+	line->envp = new_envp;
 }
 
-// in alphabetical order?
-static void	print_declare(t_data *data)
+static void	print_declare(t_mini *line)
 {
 	int	i;
 
 	i = 0;
-	while (data->envp[i])
+	while (line->envp[i])
 	{
-		ft_printf("declare -x %s\n", data->envp[i]);
+		ft_printf("declare -x %s\n", line->envp[i]);
 		i++;
 	}
 }
 
-void	export_cmd(char **args, t_data *data)
+void	export_cmd(char **args, t_mini *line)
 {
 	int	i;
+	int	j;
 
 	if (!args[1])
-		print_declare(data);
+		print_declare(line);
 	else
 	{
 		i = 1;
+		if (ft_isdigit(args[i][0]))
+		{
+			line->err_num = 1;
+			print_error("not a valid identifier", args);
+			return ;
+		}
 		while (args[i])
 		{
-			export(args[i], data);
+			j = 0;
+			if ((!ft_isalnum(args[i][j]) && args[i][j] != '_'))
+			{
+				line->err_num = 1;
+				print_error("not a valid identifier", args);
+				return ;
+			}
+			i++;
+		}
+		i = 1;
+		while (args[i])
+		{
+			export(args[i], line);
 			i++;
 		}
 	}

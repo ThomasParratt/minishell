@@ -6,11 +6,21 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/07 14:11:00 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 12:40:52 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	print_error(char *message, char **args)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(args[0], 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(args[1], 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(message, 2);
+}
 
 int	is_whitespace(char c)
 {
@@ -24,7 +34,7 @@ int	is_whitespace(char c)
 void	malloc_failure(void)
 {
 	ft_putendl_fd("minishell: malloc failure", 2);
-	exit(ENOMEM);
+	exit(1);
 }
 
 char	**malloc_2d(char **arr)

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 14:18:52 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 15:10:05 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,30 +106,13 @@ static void	print_declare(t_mini *line)
 void	export_cmd(char **args, t_mini *line)
 {
 	int	i;
-	int	j;
 
 	if (!args[1])
 		print_declare(line);
 	else
 	{
-		i = 1;
-		if (ft_isdigit(args[i][0]))
-		{
-			line->err_num = 1;
-			print_error("not a valid identifier", args);
+		if (export_unset_error_check(args, line))
 			return ;
-		}
-		while (args[i])
-		{
-			j = 0;
-			if ((!ft_isalnum(args[i][j]) && args[i][j] != '_'))
-			{
-				line->err_num = 1;
-				print_error("not a valid identifier", args);
-				return ;
-			}
-			i++;
-		}
 		i = 1;
 		while (args[i])
 		{

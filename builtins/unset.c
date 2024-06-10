@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 11:41:22 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 11:39:48 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 15:10:14 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,47 @@ void	unset(char *arg, t_mini *line)
 	line->envp = new_envp;
 }
 
+int	export_unset_error_check(char **args, t_mini *line)
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	if (ft_isdigit(args[i][0]))
+	{
+		line->err_num = 1;
+		print_error("not a valid identifier", args);
+		return (1);
+	}
+	while (args[i])
+	{
+		j = 0;
+		if ((!ft_isalnum(args[i][j]) && args[i][j] != '_'))
+		{
+			line->err_num = 1;
+			print_error("not a valid identifier", args);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
 void	unset_cmd(char **args, t_mini *line)
 {
 	int	i;
 
 	if (!args[1])
 		return ;
-	i = 1;
-	while (args[i])
+	else
 	{
-		unset(args[i], line);
-		i++;
+		if (export_unset_error_check(args, line))
+			return ;
+		i = 1;
+		while (args[i])
+		{
+			unset(args[i], line);
+			i++;
+		}
 	}
 }

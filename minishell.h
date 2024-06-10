@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 13:40:56 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/10 15:09:48 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,6 @@ int			is_it_space(char *s, int i);
 int			ft_skip(char *s, int i);
 int			is_whitespace(char c);
 void		print_error(char *message, char **args);
+int			export_unset_error_check(char **args, t_mini *line);
 
 #endif

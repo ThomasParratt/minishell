@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:22:45 by mspasic           #+#    #+#             */
-/*   Updated: 2024/06/11 12:03:44 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/11 12:43:52 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static char    *heredocing(char *delim, char *hd)
 		line = readline("heredoc> ");
 		if (line == NULL)
 			break ;
-		ft_putstr_fd(line, fd);
+		ft_putendl_fd(line, fd);
 	}
     check = close(fd);
     if (check == -1)

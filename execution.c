@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:06:44 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 17:03:39 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/11 11:45:33 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ void	execute(t_tokens *token, t_mini *line)
 		line->flag = 0;
 		if (i < line->pipe_num - 1 && pipe(fd) == -1)
 			exit(1);
-		if (is_builtin(token, i))
+		if (is_builtin(&token[i]))
 		{
-			redirections(token, i); // Handle redirections for the built-in
-			execute_builtin(token, line, i); // Execute the built-in
+			redirections(&token[i]); // Handle redirections for the built-in
+			execute_builtin(&token[i], line); // Execute the built-in
 			line->flag = 1;
 			i++; // Move to the next command in the pipeline
 			continue ; // Skip forking for built-in commands
@@ -70,7 +70,7 @@ void	execute(t_tokens *token, t_mini *line)
 					exit(1);
 				close(fd[1]);
 			}
-			redirections(token, i);
+			redirections(&token[i]);
 			if (execve(get_path(token[i].command, line->envp), token[i].command, line->envp) == -1)
 				exit(1);
 		}

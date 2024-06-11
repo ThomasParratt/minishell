@@ -6,7 +6,7 @@
 #    By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/15 10:22:54 by tparratt          #+#    #+#              #
-#    Updated: 2024/06/10 17:02:40 by tparratt         ###   ########.fr        #
+#    Updated: 2024/06/11 10:56:48 by tparratt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRC			=	minishell.c \
 					execution.c \
 					redirect.c \
 					signals.c \
+					heredoc.c \
 					builtins/echo-pwd-env.c \
 					builtins/cd.c \
 					builtins/export.c \

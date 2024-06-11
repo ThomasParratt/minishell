@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 16:54:59 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/11 10:57:26 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int			is_it_redirect(char *s);
 void		function(t_mini *line, t_tokens *token);
 void		p_count(t_mini *line);
 void		execute_command(t_tokens *token, t_mini *line);
-void		execute_builtin(t_tokens *token, t_mini *line, int i);
-int			is_builtin(t_tokens *token, int i);
+void		execute_builtin(t_tokens *token, t_mini *line);
+int			is_builtin(t_tokens *token);
 int			first_split(char *argv, t_mini *line);
 int			second_split(t_mini *line);
 void		trim_quotes(t_mini *line);
@@ -84,6 +84,7 @@ int			is_whitespace(char c);
 void		print_error(char *message, char **args);
 int			export_unset_error_check(char **args, t_mini *line);
 char		*get_env_value(char **envp, char *str);
-void		redirections(t_tokens *token, int i);
+void		redirections(t_tokens *token);
+void    	here_doc(t_mini *line);
 
 #endif

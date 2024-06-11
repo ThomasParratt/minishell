@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 16:10:22 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/11 11:40:27 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int	main(int argc, char **argv, char **envp)
 				continue ;
 			add_history(line_read);
 			validating(line_read, &line);
+			here_doc(&line);
 			expansion(&line);
 			p_count(&line);
 			token = malloc(sizeof(t_tokens) * (line.pipe_num));

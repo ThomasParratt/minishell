@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/11 12:14:12 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/11 14:42:39 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,14 @@
 # include <stdio.h>
 # include <termios.h>
 # include <string.h>
+
+typedef struct s_expansion_data
+{
+	char	**new_tokens;
+	int		loop;
+	int		i;
+	int		j;
+}				t_expansion_data;
 
 typedef struct s_mini
 {

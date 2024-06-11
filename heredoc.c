@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:22:45 by mspasic           #+#    #+#             */
-/*   Updated: 2024/06/11 12:43:52 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/11 13:18:44 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,15 @@ static char    *heredocing(char *delim, char *hd)
 	if (fd == -1)
 		printf("error while opening file\n");
 	line = readline("heredoc> ");
+	ft_putendl_fd(line, fd); // Tom added this
 	while (ft_strncmp(delim, line, ft_strlen(delim)) != 0)
 	{
 		free (line);
 		line = readline("heredoc> ");
 		if (line == NULL)
 			break ;
-		ft_putendl_fd(line, fd);
+		if (ft_strncmp(delim, line, ft_strlen(delim)) != 0) // Tom added this
+			ft_putendl_fd(line, fd); // Tom changed this
 	}
     check = close(fd);
     if (check == -1)
@@ -105,7 +107,7 @@ void    here_doc(t_mini *line)
 	i = 0;
     while (line->metaed[i] != NULL)
     {
-        if (ft_strncmp(line->metaed[i], "<<", ft_strlen(line->metaed[i])) == 0)
+        if (ft_strncmp(line->metaed[i], "<<", 3) == 0) // Tom changed this
         {
 			hd_name = here_strjoin(".here_", simple_itoa(hd_num));
 			//line->metaed[i + 1] can't be NULL and it can't be a meta which was checked before in validation (syntax errors) so no check is neccessary

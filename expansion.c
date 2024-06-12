@@ -6,107 +6,68 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 14:32:47 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:22:07 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*get_substring(char *str, int j)
+static char	*nothing_to_expand(t_mini *line, char **new_tokens, int loop, int j)
 {
-	int		start;
-	int		len;
 	char	*substring;
 
-	start = j;
-	len = j;
-	if (str[start - 1] == '$')
-	{
-		while (str[len] != '$' && str[len] != '\0' && (ft_isalnum(str[len]) || str[len] == '_'|| str[len] == '?' || is_whitespace(str[len])))
-		{
-			len++;
-			if (str[len] == '?')
-				break ;
-		}
-	}
-	else
-	{
-		while (str[len] != '$' && str[len] != '\0')
-			len++;
-	}
-	len = len - start;
-	substring = ft_substr(str, start, len);
-	if (!substring)
-		malloc_failure();
+	substring = get_substring(line->metaed[line->i], j);
+	dup_or_join(new_tokens, loop, line->i, substring);
 	return (substring);
 }
 
-static void	dup_or_join(char **new_tokens, int loop, int i, char *str)
+static char	*substring_exp(t_mini *line, char **new_tokens, int loop, int *j)
 {
-	if (loop == 0)
-		new_tokens[i] = ft_strdup(str);
+	char	*substring;
+	char	*env_value;
+
+	(*j)++;
+	substring = get_substring(line->metaed[line->i], *j);
+	env_value = get_env_value(line->envp, substring, line);
+	if (!env_value)
+		dup_or_join(new_tokens, loop, line->i, "");
 	else
-		new_tokens[i] = join_and_free(new_tokens[i], str);
-	ft_printf("new_tokens[i] = %s\n", new_tokens[i]);
+		dup_or_join(new_tokens, loop, line->i, env_value);
+	free(env_value);
+	return (substring);
 }
 
-static void	duplicate(t_mini *line, char **new_tokens, int i)
+static void	dollars_only(t_mini *line, char **new_tokens, int *loop, int *j)
 {
-	int	j;
-
-	if (ft_strchr(line->metaed[i], 7))
-	{
-		j = 0;
-		while (line->metaed[i][j])
-		{
-			if (line->metaed[i][j] == 7)
-				line->metaed[i][j] = '$';
-			j++;
-		}
-	}
-	new_tokens[i] = ft_strdup(line->metaed[i]);
-	if (!new_tokens[i])
-		malloc_failure();
+	dup_or_join(new_tokens, *loop, line->i, "$");
+	(*j)++;
+	(*loop)++;
 }
 
-static void	expand(t_mini *line, char **new_tokens, int i)
+static void	expand(t_mini *line, char **new_tokens)
 {
 	int		j;
 	int		loop;
 	char	*substring;
-	char	*env_value;
+	char	*metaed;
 
 	j = 0;
 	loop = 0;
-	while (line->metaed[i][j])
+	metaed = line->metaed[line->i];
+	while (metaed[j])
 	{
-		if (line->metaed[i][j] == '$' &&
-			(!ft_isalnum(line->metaed[i][j + 1]) && line->metaed[i][j + 1] != '_' && line->metaed[i][j + 1] != '?')) //only dollars
+		if (metaed[j] == '$' && (!ft_isalnum(metaed[j + 1])
+				&& metaed[j + 1] != '_' && metaed[j + 1] != '?'))
 		{
-			dup_or_join(new_tokens, loop, i, "$");
-			j++;
-			loop++;
+			dollars_only(line, new_tokens, &loop, &j);
 			continue ;
 		}
-		else if (line->metaed[i][j] == '$' &&
-			(ft_isalnum(line->metaed[i][j + 1]) || line->metaed[i][j + 1] == '_' || line->metaed[i][j + 1] == '?')) //something to expand
-		{
-			j++;
-			substring = get_substring(line->metaed[i], j);
-			env_value = get_env_value(line->envp, substring, line);
-			if (!env_value)
-				dup_or_join(new_tokens, loop, i, "");
-			else
-				dup_or_join(new_tokens, loop, i, env_value);
-			free(env_value);
-		}
-		else //nothing to expand
-		{
-			substring = get_substring(line->metaed[i], j);
-			dup_or_join(new_tokens, loop, i, substring);
-		}
+		else if (metaed[j] == '$' && (ft_isalnum(metaed[j + 1])
+				|| metaed[j + 1] == '_' || metaed[j + 1] == '?'))
+			substring = substring_exp(line, new_tokens, loop, &j);
+		else
+			substring = nothing_to_expand(line, new_tokens, loop, j);
 		j += ft_strlen(substring);
-		ft_printf("substring = %s\n", substring);
 		free(substring);
 		loop++;
 	}
@@ -114,20 +75,19 @@ static void	expand(t_mini *line, char **new_tokens, int i)
 
 void	expansion(t_mini *line)
 {
-	int		i;
 	char	**new_tokens;
 
-	i = 0;
+	line->i = 0;
 	new_tokens = malloc_2d(line->metaed);
-	while (line->metaed[i])
+	while (line->metaed[line->i])
 	{
-		if (ft_strchr(line->metaed[i], '$'))
-			expand(line, new_tokens, i);
+		if (ft_strchr(line->metaed[line->i], '$'))
+			expand(line, new_tokens);
 		else
-			duplicate(line, new_tokens, i);
-		i++;
+			duplicate(line, new_tokens);
+		line->i++;
 	}
-	new_tokens[i] = NULL;
+	new_tokens[line->i] = NULL;
 	free_2d(line->metaed);
 	line->metaed = new_tokens;
 }

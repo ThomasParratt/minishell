@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 14:48:36 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:27:46 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@
 # include <termios.h>
 # include <string.h>
 
-typedef struct s_exp_data
-{
-	int		loop;
-	int		i;
-	int		j;
-}				t_exp_data;
+// typedef struct s_exp_data
+// {
+// 	int		loop;
+// 	int		i;
+// 	int		j;
+// }				t_exp_data;
 
 typedef struct s_mini
 {
@@ -38,6 +38,7 @@ typedef struct s_mini
 	char	**envp;
 	int		err_num;
 	int		flag;
+	int		i;
 }				t_mini;
 
 typedef struct s_tokens
@@ -52,11 +53,12 @@ typedef struct s_alloc
 	int	other;
 }				t_alloc;
 
-char		*get_path(char **tokens, char **envp);
 void		free_2d(char **tab);
 void		print_2d(char **tab);
 char		*join_and_free(char *prompt, char *str);
-int			contains_pipe(char *line_read);
+char		**malloc_2d(char **arr);
+char		**envp_dup(char **envp);
+void		malloc_failure(void);
 extern void	rl_replace_line(const char *text, int clear_undo);
 void		execute(t_tokens *token, t_mini *line);
 void		echo(char **args);
@@ -69,11 +71,9 @@ void		export(char *arg, t_mini *line);
 void		unset_cmd(char **args, t_mini *line);
 void		unset(char *arg, t_mini *line);
 char		*ft_getenv(char **envp, char *str);
+char		*get_path(char **tokens, char **envp);
 void		handle_signal(int signal);
 void		set_term_attr(void);
-char		**malloc_2d(char **arr);
-char		**envp_dup(char **envp);
-void		malloc_failure(void);
 void		expansion(t_mini *line);
 void		validating(char *argv, t_mini *line);
 int			is_it_redirect(char *s);
@@ -93,5 +93,7 @@ int			export_unset_error_check(char **args, t_mini *line);
 char		*get_env_value(char **envp, char *str, t_mini *line);
 void		redirections(t_tokens *token);
 void		here_doc(t_mini *line);
+void		dup_or_join(char **new_tokens, int loop, int i, char *str);
+void		duplicate(t_mini *line, char **new_tokens);
 
 #endif

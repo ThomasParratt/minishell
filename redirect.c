@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 16:55:18 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/11 12:26:15 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 15:19:24 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ void	redirections(t_tokens *token)
 	j = 0;
 	while (token->redirect[j])
 	{
-		if ((ft_strncmp(token->redirect[j], "<", 2) == 0) || (ft_strncmp(token->redirect[j], "<<", 3) == 0))
+		if ((ft_strncmp(token->redirect[j], "<", 2) == 0)
+			|| (ft_strncmp(token->redirect[j], "<<", 3) == 0))
 			redirect_input(token, j);
 		else if (ft_strncmp(token->redirect[j], ">", 2) == 0)
 			redirect_output(token, j);

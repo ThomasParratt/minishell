@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/06 14:28:58 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 15:10:05 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:46:51 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,24 +91,19 @@ void	export(char *arg, t_mini *line)
 	line->envp = new_envp;
 }
 
-static void	print_declare(t_mini *line)
-{
-	int	i;
-
-	i = 0;
-	while (line->envp[i])
-	{
-		ft_printf("declare -x %s\n", line->envp[i]);
-		i++;
-	}
-}
-
 void	export_cmd(char **args, t_mini *line)
 {
 	int	i;
 
 	if (!args[1])
-		print_declare(line);
+	{
+		i = 0;
+		while (line->envp[i])
+		{
+			ft_printf("declare -x %s\n", line->envp[i]);
+			i++;
+		}
+	}
 	else
 	{
 		if (export_unset_error_check(args, line))

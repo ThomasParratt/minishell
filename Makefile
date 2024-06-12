@@ -6,7 +6,7 @@
 #    By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/15 10:22:54 by tparratt          #+#    #+#              #
-#    Updated: 2024/06/12 11:22:15 by tparratt         ###   ########.fr        #
+#    Updated: 2024/06/12 14:52:07 by tparratt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,9 @@ SRC			=	minishell.c \
 					parsing.c \
 					expansion.c \
 					paths.c \
+					env.c \
 					utils.c \
+					utils2.c \
 					execution.c \
 					redirect.c \
 					signals.c \
@@ -30,6 +32,7 @@ SRC			=	minishell.c \
 					builtins/export.c \
 					builtins/unset.c \
 					builtins/builtin_check.c \
+					builtins/exit.c \
 
 LIBFT		=	libft/libft.a
 

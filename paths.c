@@ -6,60 +6,11 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 13:22:29 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 15:14:04 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*get_env_value(char **envp, char *str, t_mini *line)
-{
-	char	*env;
-	char	*env_value;
-	int		i;
-
-	if (!ft_strncmp(str, "?", 2))
-	{
-		env_value = ft_strdup(ft_itoa(line->err_num));
-		return (env_value);
-	}
-	env = ft_getenv(envp, str);
-	if (!env)
-		return (NULL);
-	i = 0;
-	while (env[i] != '=')
-		i++;
-	i++;
-	env_value = ft_substr(env, i, ft_strlen(env));
-	return (env_value);
-}
-
-char	*ft_getenv(char **envp, char *str)
-{
-	int		i;
-	char	*path_pointer;
-	int		j;
-	int		len;
-
-	i = 0;
-	j = 0;
-	path_pointer = NULL;
-	len = ft_strlen(str);
-	while (envp[i])
-	{
-		if (!ft_strncmp(envp[i], str, len) && envp[i][len] == '=')
-		{
-			path_pointer = ft_strdup(envp[i]);
-			if (!path_pointer)
-				malloc_failure();
-			break ;
-		}
-		i++;
-	}
-	if (!path_pointer)
-		return (NULL);
-	return (path_pointer);
-}
 
 static char	**create_paths(char **tokens, char **envp)
 {
@@ -84,9 +35,30 @@ static char	**create_paths(char **tokens, char **envp)
 	return (paths);
 }
 
-char	*get_path(char **tokens, char **envp)
+static char	*check_access(char **paths)
 {
 	int		i;
+	char	*res;
+
+	i = 0;
+	res = NULL;
+	while (paths[i])
+	{
+		if (access(paths[i], F_OK) == 0)
+		{
+			res = ft_strdup(paths[i]);
+			if (!res)
+				exit(1);
+			free_2d(paths);
+			return (res);
+		}
+		i++;
+	}
+	return (res);
+}
+
+char	*get_path(char **tokens, char **envp)
+{
 	char	*res;
 	char	**paths;
 
@@ -100,19 +72,9 @@ char	*get_path(char **tokens, char **envp)
 	paths = create_paths(tokens, envp);
 	if (!paths)
 		return (NULL);
-	i = 0;
-	while (paths[i])
-	{
-		if (access(paths[i], F_OK) == 0)
-		{
-			res = ft_strdup(paths[i]);
-			if (!res)
-				exit(1);
-			free_2d(paths);
-			return (res);
-		}
-		i++;
-	}
+	res = check_access(paths);
+	if (res)
+		return (res);
 	free_2d(paths);
 	print_error("command not found", tokens);
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 15:18:38 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 15:12:15 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,44 +72,4 @@ char	**envp_dup(char **envp)
 	}
 	res[i] = NULL;
 	return (res);
-}
-
-void	free_2d(char **tab)
-{
-	size_t	i;
-
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
-
-void	print_2d(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab[i])
-	{
-		ft_printf("%s\n", tab[i]);
-		i++;
-	}
-}
-
-char	*join_and_free(char *prompt, char *str)
-{
-	char	*temp;
-
-	temp = ft_strjoin(prompt, str);
-	if (!temp)
-	{
-		free(prompt);
-		malloc_failure();
-	}
-	free(prompt);
-	prompt = temp;
-	return (prompt);
 }

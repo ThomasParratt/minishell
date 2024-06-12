@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 14:03:29 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:48:36 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,6 @@ void		print_error(char *message, char **args);
 int			export_unset_error_check(char **args, t_mini *line);
 char		*get_env_value(char **envp, char *str, t_mini *line);
 void		redirections(t_tokens *token);
-void    	here_doc(t_mini *line);
+void		here_doc(t_mini *line);
 
 #endif

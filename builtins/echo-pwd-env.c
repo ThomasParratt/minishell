@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 15:59:24 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:44:11 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,38 +83,4 @@ void	env(char **args, t_mini *line)
 			i++;
 		}
 	}
-}
-
-void	exit_cmd(char **args, t_mini *line)
-{
-	int	i;
-	int	num;
-
-	ft_printf("exit\n");
-	i = 0;
-	while (args[i])
-		i++;
-	if (i > 2)
-	{
-		line->err_num = 1;
-		print_error("too many arguments", args);
-		return ;
-	}
-	else if (i > 1)
-	{
-		i = 0;
-		while (args[1][i])
-		{
-			if (!ft_isdigit(args[1][i]))
-			{
-				print_error("numeric argument required", args);
-				exit(255);
-			}
-			i++;
-		}
-		num = ft_atoi(args[1]);
-		exit(num);
-	}
-	else if (i == 1)
-		exit(0);
 }

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 17:30:03 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:32:52 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,6 @@
 # include <stdio.h>
 # include <termios.h>
 # include <string.h>
-
-// typedef struct s_exp_data
-// {
-// 	int		loop;
-// 	int		i;
-// 	int		j;
-// }				t_exp_data;
 
 typedef struct s_mini
 {

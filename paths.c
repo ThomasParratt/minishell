@@ -6,19 +6,27 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/10 16:34:32 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 11:55:43 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*get_env_value(char **envp, char *str)
+char	*get_env_value(char **envp, char *str, t_mini *line)
 {
 	char	*env;
 	char	*env_value;
 	int		i;
 
+	ft_printf("string = %s\n", str);
+	if (!ft_strncmp(str, "?", 2))
+	{
+		env_value = ft_strdup(ft_itoa(line->err_num));
+		return (env_value);
+	}
 	env = ft_getenv(envp, str);
+	if (!env)
+		return (NULL);
 	i = 0;
 	while (env[i] != '=')
 		i++;

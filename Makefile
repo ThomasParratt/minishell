@@ -6,7 +6,7 @@
 #    By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/15 10:22:54 by tparratt          #+#    #+#              #
-#    Updated: 2024/06/11 15:33:46 by tparratt         ###   ########.fr        #
+#    Updated: 2024/06/12 11:22:15 by tparratt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ LDFLAGS 	=	-L /Users/$(USER)/.brew/opt/readline/lib
 
 $(NAME):	$(OBJ)
 			make -C ./libft
-			$(CC) $(CFLAGS) -g -o $(NAME) $(OBJ) $(LIBFT) $(LDFLAGS) -lreadline
+			$(CC) $(CFLAGS) -fsanitize=address -g -o $(NAME) $(OBJ) $(LIBFT) $(LDFLAGS) -lreadline
 
 all:		$(NAME)
 

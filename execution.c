@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:06:44 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/11 12:14:23 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 11:27:08 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	shell_lvl_check(t_mini *line)
 	char	*str;
 	char	*str_to_export;
 
-	shell_value = get_env_value(line->envp, "SHLVL");
+	shell_value = get_env_value(line->envp, "SHLVL", line);
 	value = ft_atoi(shell_value);
 	value++;
 	str = ft_itoa(value);

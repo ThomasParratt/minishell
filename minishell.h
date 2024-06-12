@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/11 14:42:39 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 11:26:17 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int			ft_skip(char *s, int i);
 int			is_whitespace(char c);
 void		print_error(char *message, char **args);
 int			export_unset_error_check(char **args, t_mini *line);
-char		*get_env_value(char **envp, char *str);
+char		*get_env_value(char **envp, char *str, t_mini *line);
 void		redirections(t_tokens *token);
 void    	here_doc(t_mini *line);
 

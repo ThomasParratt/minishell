@@ -6,7 +6,7 @@
 #    By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/15 10:22:54 by tparratt          #+#    #+#              #
-#    Updated: 2024/06/12 14:52:07 by tparratt         ###   ########.fr        #
+#    Updated: 2024/06/12 17:28:50 by tparratt         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ SRC			=	minishell.c \
 					trim.c \
 					parsing.c \
 					expansion.c \
+					expansion2.c \
 					paths.c \
 					env.c \
 					utils.c \

@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:21:50 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 17:21:53 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:29:47 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	get_len(char *s, int start, int len)
 	return (len);
 }
 
-static char	*get_substring(char *s, int j)
+char	*get_substring(char *s, int j)
 {
 	int		start;
 	int		len;

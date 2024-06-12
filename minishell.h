@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 17:27:46 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 17:30:03 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,6 @@ void		redirections(t_tokens *token);
 void		here_doc(t_mini *line);
 void		dup_or_join(char **new_tokens, int loop, int i, char *str);
 void		duplicate(t_mini *line, char **new_tokens);
+char		*get_substring(char *s, int j);
 
 #endif

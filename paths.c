@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 11:55:43 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 13:22:29 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ char	*get_env_value(char **envp, char *str, t_mini *line)
 	char	*env_value;
 	int		i;
 
-	ft_printf("string = %s\n", str);
 	if (!ft_strncmp(str, "?", 2))
 	{
 		env_value = ft_strdup(ft_itoa(line->err_num));

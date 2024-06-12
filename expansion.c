@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 12:30:46 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:32:47 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@ static char	*get_substring(char *str, int j)
 	if (str[start - 1] == '$')
 	{
 		while (str[len] != '$' && str[len] != '\0' && (ft_isalnum(str[len]) || str[len] == '_'|| str[len] == '?' || is_whitespace(str[len])))
+		{
 			len++;
+			if (str[len] == '?')
+				break ;
+		}
 	}
 	else
 	{
@@ -56,10 +60,7 @@ static void	duplicate(t_mini *line, char **new_tokens, int i)
 		while (line->metaed[i][j])
 		{
 			if (line->metaed[i][j] == 7)
-			{
 				line->metaed[i][j] = '$';
-				break ;
-			}
 			j++;
 		}
 	}
@@ -77,25 +78,21 @@ static void	expand(t_mini *line, char **new_tokens, int i)
 
 	j = 0;
 	loop = 0;
-	ft_printf("line->metaed[i] = %s\n", line->metaed[i]);
 	while (line->metaed[i][j])
 	{
 		if (line->metaed[i][j] == '$' &&
-			(!ft_isalnum(line->metaed[i][j + 1]) && line->metaed[i][j + 1] != '_' && line->metaed[i][j + 1] != '?'))
+			(!ft_isalnum(line->metaed[i][j + 1]) && line->metaed[i][j + 1] != '_' && line->metaed[i][j + 1] != '?')) //only dollars
 		{
-			ft_printf("ONLY DOLLARS\n");
 			dup_or_join(new_tokens, loop, i, "$");
 			j++;
 			loop++;
 			continue ;
 		}
 		else if (line->metaed[i][j] == '$' &&
-			(ft_isalnum(line->metaed[i][j + 1]) || line->metaed[i][j + 1] == '_' || line->metaed[i][j + 1] == '?'))
+			(ft_isalnum(line->metaed[i][j + 1]) || line->metaed[i][j + 1] == '_' || line->metaed[i][j + 1] == '?')) //something to expand
 		{
-			ft_printf("SOMETHING TO EXPAND\n");
 			j++;
 			substring = get_substring(line->metaed[i], j);
-			ft_printf("substring = %s\n", substring);
 			env_value = get_env_value(line->envp, substring, line);
 			if (!env_value)
 				dup_or_join(new_tokens, loop, i, "");
@@ -103,83 +100,17 @@ static void	expand(t_mini *line, char **new_tokens, int i)
 				dup_or_join(new_tokens, loop, i, env_value);
 			free(env_value);
 		}
-		else
+		else //nothing to expand
 		{
-			ft_printf("NOTHING TO EXPAND\n");
 			substring = get_substring(line->metaed[i], j);
-			ft_printf("substring = %s\n", substring);
-			ft_printf("substring len = %d\n", ft_strlen(substring));
 			dup_or_join(new_tokens, loop, i, substring);
 		}
 		j += ft_strlen(substring);
+		ft_printf("substring = %s\n", substring);
 		free(substring);
 		loop++;
 	}
 }
-
-// static void	expand(t_mini *line, char **new_tokens, int i)
-// {
-// 	int		j;
-// 	int		loop;
-// 	char	*substring;
-// 	char	*env_value;
-
-// 	j = 0;
-// 	loop = 0;
-// 	while (line->metaed[i][j])
-// 	{
-// 		if (line->metaed[i][j] == '$')
-// 		{
-// 			if (ft_strlen(line->metaed[i]) == 1)
-// 			{
-// 				dup_or_join(new_tokens, loop, i, "$");
-// 				break ;
-// 			}
-// 			else if (is_whitespace(line->metaed[i][j + 1]) || line->metaed[i][j + 1] == '?' || line->metaed[i][j + 1] == '\0' || line->metaed[i][j + 1] == '$')
-// 			{
-// 				j++;
-// 				if (is_whitespace(line->metaed[i][j]))
-// 					dup_or_join(new_tokens, loop, i, "$ ");
-// 				else if (line->metaed[i][j] == '?')
-// 					dup_or_join(new_tokens, loop, i, ft_itoa(line->err_num));
-// 				else if (line->metaed[i][j] == '\0')
-// 					dup_or_join(new_tokens, loop, i, "$");
-// 				else if (line->metaed[i][j] == '$' && line->metaed[i][j + 1] == '?')
-// 				{
-// 					dup_or_join(new_tokens, loop, i, "$");
-// 					dup_or_join(new_tokens, loop, i, ft_itoa(line->err_num));
-// 					j++;
-// 				}
-// 				else if (line->metaed[i][j] == '$' && ft_isalpha(line->metaed[i][j + 1]))
-// 					continue ;
-// 				else if (line->metaed[i][j] == '$')
-// 					dup_or_join(new_tokens, loop, i, "$$");
-// 				j++;
-// 				loop++;
-// 				continue ;
-// 			}
-// 			else
-// 			{
-// 				j++;
-// 				substring = get_substring(line->metaed[i], j);
-// 				env_value = get_env_value(line->envp, substring);
-// 				if (!env_value)
-// 					dup_or_join(new_tokens, loop, i, "");
-// 				else
-// 					dup_or_join(new_tokens, loop, i, env_value);
-// 				free(env_value);
-// 			}
-// 		}
-// 		else
-// 		{
-// 			substring = get_substring(line->metaed[i], j);
-// 			dup_or_join(new_tokens, loop, i, substring);
-// 		}
-// 		j += ft_strlen(substring);
-// 		free(substring);
-// 		loop++;
-// 	}
-// }
 
 void	expansion(t_mini *line)
 {

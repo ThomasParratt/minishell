@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 17:32:52 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:29:02 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ typedef struct s_mini
 	int		pipe_num;
 	char	**envp;
 	int		err_num;
-	int		flag;
 	int		i;
 }				t_mini;
 

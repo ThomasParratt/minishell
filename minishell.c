@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/13 12:40:07 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:28:54 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ int	main(int argc, char **argv, char **envp)
 		sigaction(SIGQUIT, &sa, NULL);
 		while (1)
 		{
-			line.flag = 0;
 			prompt = create_prompt();
 			line_read = readline(prompt);
 			if (!line_read)

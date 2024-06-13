@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 17:22:07 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/13 10:24:44 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*nothing_to_expand(t_mini *line, char **new_tokens, int loop, int j)
 	return (substring);
 }
 
-static char	*substring_exp(t_mini *line, char **new_tokens, int loop, int *j)
+static char	*substring_expand(t_mini *line, char **new_tokens, int loop, int *j)
 {
 	char	*substring;
 	char	*env_value;
@@ -64,7 +64,7 @@ static void	expand(t_mini *line, char **new_tokens)
 		}
 		else if (metaed[j] == '$' && (ft_isalnum(metaed[j + 1])
 				|| metaed[j + 1] == '_' || metaed[j + 1] == '?'))
-			substring = substring_exp(line, new_tokens, loop, &j);
+			substring = substring_expand(line, new_tokens, loop, &j);
 		else
 			substring = nothing_to_expand(line, new_tokens, loop, j);
 		j += ft_strlen(substring);

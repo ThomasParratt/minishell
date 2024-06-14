@@ -30,6 +30,7 @@ typedef struct s_mini
 	int		pipe_num;
 	char	**envp;
 	int		err_num;
+	int		flag;
 	int		i;
 }				t_mini;
 

@@ -1,40 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/24 16:38:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/11 19:07:24 by mspasic          ###   ########.fr       */
+/*   Created: 2024/06/13 13:39:35 by mspasic           #+#    #+#             */
+/*   Updated: 2024/06/13 13:57:05 by mspasic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/libft.h"
+#include "minishell.h"
 
-void	*ft_memmove(void *dst, const void *src, size_t len)
+void	free_2d(char **tab)
 {
-	char	*s;
-	char	*d;
 	size_t	i;
 
-	if (dst == NULL && src == NULL)
-		return (NULL);
-	s = (char *)src;
-	d = (char *)dst;
 	i = 0;
-	if (d > s)
+	while (tab[i])
 	{
-		while (len-- > 0)
-			d[len] = s[len];
+		free(tab[i]);
+		i++;
 	}
-	else
-	{
-		while (i < len)
-		{
-			d[i] = s[i];
-			i++;
-		}
-	}
-	return (dst);
+	free(tab);
+}
+
+void	malloc_failure(t_mini *line)
+{
+	ft_putendl_fd("minishell: malloc failure", 2);
+    free_2d(line->element);
+    free_2d(line->metaed);
+	//free everything
+	exit(1);
+}
+
+void	void_malloc_failure(void)
+{
+	ft_putendl_fd("minishell: malloc failure", 2);
+	exit(1);
 }

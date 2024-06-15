@@ -6,7 +6,7 @@
 /*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 13:39:35 by mspasic           #+#    #+#             */
-/*   Updated: 2024/06/15 14:59:27 by mspasic          ###   ########.fr       */
+/*   Updated: 2024/06/15 15:13:13 by mspasic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	syntax_error(t_mini *line, char *s, int i)
 	}
 	else if (i == 4)
 		ft_putendl_fd("minishell: parse error near \\n", 2);
-	//setting the errnum to 2?
+	line->err_num = 2;	
 	free_2d(line->element);
 	free_2d(line->metaed);
 	return (1);

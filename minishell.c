@@ -6,7 +6,7 @@
 /*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/14 20:11:28 by mspasic          ###   ########.fr       */
+/*   Updated: 2024/06/15 14:45:52 by mspasic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ static int	minishell_loop(t_mini *line)
 		if (ft_strlen(line_read) == 0)
 			continue ;
 		add_history(line_read);
-		validating(line_read, line);
+		if (validating(line_read, line) == 1)
+			continue ;
 		expansion(line);
 		to_token(line, &token);
 		// printf("arrived here %s\n", token->command[0]);

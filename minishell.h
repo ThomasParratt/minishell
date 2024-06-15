@@ -6,7 +6,7 @@
 /*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:20 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/13 21:40:09 by mspasic          ###   ########.fr       */
+/*   Updated: 2024/06/15 14:47:35 by mspasic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ char		*get_env_value(char **envp, char *str, t_mini *line);
 void		free_2d(char **tab);
 void		malloc_failure(t_mini *line);
 void		void_malloc_failure(void);
+int			syntax_error(t_mini *line, char *s, int i);
 //execution.c
 void		execute(t_tokens **token, t_mini *line);
 //expansion.c
@@ -116,7 +117,7 @@ void		cleanup(t_mini *line, t_tokens **token, char *line_read, int option);
 void		print_2d(char **tab);
 char		*join_and_free(char *prompt, char *str);
 //validation.c
-void		validating(char *argv, t_mini *line);
+int			validating(char *argv, t_mini *line);
 int			is_it_redirect(char *s);
 int			is_it_space(char *s, int i);
 int			ft_skip(char *s, int i);

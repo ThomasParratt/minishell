@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 14:50:13 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/14 19:40:01 by mspasic          ###   ########.fr       */
+/*   Updated: 2024/06/17 12:17:36 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,17 @@ char	*get_env_value(char **envp, char *str, t_mini *line)
 	char	*env;
 	char	*env_value;
 	int		i;
+	char	*itoaed_err_num;
 
 	if (!ft_strncmp(str, "?", 2))
 	{
-		env_value = ft_strdup(ft_itoa(line->err_num));
+		itoaed_err_num = ft_itoa(line->err_num);
+		if (!itoaed_err_num)
+			malloc_failure(line);
+		env_value = ft_strdup(itoaed_err_num);
 		if (!env_value)
 			malloc_failure(line);
+		free(itoaed_err_num);
 		return (env_value);
 	}
 	env = ft_getenv(envp, str);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/14 19:41:37 by mspasic          ###   ########.fr       */
+/*   Updated: 2024/06/17 16:36:34 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	print_error(char *message, char **args)
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(args[0], 2);
 	ft_putstr_fd(": ", 2);
-	if (!args[2])
+	if (args[1])
 	{
 		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": ", 2);
@@ -33,7 +33,6 @@ int	is_whitespace(char c) //can we combine is_whitespace and is_it_space?
 	else
 		return (0);
 }
-
 
 char	**malloc_2d(char **arr)
 {

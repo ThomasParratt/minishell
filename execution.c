@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:06:44 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/17 15:44:52 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/17 16:57:53 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	parent(int in_fd, t_mini *line, int *fd)
 
 static int	child(t_tokens *token, t_mini *line, int in_fd, int *fd)
 {
-	if (!ft_strncmp(token[line->i].command[0], "./minishell", 11)) //what if token[line->i].command[0] == ./minishellsoemthing?
+	if (!ft_strncmp(token[line->i].command[0], "./minishell", 12)) //what if token[line->i].command[0] == ./minishellsoemthing?
 		shell_lvl_check(line);
 	if (in_fd != STDIN_FILENO) // Redirect input
 	{

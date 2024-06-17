@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:06:44 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/14 20:00:34 by mspasic          ###   ########.fr       */
+/*   Updated: 2024/06/17 13:47:42 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,16 @@ static void	shell_lvl_check(t_mini *line)
 	shell_value = get_env_value(line->envp, "SHLVL", line);
 	value = ft_atoi(shell_value);
 	value++;
-	str = ft_itoa(value); //malloc_check?
-	str_to_export = ft_strjoin("SHLVL=", str); //malloc_check?
+	str = ft_itoa(value);
+	if(!str)
+		malloc_failure(line);
+	str_to_export = ft_strjoin("SHLVL=", str);
+	if(!str_to_export)
+		malloc_failure(line);
 	export(str_to_export, line);
+	free(str);
+	free(str_to_export);
+	
 }
 
 static void	wait_for_child(t_mini *line)

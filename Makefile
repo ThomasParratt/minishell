@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+         #
+#    By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/15 10:22:54 by tparratt          #+#    #+#              #
-#    Updated: 2024/06/13 12:34:12 by tparratt         ###   ########.fr        #
+#    Updated: 2024/06/14 20:07:13 by mspasic          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRC			=	minishell.c \
 					utils.c \
 					utils2.c \
 					execution.c \
+					error.c \
 					redirect.c \
 					signals.c \
 					heredoc.c \
@@ -43,7 +44,7 @@ CC			=	cc
 
 RM			=	rm -f
 
-CFLAGS		=	-I /Users/$(USER)/.brew/opt/readline/include/readline.h -Wextra -Wall -Werror
+CFLAGS		=	-I /Users/$(USER)/.brew/opt/readline/include/readline.h -Wextra -Wall -Werror -g -fsanitize=address
 
 LDFLAGS 	=	-L /Users/$(USER)/.brew/opt/readline/lib
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:00:48 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 15:12:15 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/14 19:41:37 by mspasic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	print_error(char *message, char **args)
 	ft_putendl_fd(message, 2);
 }
 
-int	is_whitespace(char c)
+int	is_whitespace(char c) //can we combine is_whitespace and is_it_space?
 {
 	if (c == ' ' || c == '\t' || c == '\n'
 		|| c == '\v' || c == '\f' || c == '\r')
@@ -34,11 +34,6 @@ int	is_whitespace(char c)
 		return (0);
 }
 
-void	malloc_failure(void)
-{
-	ft_putendl_fd("minishell: malloc failure", 2);
-	exit(1);
-}
 
 char	**malloc_2d(char **arr)
 {

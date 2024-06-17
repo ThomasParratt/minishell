@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 10:18:38 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/17 11:33:54 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:15:42 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char	*create_prompt(void)
 		username = "unknown";
 	hostname = getenv("HOSTNAME");
 	if (!hostname)
-		hostname = "unknown";
+		hostname = "hive";
 	prompt = ft_strdup(username);
 	prompt = join_and_free(prompt, "@");
 	prompt = join_and_free(prompt, hostname);
@@ -112,7 +112,10 @@ int	main(int argc, char **argv, char **envp)
 	set_term_attr();
 	if (argc == 1)
 	{
+		ft_memset(&sa, 0, sizeof(sa));
 		sa.sa_handler = handle_signal;
+		sigemptyset(&sa.sa_mask);
+		sa.sa_flags = 0;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGQUIT, &sa, NULL);
 		check = minishell_loop(&line);

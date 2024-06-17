@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:06:44 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/17 14:20:39 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:44:52 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ static void	shell_lvl_check(t_mini *line)
 	export(str_to_export, line);
 	free(str);
 	free(str_to_export);
-	
 }
 
 static void	wait_for_child(t_mini *line)

@@ -6,28 +6,36 @@
 /*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 14:50:13 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/17 12:17:36 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:51:08 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static char	*err_num_value(t_mini *line)
+{
+	char	*itoaed_err_num;
+	char	*err_num_value;
+	
+	itoaed_err_num = ft_itoa(line->err_num);
+	if (!itoaed_err_num)
+		malloc_failure(line);
+	err_num_value = ft_strdup(itoaed_err_num);
+	if (!err_num_value)
+		malloc_failure(line);
+	free(itoaed_err_num);
+	return (err_num_value);
+}
 
 char	*get_env_value(char **envp, char *str, t_mini *line)
 {
 	char	*env;
 	char	*env_value;
 	int		i;
-	char	*itoaed_err_num;
 
 	if (!ft_strncmp(str, "?", 2))
 	{
-		itoaed_err_num = ft_itoa(line->err_num);
-		if (!itoaed_err_num)
-			malloc_failure(line);
-		env_value = ft_strdup(itoaed_err_num);
-		if (!env_value)
-			malloc_failure(line);
-		free(itoaed_err_num);
+		env_value = err_num_value(line);
 		return (env_value);
 	}
 	env = ft_getenv(envp, str);

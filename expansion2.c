@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 17:21:50 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/17 16:23:17 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/17 16:47:46 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void	dup_or_join(char **new_tokens, int loop, int i, char *str)
 	}
 	else
 		new_tokens[i] = join_and_free(new_tokens[i], str);
-	ft_printf("new_tokens = %s\n", new_tokens[i]);
 }
 
 void	duplicate(t_mini *line, char **new_tokens)

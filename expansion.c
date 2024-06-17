@@ -6,7 +6,7 @@
 /*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/17 16:09:49 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/06/17 16:47:36 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ static char	*substring_expand(t_mini *line, char **new_tokens, int loop, int *j)
 
 	(*j)++;
 	substring = get_substring(line->metaed[line->i], *j);
-	ft_printf("substring = %s\n", substring);
 	env_value = get_env_value(line->envp, substring, line);
 	if (!env_value)
 		dup_or_join(new_tokens, loop, line->i, "");

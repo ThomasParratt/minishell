@@ -44,33 +44,39 @@ This project was developed as part of the 42 school curriculum to deepen underst
 
 ### Clone the repository
 
-```bash
+```
 git clone https://github.com/ThomasParratt/minishell
 cd minishell
+```
 
 ### Compile
 
-```bash
+```
 make
+```
 
 ### Run
 
-```bash
+```
 ./minishell
+```
 
 ### Clean object files
 
-```bash
+```
 make clean
+```
 
 ### Full clean (including executable)
 
-```bash
+```
 make fclean
+```
 
 ### Recompile
 
-```bash
+```
 make re
+```
 
 

@@ -45,7 +45,7 @@ This project was developed as part of the 42 school curriculum to deepen underst
 ### Clone the repository
 
 ```
-git clone https://github.com/ThomasParratt/minishell
+git clone https://github.com/ThomasParratt/minishell.git
 cd minishell
 ```
 

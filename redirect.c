@@ -3,59 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/10 16:55:18 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 15:19:24 by tparratt         ###   ########.fr       */
+/*   Created: 2024/07/16 18:03:09 by tparratt          #+#    #+#             */
+/*   Updated: 2024/07/17 14:47:48 by mspasic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	redirect_output_append(t_tokens *token, int j)
+static void	redirect_output(t_mini *line, t_tokens *token, int *output)
 {
-	int	fd;
-
-	fd = open(token->redirect[j + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd == -1 || dup2(fd, STDOUT_FILENO) == -1)
-		exit(1);
-	close(fd);
-}
-
-static void	redirect_output(t_tokens *token, int j)
-{
-	int	fd;
-
-	fd = open(token->redirect[j + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1 || dup2(fd, STDOUT_FILENO) == -1)
-		exit(1);
-	close(fd);
-}
-
-static void	redirect_input(t_tokens *token, int j)
-{
-	int	fd;
-
-	fd = open(token->redirect[j + 1], O_RDONLY);
-	if (fd == -1 || dup2(fd, STDIN_FILENO) == -1)
-		exit(1);
-	close(fd);
-}
-
-void	redirections(t_tokens *token)
-{
-	int	j;
-
-	j = 0;
-	while (token->redirect[j])
+	if (*output == -2 || *output == -1)
+		return ;
+	if (dup2(*output, STDOUT_FILENO) == -1)
 	{
-		if ((ft_strncmp(token->redirect[j], "<", 2) == 0)
-			|| (ft_strncmp(token->redirect[j], "<<", 3) == 0))
-			redirect_input(token, j);
-		else if (ft_strncmp(token->redirect[j], ">", 2) == 0)
-			redirect_output(token, j);
-		else if (ft_strncmp(token->redirect[j], ">>", 3) == 0)
-			redirect_output_append(token, j);
-		j++;
+		ft_putendl_fd("minishell: dup2 failed", 2);
+		cleanup(line, token, 1);
+		exit (1);
 	}
+	if (close (*output) == -1)
+		cleanup_close(line, token);
+	*output = -2;
+	if (has_output(&token[line->i]))
+		line->output_fd = -2;
+}
+
+static void	redirect_input(t_mini *line, t_tokens *token, int *input)
+{
+	if (*input == -2 || *input == -1)
+		return ;
+	if (dup2(*input, STDIN_FILENO) == -1)
+	{
+		ft_putendl_fd("minishell: dup2 failed", 2);
+		cleanup(line, token, 1);
+		exit (1);
+	}
+	if (close (*input) == -1)
+		cleanup_close(line, token);
+	*input = -2;
+	if (has_input(&token[line->i]))
+		line->input_fd = -2;
+}
+
+void	redirections(t_mini *line, t_tokens *token, t_fds *cur)
+{
+	redirect_input(line, token, &cur->in);
+	redirect_output(line, token, &cur->out);
+	if (cur->close != -2 && close(cur->close) == -1)
+		cleanup_close(line, token);
 }

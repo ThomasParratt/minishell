@@ -6,24 +6,24 @@
 /*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 14:02:36 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/17 17:05:49 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/07/15 17:15:40 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**create_paths(char **tokens, char **envp)
+static char	**create(char **tokens, char **envp, t_mini *line, t_tokens *token)
 {
 	char	*path_pointer;
 	char	**paths;
 	int		i;
 
-	path_pointer = ft_getenv(envp, "PATH");
+	path_pointer = get_env_value(envp, "PATH", line, token);
 	if (!path_pointer)
 		return (NULL);
 	paths = ft_split(path_pointer, ':');
 	if (!paths)
-		return (NULL);
+		malloc_failure(line, token);
 	free(path_pointer);
 	i = 0;
 	while (paths[i])
@@ -31,53 +31,90 @@ static char	**create_paths(char **tokens, char **envp)
 		paths[i] = join_and_free(paths[i], "/");
 		paths[i] = join_and_free(paths[i], tokens[0]);
 		if (!paths[i])
-			return (NULL);
+			malloc_failure(line, token);
 		i++;
 	}
 	return (paths);
 }
 
-static char	*check_access(char **paths)
+static int	check_access(char **paths, t_mini *line, t_tokens *token)
 {
 	int		i;
-	char	*res;
 
 	i = 0;
-	res = NULL;
+	if (!paths)
+		return (-1);
 	while (paths[i])
 	{
 		if (access(paths[i], F_OK) == 0)
 		{
-			res = ft_strdup(paths[i]);
-			if (!res)
-				exit(1);
+			line->paths[line->i] = ft_strdup(paths[i]);
 			free_2d(paths);
-			return (res);
+			if (!(line->paths[line->i]))
+				malloc_failure(line, token);
+			return (0);
 		}
 		i++;
 	}
-	return (res);
+	free_2d(paths);
+	return (-1);
 }
 
-char	*get_path(char **tokens, char **envp)
+static void	path_error(char *str, char **tokens, t_mini *line, t_tokens *token)
 {
-	char	*res;
+	line->err_num = 127;
+	print_error(str, tokens);
+	tokens[0][0] = 9;
+	unnecessary_path(line, token);
+}
+
+static int	file_or_directory(char **tokens, t_mini *line, t_tokens *token)
+{
+	int	fd;
+
+	if (access(tokens[0], F_OK) == 0)
+	{
+		fd = open(tokens[0], O_RDONLY | O_DIRECTORY);
+		if (fd == -1)
+		{
+			line->paths[line->i] = ft_strdup(tokens[0]);
+			if (!line->paths[line->i])
+				return (-1);
+		}
+		else
+		{
+			path_error("Is a directory", tokens, line, token);
+			line->err_num = 126;
+		}
+	}
+	else
+		path_error("No such file or directory", tokens, line, token);
+	return (0);
+}
+
+int	get_path(char **tokens, t_mini *line, t_tokens *token)
+{
 	char	**paths;
 
-	if (!ft_strncmp(tokens[0], "./", 2))
+	if (!ft_strncmp(tokens[0], ".", 2))
 	{
-		res = ft_strdup(tokens[0]);
-		if (!res)
-			void_malloc_failure();
-		return (res);
+		path_error("filename argument required", tokens, line, token);
+		line->err_num = 2;
+		return (0);
 	}
-	paths = create_paths(tokens, envp);
-	if (!paths)
-		return (NULL);
-	res = check_access(paths);
-	if (res)
-		return (res);
-	free_2d(paths);
-	print_error("command not found", tokens);
-	return (NULL);
+	if (!ft_strncmp(tokens[0], "..", 3))
+	{
+		path_error("command not found", tokens, line, token);
+		return (0);
+	}
+	if (ft_strchr(tokens[0], '/'))
+	{
+		if (file_or_directory(tokens, line, token) == -1)
+			return (-1);
+		return (0);
+	}
+	paths = create(tokens, line->envp, line, token);
+	if (!paths || check_access(paths, line, token) != 0)
+		path_error("command not found", tokens, line, token);
+	return (0);
 }

@@ -3,136 +3,128 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:06:44 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/17 16:57:53 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/07/19 12:18:03 by mspasic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	shell_lvl_check(t_mini *line)
+static void	parent(t_mini *line, t_tokens *token, t_fds *cur)
 {
-	char	*shell_value;
-	int		value;
-	char	*str;
-	char	*str_to_export;
-
-	shell_value = get_env_value(line->envp, "SHLVL", line);
-	value = ft_atoi(shell_value);
-	value++;
-	str = ft_itoa(value);
-	if(!str)
-		malloc_failure(line);
-	str_to_export = ft_strjoin("SHLVL=", str);
-	if(!str_to_export)
-		malloc_failure(line);
-	export(str_to_export, line);
-	free(str);
-	free(str_to_export);
+	if (line->i < line->pipe_num)
+	{
+		if (line->i != 0)
+		{
+			if (cur->in != -2 && close(cur->in) == -1)
+				cleanup_close(line, token);
+			cur->in = -2;
+			if (has_input(&token[line->i]))
+				line->input_fd = -2;
+		}
+		if (cur->out != -2 && close(cur->out) == -1)
+			cleanup_close(line, token);
+		cur->out = -2;
+		if (has_output(&token[line->i]))
+			line->output_fd = -2;
+	}
+	close_cleanup(line);
 }
 
-static void	wait_for_child(t_mini *line)
+static void	child(t_tokens *token, t_mini *line, t_fds *cur)
 {
-	int	status;
-
-	line->i = 0;
-	while (line->i < line->pipe_num)
+	if (!ft_strncmp(token[line->i].command[0], "./minishell", 12))
+		shell_lvl_check(line, token);
+	redirections(line, token, cur);
+	if (is_builtin(token[line->i].command[0]))
 	{
-		if (line->flag == 0)
+		execute_builtin(&token[line->i], line);
+		exit(line->err_num);
+	}
+	else
+	{
+		close_cleanup(line);
+		if (execve(line->paths[line->i], token[line->i].command,
+				line->envp) == -1)
 		{
-			wait(&status);
-			if (WIFEXITED(status))
-				line->err_num = WEXITSTATUS(status);
+			ft_putstr_fd("minishell: execve failed", 2);
+			cleanup(line, token, 1);
+			exit(1);
+		}
+	}
+}
+
+static int	set_error(t_tokens *token, t_mini *line, int check, t_fds *cur)
+{
+	if (check == -1 || token[line->i].command[0] == NULL \
+		|| ft_strlen(token[line->i].command[0]) == 0 \
+		|| token[line->i].command[0][0] == 9)
+	{
+		if (check == -1)
+			line->err_num = 1;
+		line->flag = 1;
+		if (line->pipe_num != 1)
+		{
+			if (line->i != 0 && cur->in != -2)
+			{
+				close(cur->in);
+				cur->in = -2;
+			}
+			if (line->i != line->pipe_num - 1 && cur->out != -2)
+			{
+				close(cur->out);
+				cur->in = -2;
+			}
 		}
 		line->i++;
+		close_cleanup(line);
+		return (1);
 	}
+	return (0);
 }
 
-static void	builtin_execution(t_tokens *token, t_mini *line)
+static void	fork_and_execute(t_tokens *token, t_mini *line, t_fds cur)
 {
-	if (line->i == line->pipe_num - 1)
+	line->pid = fork();
+	if (line->pid == -1)
 	{
-		redirections(&token[line->i]); // Handle redirections for the built-in
-		execute_builtin(&token[line->i], line); // Execute the built-in
-		line->flag = 1;
-	}
-	line->i++; // Move to the next command in the pipeline
-}
-
-static int	parent(int in_fd, t_mini *line, int *fd)
-{
-	if (in_fd != STDIN_FILENO)
-		close(in_fd);
-	if (line->i < line->pipe_num - 1)
-	{
-		close(fd[1]); // close write end of pipe
-		in_fd = fd[0]; // set read end of pipe
-	}
-	return (in_fd);
-}
-
-static int	child(t_tokens *token, t_mini *line, int in_fd, int *fd)
-{
-	if (!ft_strncmp(token[line->i].command[0], "./minishell", 12)) //what if token[line->i].command[0] == ./minishellsoemthing?
-		shell_lvl_check(line);
-	if (in_fd != STDIN_FILENO) // Redirect input
-	{
-		if (dup2(in_fd, STDIN_FILENO) == -1)
-			exit(1);
-		close(in_fd);
-	}
-	if (line->i < line->pipe_num - 1) // Redirect output
-	{
-		close(fd[0]);
-		if (dup2(fd[1], STDOUT_FILENO) == -1)
-			exit(1);
-		close(fd[1]);
-	}
-	redirections(&token[line->i]);
-	/* if (is_builtin(&token[line->i]))
-	{
-		builtin_execution(token, line); // Execute the built-in
-		exit(line->err_num);
-	} */
-	//else
-	//{
-	if (execve(get_path(token[line->i].command, line->envp), token[line->i].command, line->envp) == -1)
+		ft_putstr_fd("minishell: failed to fork", 2);
+		cleanup(line, token, 1);
 		exit(1);
-	//}
-	return (in_fd);
+	}
+	if (line->pid == 0)
+		child(token, line, &cur);
+	else
+		parent(line, token, &cur);
 }
 
-void	execute(t_tokens **token, t_mini *line)
+void	execute(t_tokens *token, t_mini *line)
 {
-	int		fd[2];
-	pid_t	pid;
-	int		in_fd;
+	int		check;
+	t_fds	cur;
+	int		prev;
 
-	in_fd = STDIN_FILENO;
 	line->i = 0;
+	prev = -2;
+	if (line->pipe_num == 1 && token[line->i].command[0] != NULL
+		&& is_builtin(token[line->i].command[0]))
+	{
+		single_builtin(token, line);
+		return ;
+	}
 	while (line->i < line->pipe_num)
 	{
 		line->flag = 0;
-		if (line->i < line->pipe_num - 1 && pipe(fd) == -1)
-			exit(1);
-		if (is_builtin(token[line->i]->command[0]))
-		{
-			builtin_execution(*token, line); // Execute the built-in
+		line->err_num = 0;
+		check = opening(&token[line->i], line);
+		cur = set_path_fds(check, token, line, prev);
+		prev = cur.close;
+		if (set_error(token, line, check, &cur))
 			continue ;
-		}
-		pid = fork();
-		if (pid == -1)
-			exit(1);
-		if (pid == 0)
-		{
-			if (!is_builtin(token[line->i]->command[0]))
-				in_fd = child(*token, line, in_fd, fd);
-		}
-		else
-			in_fd = parent(in_fd, line, fd);
+		fork_and_execute(token, line, cur);
 		line->i++;
 	}
-	wait_for_child(line);
+	wait_for_child(line, token);
 }

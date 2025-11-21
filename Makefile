@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+         #
+#    By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/15 10:22:54 by tparratt          #+#    #+#              #
-#    Updated: 2024/06/17 15:53:47 by tparratt         ###   ########.fr        #
+#    Updated: 2024/07/19 15:11:51 by mspasic          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,18 +20,31 @@ SRC			=	minishell.c \
 					parsing.c \
 					expansion.c \
 					expansion2.c \
+					expansion3.c \
 					paths.c \
 					env.c \
 					utils.c \
 					utils2.c \
+					utils3.c \
+					utils4.c \
 					execution.c \
+					execution2.c \
 					error.c \
 					redirect.c \
+					retrim.c \
+					children.c \
+					fd_handling.c \
+					dup2ing_fds.c \
+					opening_files.c \
 					signals.c \
+					syntax_errors.c \
 					heredoc.c \
+					heredoc2.c \
+					set_termios.c \
 					builtins/echo-pwd-env.c \
 					builtins/cd.c \
 					builtins/export.c \
+					builtins/export_unset_error.c \
 					builtins/unset.c \
 					builtins/builtin_check.c \
 					builtins/exit.c \
@@ -44,9 +57,7 @@ CC			=	cc
 
 RM			=	rm -f
 
-CFLAGS		=	-I /Users/$(USER)/.brew/opt/readline/include/readline.h -Wextra -Wall -Werror -g -fsanitize=address
-
-LDFLAGS 	=	-L /Users/$(USER)/.brew/opt/readline/lib
+CFLAGS		= -Wextra -Wall -Werror
 
 $(NAME):	$(OBJ)
 			make -C ./libft

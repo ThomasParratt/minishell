@@ -6,20 +6,11 @@
 /*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:31:15 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/17 16:47:36 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/07/16 17:50:42 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	*nothing_to_expand(t_mini *line, char **new_tokens, int loop, int j)
-{
-	char	*substring;
-
-	substring = get_substring(line->metaed[line->i], j);
-	dup_or_join(new_tokens, loop, line->i, substring);
-	return (substring);
-}
 
 static char	*substring_expand(t_mini *line, char **new_tokens, int loop, int *j)
 {
@@ -28,18 +19,25 @@ static char	*substring_expand(t_mini *line, char **new_tokens, int loop, int *j)
 
 	(*j)++;
 	substring = get_substring(line->metaed[line->i], *j);
-	env_value = get_env_value(line->envp, substring, line);
+	env_value = get_env_value(line->envp, substring, line, NULL);
 	if (!env_value)
-		dup_or_join(new_tokens, loop, line->i, "");
+	{
+		if (dup_or_join(new_tokens, loop, line->i, ""))
+			malloc_failure_without_token(line);
+	}
 	else
-		dup_or_join(new_tokens, loop, line->i, env_value);
+	{
+		if (dup_or_join(new_tokens, loop, line->i, env_value))
+			malloc_failure_without_token(line);
+	}
 	free(env_value);
 	return (substring);
 }
 
 static void	dollars_only(t_mini *line, char **new_tokens, int *loop, int *j)
 {
-	dup_or_join(new_tokens, *loop, line->i, "$");
+	if (dup_or_join(new_tokens, *loop, line->i, "$"))
+		malloc_failure_without_token(line);
 	(*j)++;
 	(*loop)++;
 }
@@ -73,12 +71,39 @@ static void	expand(t_mini *line, char **new_tokens)
 	}
 }
 
+static void	remove_dollar(t_mini *line, char **new_tokens)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	while (new_tokens[i])
+	{
+		if (new_tokens[i][0] == '$' && (new_tokens[i][1] == '\''
+			|| new_tokens[i][1] == '"'))
+		{
+			str = ft_substr(new_tokens[i], 1, ft_strlen(new_tokens[i]));
+			if (!str)
+				malloc_failure_without_token(line);
+			free(new_tokens[i]);
+			new_tokens[i] = ft_strdup(str);
+			if (!new_tokens[i])
+				malloc_failure_without_token(line);
+			free(str);
+		}
+		i++;
+	}
+	line->metaed = new_tokens;
+}
+
 void	expansion(t_mini *line)
 {
 	char	**new_tokens;
 
 	line->i = 0;
 	new_tokens = malloc_2d(line->metaed);
+	if (!new_tokens)
+		malloc_failure_without_token(line);
 	while (line->metaed[line->i])
 	{
 		if (ft_strchr(line->metaed[line->i], '$'))
@@ -90,4 +115,5 @@ void	expansion(t_mini *line)
 	new_tokens[line->i] = NULL;
 	free_2d(line->metaed);
 	line->metaed = new_tokens;
+	remove_dollar(line, new_tokens);
 }

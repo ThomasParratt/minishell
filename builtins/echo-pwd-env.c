@@ -3,20 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   echo-pwd-env.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tparratt <tparratt@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:16:35 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/12 14:44:11 by tparratt         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:55:15 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static int	all_ens(char *arg)
+{
+	int	i;
+
+	i = 1;
+	if (ft_strlen(arg) == 1 || ft_strlen(arg) == 0)
+		return (0);
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 static void	echon(char **args)
 {
 	int	i;
 
-	i = 2;
+	i = 1;
+	while (args[i] && all_ens(args[i]))
+		i++;
 	while (args[i])
 	{
 		if (args[i + 1] == NULL)
@@ -35,14 +53,14 @@ void	echo(char **args)
 		ft_printf("\n");
 	else
 	{
-		if (!ft_strncmp(args[1], "-n", 3))
+		if (all_ens(args[1]))
 			echon(args);
 		else
 		{
 			i = 1;
 			while (args[i])
 			{
-				if (args[i + 1] == NULL || ft_strlen(args[i]) == 0)
+				if (args[i + 1] == NULL)
 					ft_printf("%s", args[i]);
 				else
 					ft_printf("%s ", args[i]);
@@ -59,7 +77,10 @@ void	pwd(void)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		exit(1);
+	{
+		chdir("/home");
+		cwd = getcwd(NULL, 0);
+	}
 	ft_printf("%s\n", cwd);
 	free(cwd);
 }

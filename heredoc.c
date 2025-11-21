@@ -3,117 +3,93 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 15:22:45 by mspasic           #+#    #+#             */
-/*   Updated: 2024/06/14 20:09:53 by mspasic          ###   ########.fr       */
+/*   Updated: 2024/07/18 10:40:28 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*here_strjoin(char *s1, char *s2)
+char	*create_hd_name(int hd_num, t_mini *line)
 {
 	char	*str;
-	int		i;
-	int		j;
 
-	i = 0;
-	j = 0;
-	str = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (str == NULL)
-		return (NULL);
-	while (s1[i] != '\0')
-	{
-		str[i] = s1[i];
-		i++;
-	}
-	while (s2[j] != '\0')
-		str[i++] = s2[j++];
-	str[i] = '\0';
-	free(s2);
+	str = here_strjoin(".here_", simple_itoa(hd_num));
+	if (!str)
+		malloc_failure_without_token(line);
 	return (str);
 }
 
-static int	ft_intlen(int n)
+static void	free_and_exit(t_mini *line, int hd_num, char *hd_name)
 {
 	int	i;
 
-	i = 0;
-	while (n)
+	i = 1;
+	unlink(hd_name);
+	free(hd_name);
+	while (i < hd_num)
 	{
-		n /= 10;
+		hd_name = create_hd_name(hd_num - i, line);
+		unlink(hd_name);
+		free(hd_name);
 		i++;
 	}
-	return (i);
+	ft_putendl_fd("minishell: couldn't handle here_doc", 2);
+	free_2d(line->element);
+	free_2d(line->metaed);
+	free_2d(line->envp);
+	exit(1);
 }
 
-static char	*simple_itoa(int n)
+static char	*hdocing(char *delim, char *hd, t_mini *line)
 {
-	int		len;
-	char	*str;
+	int				fd;
+	char			*hdoc_line;
+	char			*str;
 
-	len = ft_intlen(n);
-	str = malloc(sizeof(char) * (len + 1));
-	if (!str)
-		void_malloc_failure();
-	str[len--] = '\0';
-	while (n)
-	{
-		str[len--] = n % 10 + '0';
-		n /= 10;
-	}
-	return (str);
-}
-
-static char    *heredocing(char *delim, char *hd)
-{
-    int     fd;
-    int     check;
-	char	*line;
-
-    check = 0;
-    fd = open(hd, O_CREAT | O_RDWR | O_TRUNC, 0777);
+	signal(SIGINT, handle_heredoc_sig);
+	fd = open(hd, O_CREAT | O_RDWR | O_TRUNC, 0777);
 	if (fd == -1)
-		printf("error while opening file\n");
-	line = readline("heredoc> ");
-	ft_putendl_fd(line, fd); // Tom added this
-	while (ft_strncmp(delim, line, ft_strlen(delim)) != 0)
-	{
-		free (line);
-		line = readline("heredoc> ");
-		if (line == NULL)
-			break ;
-		if (ft_strncmp(delim, line, ft_strlen(delim)) != 0) // Tom added this
-			ft_putendl_fd(line, fd); // Tom changed this
-	}
-    check = close(fd);
-    if (check == -1)
-        printf("error while closing file\n");
-    free (delim);
-	free (line);
-	line = ft_strdup("");
-	free (line);
-    return (hd); //unlink heredocs in cleanup and close fds
+		return (NULL);
+	write(1, "> ", 2);
+	hdoc_line = get_next_line(0);
+	hdoc_line = hdoc_loop(hdoc_line, fd, delim);
+	str = null_hdoc_line(hdoc_line, delim, line);
+	if (str)
+		return (str);
+	if (close(fd) == -1)
+		return (NULL);
+	free(delim);
+	free(hdoc_line);
+	return (hd);
 }
 
-void    here_doc(t_mini *line)
+int	here_doc(t_mini *line)
 {
-    int 	hd_num;
+	int		hd_num;
 	int		i;
-	char 	*hd_name;
+	char	*hd_name;
 
-    hd_num = 1;
+	hd_num = 1;
 	i = 0;
-    while (line->metaed[i] != NULL)
-    {
-        if (ft_strncmp(line->metaed[i], "<<", 3) == 0) // Tom changed this
-        {
-			hd_name = here_strjoin(".here_", simple_itoa(hd_num));
-			//line->metaed[i + 1] can't be NULL and it can't be a meta which was checked before in validation (syntax errors) so no check is neccessary
-            line->metaed[i + 1] = heredocing(line->metaed[i + 1], hd_name);
-            hd_num++;
-        }
-        i++;
-    }
+	while (line->metaed[i] != NULL)
+	{
+		if (ft_strncmp(line->metaed[i], "<<", 3) == 0)
+		{
+			hd_name = create_hd_name(hd_num, line);
+			line->metaed[i + 1] = hdocing(line->metaed[i + 1], hd_name, line);
+			if (line->metaed[i + 1] == NULL)
+				free_and_exit(line, hd_num, hd_name);
+			if (ft_strlen(line->metaed[i + 1]) == 0)
+			{
+				free_before_return(line, hd_name, hd_num);
+				return (1);
+			}
+			hd_num++;
+		}
+		i++;
+	}
+	return (0);
 }

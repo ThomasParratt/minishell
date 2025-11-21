@@ -1,4 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   trim.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/16 17:58:55 by tparratt          #+#    #+#             */
+/*   Updated: 2024/07/16 18:00:29 by tparratt         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+static void	set_meta(char replace, char *copy, char c, int k)
+{
+	if (c == '\'' && replace == '$')
+		copy[k] = DOLLAR;
+	else if (replace == '|')
+		copy[k] = PIPE;
+	else if (replace == '>')
+		copy[k] = RED_OUT;
+	else if (replace == '<')
+		copy[k] = RED_IN;
+	else
+		copy[k] = replace;
+}
 
 static char	*trim_copy(t_mini *line, char *copy, int i, int j)
 {
@@ -15,13 +41,9 @@ static char	*trim_copy(t_mini *line, char *copy, int i, int j)
 	j++;
 	while (line->metaed[i][j] != c)
 	{
-		if (c == '\'' && line->metaed[i][j] == '$')
-		{
-			copy[k++] = 7;
-			j++;
-		}
-		else
-			copy[k++] = line->metaed[i][j++];
+		set_meta(line->metaed[i][j], copy, c, k);
+		j++;
+		k++;
 	}
 	j++;
 	while (line->metaed[i][j] != '\0')
@@ -43,11 +65,10 @@ static int	snip_snip(t_mini *line, int i, int j)
 	count = j + 1;
 	trimmed_string = malloc((sizeof(char)) * (len - 1));
 	if (!trimmed_string)
-		malloc_failure(line);
+		malloc_failure_without_token(line);
 	while (line->metaed[i][count] != c)
 		count++;
 	count = count - 1;
-	// printf("count is %d\n", count);
 	line->metaed[i] = trim_copy(line, trimmed_string, i, j);
 	return (count);
 }
@@ -63,13 +84,20 @@ void	trim_quotes(t_mini *line)
 		j = 0;
 		while (line->metaed[i][j] != '\0')
 		{
-			if (line->metaed[i][j] == '\'' || line->metaed[i][j] == '\"') 
+			if (ft_strncmp(line->metaed[i], "\"\"", 3) == 0
+				|| ft_strncmp(line->metaed[i], "''", 3) == 0)
+			{
+				free(line->metaed[i]);
+				line->metaed[i] = ft_strdup("");
+				if (!line->metaed[i])
+					malloc_failure_without_token(line);
+				break ;
+			}
+			else if (line->metaed[i][j] == '\'' || line->metaed[i][j] == '\"')
 				j = snip_snip(line, i, j);
 			else
 				j++;
 		}
-		// printf("new metaed is %s\n", line->metaed[i]);
 		i++;
 	}
 }
-

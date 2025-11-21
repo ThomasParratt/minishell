@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_check.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mspasic <mspasic@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: tparratt <tparratt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 13:47:13 by tparratt          #+#    #+#             */
-/*   Updated: 2024/06/14 19:59:00 by mspasic          ###   ########.fr       */
+/*   Updated: 2024/07/18 17:55:56 by tparratt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ void	execute_builtin(t_tokens *token, t_mini *line)
 	else if (!ft_strncmp(token->command[0], "pwd", 4))
 		pwd();
 	else if (!ft_strncmp(token->command[0], "cd", 3))
-		cd(token->command, line);
+		cd(token->command, line, token);
 	else if (!ft_strncmp(token->command[0], "env", 4))
 		env(token->command, line);
 	else if (!ft_strncmp(token->command[0], "exit", 5))
-		exit_cmd(token->command, line);
+		exit_cmd(token->command, line, token);
 	else if (!ft_strncmp(token->command[0], "export", 7))
-		export_cmd(token->command, line);
+		export_cmd(token->command, line, token);
 	else if (!ft_strncmp(token->command[0], "unset", 6))
-		unset_cmd(token->command, line);
+		unset_cmd(token->command, line, token);
 }
